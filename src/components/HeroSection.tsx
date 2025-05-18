@@ -1,5 +1,6 @@
 
 import { Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -17,9 +18,9 @@ const HeroSection = () => {
             before they can do so, they must complete a complex credentialing process.
           </p>
           
-          <button className="bg-brand-primary text-gray-900 font-semibold px-8 py-3 rounded-full hover:bg-yellow-300 transition-colors mr-4">
+          <Link to="/contact" className="bg-brand-primary text-gray-900 px-8 py-3 rounded-full font-medium hover:bg-yellow-300 transition-colors inline-block">
             Contact Us
-          </button>
+          </Link>
           
           <div className="mt-16">
             <p className="mb-2">Satisfied Clients</p>

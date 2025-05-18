@@ -10,6 +10,10 @@ interface Pharmacist {
   avatar: string;
 }
 
+interface PharmacistTableProps {
+  filterStatus?: "In Progress" | "Pending" | "Completed" | "Expiring Soon";
+}
+
 const pharmacists: Pharmacist[] = [
   {
     id: "1",
@@ -46,13 +50,41 @@ const pharmacists: Pharmacist[] = [
     submitted: "May 1, 2025",
     avatar: "EP",
   },
+  {
+    id: "6",
+    name: "Dr. David Lee",
+    status: "Completed",
+    submitted: "Apr 28, 2025",
+    avatar: "DL",
+  },
+  {
+    id: "7",
+    name: "Dr. Lisa Wong",
+    status: "In Progress",
+    submitted: "Apr 25, 2025",
+    avatar: "LW",
+  },
+  {
+    id: "8",
+    name: "Dr. James Taylor",
+    status: "Pending",
+    submitted: "Apr 20, 2025",
+    avatar: "JT",
+  },
 ];
 
-const PharmacistTable = () => {
+const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
+  // Filter pharmacists based on the provided status if any
+  const filteredPharmacists = filterStatus
+    ? pharmacists.filter(pharmacist => pharmacist.status === filterStatus)
+    : pharmacists;
+
   return (
     <div className="bg-white rounded-lg border shadow-sm">
       <div className="p-6 border-b">
-        <h2 className="text-xl font-semibold">Recent Pharmacist Applications</h2>
+        <h2 className="text-xl font-semibold">
+          {filterStatus ? `${filterStatus} Pharmacist Applications` : "Recent Pharmacist Applications"}
+        </h2>
       </div>
       
       <div className="overflow-x-auto">
@@ -67,34 +99,44 @@ const PharmacistTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {pharmacists.map((pharmacist) => (
-              <tr key={pharmacist.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
-                      {pharmacist.avatar}
+            {filteredPharmacists.length > 0 ? (
+              filteredPharmacists.map((pharmacist) => (
+                <tr key={pharmacist.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
+                        {pharmacist.avatar}
+                      </div>
+                      <span className="font-medium">{pharmacist.name}</span>
                     </div>
-                    <span className="font-medium">{pharmacist.name}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <StatusBadge status={pharmacist.status} />
-                </td>
-                <td className="px-6 py-4 text-gray-600">{pharmacist.submitted}</td>
-                <td className="px-6 py-4">
-                  <a href="#" className="text-blue-600 hover:underline">View</a>
-                </td>
-                <td className="px-6 py-4">
-                  <button className="text-gray-600 hover:bg-gray-100 p-2 rounded">Edit</button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <StatusBadge status={pharmacist.status} />
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">{pharmacist.submitted}</td>
+                  <td className="px-6 py-4">
+                    <a href="#" className="text-blue-600 hover:underline">View</a>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button className="text-gray-600 hover:bg-gray-100 p-2 rounded">Edit</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  No pharmacists found with {filterStatus} status.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
       
       <div className="px-6 py-4 border-t flex items-center justify-between">
-        <span className="text-sm text-gray-500">Showing 1-5 of 24 records</span>
+        <span className="text-sm text-gray-500">
+          Showing {filteredPharmacists.length} records
+        </span>
         <div className="flex items-center gap-2">
           <button className="p-2 border rounded hover:bg-gray-50">
             <ChevronLeft size={18} />

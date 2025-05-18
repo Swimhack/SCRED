@@ -9,6 +9,10 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PharmacistForm from "./pages/PharmacistForm";
+import Pharmacists from "./pages/Pharmacists";
+import Pending from "./pages/Pending";
+import Completed from "./pages/Completed";
+import Expiring from "./pages/Expiring";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +32,26 @@ const App = () => (
           <Route path="/pharmacist-form" element={
             <DashboardLayout>
               <PharmacistForm />
+            </DashboardLayout>
+          } />
+          <Route path="/pharmacists" element={
+            <DashboardLayout>
+              <Pharmacists />
+            </DashboardLayout>
+          } />
+          <Route path="/pending" element={
+            <DashboardLayout>
+              <Pending />
+            </DashboardLayout>
+          } />
+          <Route path="/completed" element={
+            <DashboardLayout>
+              <Completed />
+            </DashboardLayout>
+          } />
+          <Route path="/expiring" element={
+            <DashboardLayout>
+              <Expiring />
             </DashboardLayout>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

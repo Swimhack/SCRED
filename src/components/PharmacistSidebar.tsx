@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { icon: Home, label: "Dashboard", path: "/dashboard" },
@@ -14,7 +14,13 @@ const menuItems = [
 
 const PharmacistSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
   const [activePath, setActivePath] = useState("/dashboard");
+
+  // Update active path based on current location
+  useEffect(() => {
+    setActivePath(location.pathname);
+  }, [location.pathname]);
 
   return (
     <div className={cn(

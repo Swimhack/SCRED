@@ -9,6 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 interface Credential {
   id: string;
@@ -35,6 +38,15 @@ const MyExpiring = () => {
       daysLeft: 56,
     }
   ]);
+
+  const handleRenewNow = (id: string) => {
+    toast({
+      title: "Renewal Process Started",
+      description: `Starting renewal process for credential #${id}`,
+      duration: 3000,
+    });
+    // In a real app, this would redirect to the renewal form
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -78,9 +90,14 @@ const MyExpiring = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <button className="bg-brand-primary text-gray-900 px-3 py-1 rounded font-medium text-sm hover:bg-yellow-300 transition-colors">
-                      Renew Now
-                    </button>
+                    <Link to={`/pharmacist-form?id=${credential.id}&renew=true`}>
+                      <Button 
+                        className="bg-brand-primary text-gray-900 hover:bg-yellow-300 transition-colors"
+                        size="sm"
+                      >
+                        Renew Now
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

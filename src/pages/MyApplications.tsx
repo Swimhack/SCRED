@@ -9,6 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import StatusBadge from "@/components/StatusBadge";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 interface Application {
   id: string;
@@ -43,6 +46,15 @@ const MyApplications = () => {
     },
   ]);
 
+  const handleViewApplication = (id: string) => {
+    toast({
+      title: "Application Details",
+      description: `Viewing application #${id}`,
+      duration: 3000,
+    });
+    // In a real app, this would load the application details
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-semibold mb-6">My Applications</h1>
@@ -50,9 +62,11 @@ const MyApplications = () => {
       <div className="bg-white rounded-lg border shadow-sm">
         <div className="p-6 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">All Applications</h2>
-          <button className="bg-brand-primary text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
-            New Application
-          </button>
+          <Link to="/pharmacist-form">
+            <Button className="bg-brand-primary text-gray-900 hover:bg-yellow-300 transition-colors">
+              New Application
+            </Button>
+          </Link>
         </div>
         
         <div className="overflow-x-auto">
@@ -77,7 +91,13 @@ const MyApplications = () => {
                       <StatusBadge status={app.status} />
                     </TableCell>
                     <TableCell>
-                      <button className="text-blue-600 hover:underline">View</button>
+                      <Button 
+                        variant="link" 
+                        className="text-blue-600 hover:underline p-0"
+                        onClick={() => handleViewApplication(app.id)}
+                      >
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))

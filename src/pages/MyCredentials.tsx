@@ -9,6 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CheckCircle, AlertTriangle, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 interface Credential {
   id: string;
@@ -47,13 +50,25 @@ const MyCredentials = () => {
     },
   ]);
 
+  const handleRenewCredential = () => {
+    toast({
+      title: "Renewal Process Started",
+      description: "You will be redirected to complete your renewal application.",
+      duration: 3000,
+    });
+    // In a real app, we would redirect to the renewal form
+    // or start the renewal process
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">My Credentials</h1>
-        <button className="bg-brand-primary text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
-          Renew Credential
-        </button>
+        <Link to="/pharmacist-form">
+          <Button variant="default" className="bg-brand-primary text-gray-900 hover:bg-yellow-300">
+            Renew Credential
+          </Button>
+        </Link>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -116,7 +131,11 @@ const MyCredentials = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <button className="text-blue-600 hover:underline">View</button>
+                    <Link to={`/pharmacist-form?id=${credential.id}`}>
+                      <Button variant="link" className="text-blue-600 hover:underline p-0">
+                        View
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

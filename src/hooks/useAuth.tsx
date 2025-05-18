@@ -12,6 +12,7 @@ interface AuthContextType {
   userRole: string | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  refreshProfile: (userId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -100,17 +101,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         }
         
-        // Show non-blocking toast - Fix the variant to use "default" instead of "warning"
+        // Show non-blocking toast
         toast({
           title: "Profile Issue",
           description: "Using default profile settings. Some features might be limited.",
-          variant: "default", // Changed from "warning" to "default"
+          variant: "default",
         });
       }
     } catch (error: any) {
       console.error("Fatal auth error:", error.message);
       setLoading(false);
     }
+  };
+
+  const refreshProfile = async (userId: string) => {
+    await fetchUserProfile(userId);
   };
 
   const signOut = async () => {
@@ -150,7 +155,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     profile,
     userRole,
     loading,
-    signOut
+    signOut,
+    refreshProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

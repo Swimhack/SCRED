@@ -24,6 +24,7 @@ import Unauthorized from "./pages/Unauthorized";
 import MyApplications from "./pages/MyApplications";
 import MyCredentials from "./pages/MyCredentials";
 import MyExpiring from "./pages/MyExpiring";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,6 +61,15 @@ const App = () => (
                 <ProtectedRoute>
                   <DashboardLayout>
                     <PharmacistForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              {/* Profile page */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Profile />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />

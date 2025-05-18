@@ -1,6 +1,7 @@
 
 import { Bell, Search, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { profile } = useAuth();
@@ -34,7 +35,7 @@ const Header = () => {
           <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
         
-        <div className="flex items-center gap-3">
+        <Link to="/profile" className="flex items-center gap-3 hover:bg-gray-50 p-1 rounded-full">
           <div className="text-right hidden sm:block">
             <div className="font-medium">{displayName}</div>
             <div className="text-xs text-gray-500">{role}</div>
@@ -42,7 +43,7 @@ const Header = () => {
           <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
             <User size={20} className="text-gray-500" />
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   );

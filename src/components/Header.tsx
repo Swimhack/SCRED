@@ -1,7 +1,20 @@
 
 import { Bell, Search, User } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
+  const { profile } = useAuth();
+  
+  // Get first and last name from profile or use fallbacks
+  const firstName = profile?.first_name || "";
+  const lastName = profile?.last_name || "";
+  const displayName = firstName && lastName 
+    ? `${firstName} ${lastName}`
+    : firstName || lastName || "User";
+  
+  // Get user role or default to empty string
+  const role = profile?.roles?.name || "";
+
   return (
     <header className="bg-white border-b px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -23,8 +36,8 @@ const Header = () => {
         
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <div className="font-medium">John Smith</div>
-            <div className="text-xs text-gray-500">Admin</div>
+            <div className="font-medium">{displayName}</div>
+            <div className="text-xs text-gray-500">{role}</div>
           </div>
           <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
             <User size={20} className="text-gray-500" />

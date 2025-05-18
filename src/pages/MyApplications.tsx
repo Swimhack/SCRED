@@ -12,6 +12,7 @@ import StatusBadge from "@/components/StatusBadge";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import SEO from "@/components/SEO";
 
 interface Application {
   id: string;
@@ -57,6 +58,11 @@ const MyApplications = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <SEO 
+        title="My Pharmacy Enrollment Applications" 
+        description="Track and manage your pharmacy credentialing applications. Submit new applications and monitor pending approvals."
+        canonicalPath="/my-applications"
+      />
       <h1 className="text-2xl font-semibold mb-6">My Applications</h1>
       
       <div className="bg-white rounded-lg border shadow-sm">

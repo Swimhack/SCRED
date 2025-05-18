@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
+import SEO from "@/components/SEO";
 
 const Dashboard = () => {
   const { userRole, profile } = useAuth();
@@ -170,6 +171,13 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <SEO 
+        title={userRole === "admin" ? "Admin Dashboard - StreetCredRX" : "Provider Dashboard - StreetCredRX"}
+        description={userRole === "admin" 
+          ? "Manage pharmacy credentialing applications and track enrollment statuses across your organization." 
+          : "Monitor your pharmacy credentials, track application status, and manage upcoming renewals."}
+        canonicalPath="/dashboard"
+      />
       <h1 className="text-2xl font-semibold mb-6">
         {userRole === "admin" ? "Admin Dashboard" : "My Dashboard"}
       </h1>

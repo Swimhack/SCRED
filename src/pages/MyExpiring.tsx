@@ -12,6 +12,7 @@ import { AlertTriangle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import SEO from "@/components/SEO";
 
 interface Credential {
   id: string;
@@ -52,6 +53,11 @@ const MyExpiring = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <SEO 
+        title="Expiring Pharmacy Credentials" 
+        description="Monitor credentials that need renewal. Get timely reminders for approaching expiration dates to maintain uninterrupted billing privileges."
+        canonicalPath="/my-expiring"
+      />
       <h1 className="text-2xl font-semibold mb-6">Expiring Credentials</h1>
       
       <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6 flex items-start gap-3">

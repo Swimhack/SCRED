@@ -1,6 +1,7 @@
 
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
@@ -9,6 +10,11 @@ const Index = () => {
       backgroundSize: "cover", 
       backgroundPosition: "center"
     }}>
+      <SEO 
+        title="StreetCredRX - Pharmacy Credentialing & Enrollment Services" 
+        description="Simplify your pharmacy credentialing process with StreetCredRX. We help independent pharmacists navigate the complex provider enrollment requirements."
+        canonicalPath="/"
+      />
       <Navbar />
       <HeroSection />
     </div>

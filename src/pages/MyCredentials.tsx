@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Table,
@@ -12,6 +11,7 @@ import { CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import SEO from "@/components/SEO";
 
 interface Credential {
   id: string;
@@ -72,6 +72,11 @@ const MyCredentials = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <SEO 
+        title="My Pharmacy Credentials Dashboard" 
+        description="View and manage your active pharmacy credentials. Track expiration dates and renew your provider credentials."
+        canonicalPath="/my-credentials"
+      />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">My Credentials</h1>
         <Button 

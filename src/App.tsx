@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from 'react-helmet-async';
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Service from "./pages/Service";
@@ -29,85 +29,87 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/service" element={<Service />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Dashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/pharmacist-form" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <PharmacistForm />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/pharmacists" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Pharmacists />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/pending" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Pending />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/completed" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Completed />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/expiring" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Expiring />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            {/* Pharmacist specific routes */}
-            <Route path="/my-applications" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <MyApplications />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/my-credentials" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <MyCredentials />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/my-expiring" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <MyExpiring />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
+      <HelmetProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/service" element={<Service />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Dashboard />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/pharmacist-form" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <PharmacistForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/pharmacists" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Pharmacists />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/pending" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Pending />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/completed" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Completed />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/expiring" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Expiring />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              {/* Pharmacist specific routes */}
+              <Route path="/my-applications" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <MyApplications />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/my-credentials" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <MyCredentials />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/my-expiring" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <MyExpiring />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </HelmetProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

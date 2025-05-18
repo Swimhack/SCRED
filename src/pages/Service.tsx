@@ -1,6 +1,7 @@
 
 import Navbar from "@/components/Navbar";
 import { Check } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const Service = () => {
   const services = [
@@ -45,6 +46,11 @@ const Service = () => {
       backgroundSize: "cover", 
       backgroundPosition: "center"
     }}>
+      <SEO 
+        title="Pharmacy Credentialing & Enrollment Services" 
+        description="Explore our comprehensive credentialing services for pharmacists including provider enrollment, insurance network applications, and ongoing maintenance."
+        canonicalPath="/service"
+      />
       <Navbar />
       
       <div className="pt-24 pb-16">

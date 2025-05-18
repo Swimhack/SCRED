@@ -1,5 +1,6 @@
 
 import Navbar from "@/components/Navbar";
+import SEO from "@/components/SEO";
 
 const About = () => {
   return (
@@ -8,6 +9,11 @@ const About = () => {
       backgroundSize: "cover", 
       backgroundPosition: "center"
     }}>
+      <SEO 
+        title="About Our Pharmacy Credentialing Services" 
+        description="Learn about StreetCredRX's mission to streamline the credentialing process for pharmacists. Founded by pharmacists for pharmacists."
+        canonicalPath="/about"
+      />
       <Navbar />
       
       <div className="pt-24 pb-16">

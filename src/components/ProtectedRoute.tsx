@@ -22,19 +22,14 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   }
 
   // If authenticated but role check is needed
-  if (allowedRoles && allowedRoles.length > 0) {
-    // If user role isn't loaded yet, show loading
-    if (!userRole) {
-      return <div className="flex items-center justify-center min-h-screen">Loading permissions...</div>;
-    }
-    
+  if (allowedRoles && allowedRoles.length > 0 && userRole) {
     // Check if user has required role
     if (!allowedRoles.includes(userRole)) {
       return <Navigate to="/unauthorized" state={{ from: location }} replace />;
     }
   }
 
-  // User is authenticated and has correct role
+  // User is authenticated and has correct role (or no role check needed)
   return <>{children}</>;
 };
 

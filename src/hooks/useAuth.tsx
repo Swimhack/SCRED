@@ -22,12 +22,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<any | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileError, setProfileError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      (event, currentSession) => {
+        console.log("Auth state changed:", event);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         
@@ -62,26 +64,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      // Fetch user profile
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*, roles(name)')
-        .eq('id', userId)
-        .single();
-        
-      if (profileError) throw profileError;
+      // For now, provide a default profile if there's an error
+      // This prevents the app from crashing when profile fetching fails
       
-      if (profileData) {
-        setProfile(profileData);
-        setUserRole(profileData.roles?.name || null);
+      try {
+        // Attempt to fetch user profile
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*, roles(name)')
+          .eq('id', userId)
+          .single();
+          
+        if (profileError) throw profileError;
+        
+        if (profileData) {
+          setProfile(profileData);
+          setUserRole(profileData.roles?.name || "user"); // Default to user role if roles is missing
+        }
+      } catch (error: any) {
+        console.error("Error fetching user profile:", error.message);
+        
+        // Instead of failing, set a default profile
+        setProfileError(true);
+        
+        // Set default user role to prevent blocking access
+        setUserRole("user");
+        
+        // Create a basic profile with available user data
+        if (user) {
+          setProfile({
+            id: userId,
+            email: user.email,
+            first_name: user.user_metadata?.first_name || "",
+            last_name: user.user_metadata?.last_name || "",
+          });
+        }
+        
+        // Show non-blocking toast
+        toast({
+          title: "Profile Issue",
+          description: "Using default profile settings. Some features might be limited.",
+          variant: "warning",
+        });
       }
     } catch (error: any) {
-      console.error("Error fetching user profile:", error.message);
-      toast({
-        title: "Error",
-        description: "Failed to load user profile",
-        variant: "destructive",
-      });
+      console.error("Fatal auth error:", error.message);
+      setLoading(false);
     }
   };
 

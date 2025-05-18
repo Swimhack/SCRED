@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,7 +25,14 @@ import MyApplications from "./pages/MyApplications";
 import MyCredentials from "./pages/MyCredentials";
 import MyExpiring from "./pages/MyExpiring";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -55,35 +63,38 @@ const App = () => (
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
+              
+              {/* Admin only routes */}
               <Route path="/pharmacists" element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <DashboardLayout>
                     <Pharmacists />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
               <Route path="/pending" element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <DashboardLayout>
                     <Pending />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
               <Route path="/completed" element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <DashboardLayout>
                     <Completed />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
               <Route path="/expiring" element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <DashboardLayout>
                     <Expiring />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
-              {/* Pharmacist specific routes */}
+              
+              {/* Accessible to all authenticated users */}
               <Route path="/my-applications" element={
                 <ProtectedRoute>
                   <DashboardLayout>

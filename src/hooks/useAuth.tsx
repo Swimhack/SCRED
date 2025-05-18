@@ -100,11 +100,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         }
         
-        // Show non-blocking toast
+        // Show non-blocking toast - Fix the variant to use "default" instead of "warning"
         toast({
           title: "Profile Issue",
           description: "Using default profile settings. Some features might be limited.",
-          variant: "warning",
+          variant: "default", // Changed from "warning" to "default"
         });
       }
     } catch (error: any) {

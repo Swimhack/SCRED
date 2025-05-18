@@ -20,6 +20,9 @@ import Auth from "./pages/Auth";
 import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
+import MyApplications from "./pages/MyApplications";
+import MyCredentials from "./pages/MyCredentials";
+import MyExpiring from "./pages/MyExpiring";
 
 const queryClient = new QueryClient();
 
@@ -79,7 +82,28 @@ const App = () => (
                 </DashboardLayout>
               </ProtectedRoute>
             } />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            {/* Pharmacist specific routes */}
+            <Route path="/my-applications" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <MyApplications />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-credentials" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <MyCredentials />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-expiring" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <MyExpiring />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

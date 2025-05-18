@@ -3,19 +3,41 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-
-const menuItems = [
-  { icon: Home, label: "Dashboard", path: "/dashboard" },
-  { icon: Users, label: "Total Pharmacists", path: "/pharmacists" },
-  { icon: Clock, label: "Pending Requests", path: "/pending" },
-  { icon: CheckCircle, label: "Completed", path: "/completed" },
-  { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
-];
+import { useAuth } from "@/hooks/useAuth";
 
 const PharmacistSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const [activePath, setActivePath] = useState("/dashboard");
+  const { userRole } = useAuth();
+
+  // Define menu items based on user role
+  const getMenuItems = () => {
+    const commonItems = [
+      { icon: Home, label: "Dashboard", path: "/dashboard" },
+    ];
+
+    const adminItems = [
+      { icon: Users, label: "Total Pharmacists", path: "/pharmacists" },
+      { icon: Clock, label: "Pending Requests", path: "/pending" },
+      { icon: CheckCircle, label: "Completed", path: "/completed" },
+      { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
+    ];
+
+    const pharmacistItems = [
+      { icon: Clock, label: "My Applications", path: "/my-applications" },
+      { icon: CheckCircle, label: "My Credentials", path: "/my-credentials" },
+      { icon: AlertTriangle, label: "Expiring Soon", path: "/my-expiring" },
+    ];
+
+    if (userRole === "admin") {
+      return [...commonItems, ...adminItems];
+    } else {
+      return [...commonItems, ...pharmacistItems];
+    }
+  };
+
+  const menuItems = getMenuItems();
 
   // Update active path based on current location
   useEffect(() => {

@@ -1,12 +1,16 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="relative" style={{ 
+      backgroundImage: "url('/lovable-uploads/b0b5c3c7-14d1-4e71-881c-a520bcdc11c8.png')", 
+      backgroundSize: "cover", 
+      backgroundPosition: "center"
+    }}>
+      <Navbar />
+      <HeroSection />
     </div>
   );
 };

@@ -1,6 +1,8 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import StatusBadge from "./StatusBadge";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 interface Pharmacist {
   id: string;
@@ -74,10 +76,47 @@ const pharmacists: Pharmacist[] = [
 ];
 
 const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Number of items to show per page
+  
   // Filter pharmacists based on the provided status if any
   const filteredPharmacists = filterStatus
     ? pharmacists.filter(pharmacist => pharmacist.status === filterStatus)
     : pharmacists;
+    
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredPharmacists.length / itemsPerPage);
+  
+  // Get current pharmacists
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPharmacists = filteredPharmacists.slice(indexOfFirstItem, indexOfLastItem);
+  
+  // Change page
+  const paginate = (pageNumber: number) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+  
+  const handleViewDocument = (pharmacistId: string, name: string) => {
+    toast({
+      title: "Document Viewer",
+      description: `Opening documents for ${name}`,
+      duration: 3000,
+    });
+    // In a real app, this would open the document viewer or download the document
+  };
+  
+  const handleEditPharmacist = (pharmacistId: string, name: string) => {
+    toast({
+      title: "Edit Pharmacist",
+      description: `Editing profile for ${name}`,
+      duration: 3000,
+    });
+    // In a real app, this would open the edit form
+  };
 
   return (
     <div className="bg-white rounded-lg border shadow-sm">
@@ -99,8 +138,8 @@ const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {filteredPharmacists.length > 0 ? (
-              filteredPharmacists.map((pharmacist) => (
+            {currentPharmacists.length > 0 ? (
+              currentPharmacists.map((pharmacist) => (
                 <tr key={pharmacist.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -115,10 +154,20 @@ const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
                   </td>
                   <td className="px-6 py-4 text-gray-600">{pharmacist.submitted}</td>
                   <td className="px-6 py-4">
-                    <a href="#" className="text-blue-600 hover:underline">View</a>
+                    <button 
+                      className="text-blue-600 hover:underline"
+                      onClick={() => handleViewDocument(pharmacist.id, pharmacist.name)}
+                    >
+                      View
+                    </button>
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-gray-600 hover:bg-gray-100 p-2 rounded">Edit</button>
+                    <button 
+                      className="text-gray-600 hover:bg-gray-100 p-2 rounded"
+                      onClick={() => handleEditPharmacist(pharmacist.id, pharmacist.name)}
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))
@@ -135,16 +184,36 @@ const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
       
       <div className="px-6 py-4 border-t flex items-center justify-between">
         <span className="text-sm text-gray-500">
-          Showing {filteredPharmacists.length} records
+          Showing {currentPharmacists.length} of {filteredPharmacists.length} records
         </span>
         <div className="flex items-center gap-2">
-          <button className="p-2 border rounded hover:bg-gray-50">
+          <button 
+            className="p-2 border rounded hover:bg-gray-50"
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
             <ChevronLeft size={18} />
           </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded bg-brand-primary font-medium">1</button>
-          <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-50">2</button>
-          <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-50">3</button>
-          <button className="p-2 border rounded hover:bg-gray-50">
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+            <button 
+              key={number}
+              onClick={() => paginate(number)}
+              className={`w-8 h-8 flex items-center justify-center rounded ${
+                currentPage === number 
+                  ? "bg-brand-primary font-medium" 
+                  : "hover:bg-gray-50"
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          
+          <button 
+            className="p-2 border rounded hover:bg-gray-50"
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
             <ChevronRight size={18} />
           </button>
         </div>

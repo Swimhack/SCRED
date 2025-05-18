@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 
 interface Credential {
@@ -23,6 +23,7 @@ interface Credential {
 }
 
 const MyCredentials = () => {
+  const navigate = useNavigate();
   const [credentials] = useState<Credential[]>([
     {
       id: "1",
@@ -52,23 +53,34 @@ const MyCredentials = () => {
 
   const handleRenewCredential = () => {
     toast({
-      title: "Renewal Process Started",
-      description: "You will be redirected to complete your renewal application.",
+      title: "New Credential Form",
+      description: "Starting a new credential application form.",
       duration: 3000,
     });
-    // In a real app, we would redirect to the renewal form
-    // or start the renewal process
+    navigate("/pharmacist-form");
+  };
+  
+  const handleViewCredential = (id: string, name: string) => {
+    toast({
+      title: "Credential Details",
+      description: `Viewing details for ${name}`,
+      duration: 3000,
+    });
+    // In a real app, this would navigate to the credential details page with the specific ID
+    navigate(`/pharmacist-form?id=${id}&view=true&name=${encodeURIComponent(name)}`);
   };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">My Credentials</h1>
-        <Link to="/pharmacist-form">
-          <Button variant="default" className="bg-brand-primary text-gray-900 hover:bg-yellow-300">
-            Renew Credential
-          </Button>
-        </Link>
+        <Button 
+          variant="default" 
+          className="bg-brand-primary text-gray-900 hover:bg-yellow-300"
+          onClick={handleRenewCredential}
+        >
+          New Credential
+        </Button>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -131,11 +143,13 @@ const MyCredentials = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/pharmacist-form?id=${credential.id}`}>
-                      <Button variant="link" className="text-blue-600 hover:underline p-0">
-                        View
-                      </Button>
-                    </Link>
+                    <Button 
+                      variant="link" 
+                      className="text-blue-600 hover:underline p-0"
+                      onClick={() => handleViewCredential(credential.id, credential.name)}
+                    >
+                      View
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

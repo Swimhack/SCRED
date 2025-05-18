@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AlertTriangle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 
@@ -22,6 +22,7 @@ interface Credential {
 }
 
 const MyExpiring = () => {
+  const navigate = useNavigate();
   const [expiringCredentials] = useState<Credential[]>([
     {
       id: "1",
@@ -39,13 +40,14 @@ const MyExpiring = () => {
     }
   ]);
 
-  const handleRenewNow = (id: string) => {
+  const handleRenewNow = (id: string, name: string) => {
     toast({
       title: "Renewal Process Started",
-      description: `Starting renewal process for credential #${id}`,
+      description: `Starting renewal process for ${name}`,
       duration: 3000,
     });
-    // In a real app, this would redirect to the renewal form
+    // Navigate to the renewal form with pre-filled data
+    navigate(`/pharmacist-form?id=${id}&renew=true&name=${encodeURIComponent(name)}`);
   };
 
   return (
@@ -90,14 +92,13 @@ const MyExpiring = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/pharmacist-form?id=${credential.id}&renew=true`}>
-                      <Button 
-                        className="bg-brand-primary text-gray-900 hover:bg-yellow-300 transition-colors"
-                        size="sm"
-                      >
-                        Renew Now
-                      </Button>
-                    </Link>
+                    <Button 
+                      className="bg-brand-primary text-gray-900 hover:bg-yellow-300 transition-colors"
+                      size="sm"
+                      onClick={() => handleRenewNow(credential.id, credential.name)}
+                    >
+                      Renew Now
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -46,13 +46,13 @@ const MyApplications = () => {
     },
   ]);
 
-  const handleViewApplication = (id: string) => {
+  const handleViewApplication = (id: string, name: string) => {
     toast({
       title: "Application Details",
-      description: `Viewing application #${id}`,
+      description: `Viewing ${name} (ID: ${id})`,
       duration: 3000,
     });
-    // In a real app, this would load the application details
+    // In a real app, this would navigate to the application details page with the specific ID
   };
 
   return (
@@ -94,7 +94,7 @@ const MyApplications = () => {
                       <Button 
                         variant="link" 
                         className="text-blue-600 hover:underline p-0"
-                        onClick={() => handleViewApplication(app.id)}
+                        onClick={() => handleViewApplication(app.id, app.name)}
                       >
                         View
                       </Button>

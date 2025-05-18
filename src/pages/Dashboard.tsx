@@ -4,11 +4,13 @@ import StatCard from "@/components/StatCard";
 import PharmacistTable from "@/components/PharmacistTable";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
   const { userRole, profile } = useAuth();
+  const navigate = useNavigate();
   const [recentActivity, setRecentActivity] = useState([]);
 
   // This would be replaced with actual data from Supabase
@@ -21,33 +23,68 @@ const Dashboard = () => {
     ]);
   }, []);
 
+  const handleNewApplication = () => {
+    toast({
+      title: "New Application",
+      description: "Starting a new application form",
+      duration: 3000,
+    });
+    navigate("/pharmacist-form");
+  };
+
+  const handleViewCredentials = () => {
+    toast({
+      title: "My Credentials",
+      description: "Navigating to your credentials",
+      duration: 3000,
+    });
+    navigate("/my-credentials");
+  };
+
+  const handleCheckExpiring = () => {
+    toast({
+      title: "Expiring Credentials",
+      description: "Checking your expiring credentials",
+      duration: 3000,
+    });
+    navigate("/my-expiring");
+  };
+
   const AdminDashboard = () => (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <StatCard 
-          title="Total Pharmacists" 
-          value="1,584" 
-          icon={<Users size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-yellow"
-        />
-        <StatCard 
-          title="Pending Requests" 
-          value="42" 
-          icon={<Clock size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-blue"
-        />
-        <StatCard 
-          title="Completed" 
-          value="1,387" 
-          icon={<CheckCircle size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-green"
-        />
-        <StatCard 
-          title="Expiring Soon" 
-          value="23" 
-          icon={<AlertTriangle size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-red"
-        />
+        <Link to="/pharmacists">
+          <StatCard 
+            title="Total Pharmacists" 
+            value="1,584" 
+            icon={<Users size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-yellow"
+          />
+        </Link>
+        <Link to="/pending">
+          <StatCard 
+            title="Pending Requests" 
+            value="42" 
+            icon={<Clock size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-blue"
+          />
+        </Link>
+        <Link to="/completed">
+          <StatCard 
+            title="Completed" 
+            value="1,387" 
+            icon={<CheckCircle size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-green"
+          />
+        </Link>
+        <Link to="/expiring">
+          <StatCard 
+            title="Expiring Soon" 
+            value="23" 
+            icon={<AlertTriangle size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-red"
+          />
+        </Link>
       </div>
       
       <PharmacistTable />
@@ -57,24 +94,30 @@ const Dashboard = () => {
   const PharmacistDashboard = () => (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <StatCard 
-          title="Active Credentials" 
-          value="3" 
-          icon={<CheckCircle size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-green"
-        />
-        <StatCard 
-          title="Pending Applications" 
-          value="1" 
-          icon={<Clock size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-blue"
-        />
-        <StatCard 
-          title="Expiring Soon" 
-          value="1" 
-          icon={<AlertTriangle size={24} className="text-gray-700" />} 
-          bgColor="bg-brand-red"
-        />
+        <Link to="/my-credentials">
+          <StatCard 
+            title="Active Credentials" 
+            value="3" 
+            icon={<CheckCircle size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-green"
+          />
+        </Link>
+        <Link to="/my-applications">
+          <StatCard 
+            title="Pending Applications" 
+            value="1" 
+            icon={<Clock size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-blue"
+          />
+        </Link>
+        <Link to="/my-expiring">
+          <StatCard 
+            title="Expiring Soon" 
+            value="1" 
+            icon={<AlertTriangle size={24} className="text-gray-700" />} 
+            bgColor="bg-brand-red"
+          />
+        </Link>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -110,15 +153,15 @@ const Dashboard = () => {
             <h2 className="text-xl font-semibold">Quick Actions</h2>
           </div>
           <div className="p-6 space-y-4">
-            <Link to="/pharmacist-form">
-              <Button className="w-full">Submit New Application</Button>
-            </Link>
-            <Link to="/my-credentials">
-              <Button variant="outline" className="w-full">View My Credentials</Button>
-            </Link>
-            <Link to="/my-expiring">
-              <Button variant="outline" className="w-full">Check Expiring Credentials</Button>
-            </Link>
+            <Button className="w-full" onClick={handleNewApplication}>
+              Submit New Application
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleViewCredentials}>
+              View My Credentials
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleCheckExpiring}>
+              Check Expiring Credentials
+            </Button>
           </div>
         </div>
       </div>

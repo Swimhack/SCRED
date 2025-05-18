@@ -23,7 +23,7 @@ const Navbar = () => {
               <Link to="/contact" className="text-white hover:text-brand-primary transition-colors">Contact</Link>
             </div>
             
-            <Link to="/dashboard" className="bg-brand-primary text-gray-900 px-6 py-2 rounded-full font-medium hover:bg-yellow-300 transition-colors">
+            <Link to="/auth" className="bg-brand-primary text-gray-900 px-6 py-2 rounded-full font-medium hover:bg-yellow-300 transition-colors">
               Log In
             </Link>
           </div>
@@ -44,7 +44,7 @@ const Navbar = () => {
             <Link to="/about" className="text-white py-2 hover:text-brand-primary">About</Link>
             <Link to="/service" className="text-white py-2 hover:text-brand-primary">Service</Link>
             <Link to="/contact" className="text-white py-2 hover:text-brand-primary">Contact</Link>
-            <Link to="/dashboard" className="bg-brand-primary text-gray-900 py-2 px-4 rounded-lg text-center mt-2">
+            <Link to="/auth" className="bg-brand-primary text-gray-900 py-2 px-4 rounded-lg text-center mt-2">
               Log In
             </Link>
           </div>

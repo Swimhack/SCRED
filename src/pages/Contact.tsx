@@ -70,7 +70,7 @@ const Contact = () => {
                     <Mail className="text-brand-primary mr-4 h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
                       <h3 className="font-semibold text-lg">Email</h3>
-                      <p className="text-gray-300">info@pharmcred.com</p>
+                      <p className="text-gray-300">info@streetcredrx.com</p>
                     </div>
                   </div>
                   

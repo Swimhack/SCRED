@@ -11,8 +11,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-white text-2xl font-bold flex items-center gap-2">
-            <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-gray-900">P</div>
-            PharmCred
+            <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-gray-900">S</div>
+            StreetCredRx
           </Link>
           
           <div className="hidden md:flex items-center gap-8">

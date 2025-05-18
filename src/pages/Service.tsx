@@ -53,7 +53,7 @@ const Service = () => {
             <h1 className="text-4xl md:text-5xl font-bold mb-8 text-brand-primary">Our Services</h1>
             
             <p className="text-xl mb-12">
-              PharmCred offers comprehensive credentialing and enrollment services designed specifically 
+              StreetCredRX offers comprehensive credentialing and enrollment services designed specifically 
               for pharmacists looking to bill for clinical services.
             </p>
             

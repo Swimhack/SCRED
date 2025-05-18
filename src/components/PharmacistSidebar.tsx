@@ -29,8 +29,8 @@ const PharmacistSidebar = () => {
     )}>
       <div className="p-4 flex items-center justify-between border-b">
         <div className={cn("flex items-center", collapsed ? "justify-center w-full" : "")}>
-          {!collapsed && <h2 className="font-bold text-xl">PharmCred</h2>}
-          {collapsed && <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center">P</div>}
+          {!collapsed && <h2 className="font-bold text-xl">StreetCredRX</h2>}
+          {collapsed && <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center">S</div>}
         </div>
         <button 
           onClick={() => setCollapsed(!collapsed)}
@@ -60,7 +60,7 @@ const PharmacistSidebar = () => {
       <div className="p-4 border-t">
         {!collapsed && (
           <div className="text-xs text-gray-500">
-            PharmCred Admin v1.0
+            StreetCredRX Admin v1.0
           </div>
         )}
       </div>

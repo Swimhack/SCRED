@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, AlertTriangle, Clock } from "lucide-react";
 
 interface Credential {
   id: string;

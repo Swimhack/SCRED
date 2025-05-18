@@ -1,7 +1,7 @@
 
 import { cn } from "@/lib/utils";
 
-type StatusType = "In Progress" | "Pending" | "Completed" | "Expiring Soon";
+type StatusType = "In Progress" | "Pending" | "Completed" | "Rejected" | "Expiring Soon";
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -16,6 +16,8 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
         return "bg-yellow-100 text-status-yellow";
       case "Completed":
         return "bg-green-100 text-status-green";
+      case "Rejected":
+        return "bg-red-100 text-status-red";
       case "Expiring Soon":
         return "bg-red-100 text-status-red";
       default:

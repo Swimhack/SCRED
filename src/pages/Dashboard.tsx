@@ -3,6 +3,7 @@ import { Users, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import PharmacistTable from "@/components/PharmacistTable";
 import { useAuth } from "@/hooks/useAuth";
+import { usePharmacistData } from "@/hooks/usePharmacistData";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import SEO from "@/components/SEO";
 
 const Dashboard = () => {
   const { userRole, profile } = useAuth();
+  const { statistics } = usePharmacistData();
   const navigate = useNavigate();
   const [recentActivity, setRecentActivity] = useState([]);
 
@@ -57,7 +59,7 @@ const Dashboard = () => {
         <Link to="/pharmacists">
           <StatCard 
             title="Total Pharmacists" 
-            value="1,584" 
+            value={statistics.total}
             icon={<Users size={24} className="text-gray-700" />} 
             bgColor="bg-brand-yellow"
           />
@@ -65,7 +67,7 @@ const Dashboard = () => {
         <Link to="/pending">
           <StatCard 
             title="Pending Requests" 
-            value="42" 
+            value={statistics.pending}
             icon={<Clock size={24} className="text-gray-700" />} 
             bgColor="bg-brand-blue"
           />
@@ -73,7 +75,7 @@ const Dashboard = () => {
         <Link to="/completed">
           <StatCard 
             title="Completed" 
-            value="1,387" 
+            value={statistics.completed}
             icon={<CheckCircle size={24} className="text-gray-700" />} 
             bgColor="bg-brand-green"
           />
@@ -81,7 +83,7 @@ const Dashboard = () => {
         <Link to="/expiring">
           <StatCard 
             title="Expiring Soon" 
-            value="23" 
+            value={statistics.expiring}
             icon={<AlertTriangle size={24} className="text-gray-700" />} 
             bgColor="bg-brand-red"
           />

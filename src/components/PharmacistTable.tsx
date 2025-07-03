@@ -1,180 +1,134 @@
-
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-
-interface Pharmacist {
-  id: string;
-  name: string;
-  status: "In Progress" | "Pending" | "Completed" | "Expiring Soon";
-  submitted: string;
-  avatar: string;
-}
+import { usePharmacistData, Pharmacist } from "@/hooks/usePharmacistData";
 
 interface PharmacistTableProps {
-  filterStatus?: "In Progress" | "Pending" | "Completed" | "Expiring Soon";
+  filterStatus?: Pharmacist["status"];
 }
 
-const pharmacists: Pharmacist[] = [
-  {
-    id: "1",
-    name: "Dr. Sarah Johnson",
-    status: "In Progress",
-    submitted: "May 15, 2025",
-    avatar: "SJ",
-  },
-  {
-    id: "2",
-    name: "Dr. Michael Chen",
-    status: "Completed",
-    submitted: "May 12, 2025",
-    avatar: "MC",
-  },
-  {
-    id: "3",
-    name: "Dr. Jessica Smith",
-    status: "Pending",
-    submitted: "May 10, 2025",
-    avatar: "JS",
-  },
-  {
-    id: "4",
-    name: "Dr. Robert Williams",
-    status: "Expiring Soon",
-    submitted: "May 5, 2025",
-    avatar: "RW",
-  },
-  {
-    id: "5",
-    name: "Dr. Emily Parker",
-    status: "Completed",
-    submitted: "May 1, 2025",
-    avatar: "EP",
-  },
-  {
-    id: "6",
-    name: "Dr. David Lee",
-    status: "Completed",
-    submitted: "Apr 28, 2025",
-    avatar: "DL",
-  },
-  {
-    id: "7",
-    name: "Dr. Lisa Wong",
-    status: "In Progress",
-    submitted: "Apr 25, 2025",
-    avatar: "LW",
-  },
-  {
-    id: "8",
-    name: "Dr. James Taylor",
-    status: "Pending",
-    submitted: "Apr 20, 2025",
-    avatar: "JT",
-  },
-];
-
 const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
-  // State for pagination
+  const { getPharmacistsByStatus, updatePharmacistStatus } = usePharmacistData();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Number of items to show per page
+  const itemsPerPage = 8;
+
+  // Get filtered pharmacists based on status
+  const allPharmacists = getPharmacistsByStatus(filterStatus);
   
-  // Filter pharmacists based on the provided status if any
-  const filteredPharmacists = filterStatus
-    ? pharmacists.filter(pharmacist => pharmacist.status === filterStatus)
-    : pharmacists;
-    
-  // Calculate total pages
-  const totalPages = Math.ceil(filteredPharmacists.length / itemsPerPage);
-  
-  // Get current pharmacists
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPharmacists = filteredPharmacists.slice(indexOfFirstItem, indexOfLastItem);
-  
-  // Change page
+  // Pagination logic
+  const totalPages = Math.ceil(allPharmacists.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPharmacists = allPharmacists.slice(startIndex, endIndex);
+
   const paginate = (pageNumber: number) => {
-    if (pageNumber > 0 && pageNumber <= totalPages) {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
   };
-  
-  const handleViewDocument = (pharmacistId: string, name: string) => {
+
+  const handleViewPharmacist = (pharmacist: Pharmacist) => {
     toast({
-      title: "Document Viewer",
-      description: `Opening documents for ${name}`,
+      title: "Pharmacist Details",
+      description: `Viewing profile for ${pharmacist.name}`,
       duration: 3000,
     });
-    // In a real app, this would open the document viewer or download the document
   };
-  
-  const handleEditPharmacist = (pharmacistId: string, name: string) => {
+
+  const handleStatusChange = (pharmacistId: string, newStatus: Pharmacist["status"]) => {
+    updatePharmacistStatus(pharmacistId, newStatus);
     toast({
-      title: "Edit Pharmacist",
-      description: `Editing profile for ${name}`,
+      title: "Status Updated",
+      description: `Pharmacist status changed to ${newStatus}`,
       duration: 3000,
     });
-    // In a real app, this would open the edit form
+  };
+
+  const handleViewDocument = (pharmacist: Pharmacist) => {
+    toast({
+      title: "Document Access",
+      description: `Opening documents for ${pharmacist.name}`,
+      duration: 3000,
+    });
   };
 
   return (
     <div className="bg-white rounded-lg border shadow-sm">
-      <div className="p-6 border-b">
-        <h2 className="text-xl font-semibold">
-          {filterStatus ? `${filterStatus} Pharmacist Applications` : "Recent Pharmacist Applications"}
-        </h2>
+      <div className="p-6 border-b flex justify-between items-center">
+        <div>
+          <h2 className="text-xl font-semibold">
+            {filterStatus ? `${filterStatus} Pharmacists` : 'All Pharmacists'}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            {allPharmacists.length} total {filterStatus ? filterStatus.toLowerCase() : ''} pharmacists
+          </p>
+        </div>
       </div>
       
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="text-left text-sm font-medium text-gray-500 border-b">
-              <th className="px-6 py-3">NAME</th>
-              <th className="px-6 py-3">STATUS</th>
-              <th className="px-6 py-3">SUBMITTED</th>
-              <th className="px-6 py-3">DOCUMENT</th>
-              <th className="px-6 py-3">ACTIONS</th>
+            <tr className="border-b">
+              <th className="text-left p-4 font-medium text-muted-foreground">PHARMACIST</th>
+              <th className="text-left p-4 font-medium text-muted-foreground">STATUS</th>
+              <th className="text-left p-4 font-medium text-muted-foreground">SUBMITTED</th>
+              <th className="text-left p-4 font-medium text-muted-foreground">LICENSE</th>
+              <th className="text-left p-4 font-medium text-muted-foreground">ACTIONS</th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {currentPharmacists.length > 0 ? (
               currentPharmacists.map((pharmacist) => (
-                <tr key={pharmacist.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                <tr key={pharmacist.id} className="hover:bg-accent/50 transition-colors">
+                  <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-primary/40 flex items-center justify-center text-sm font-semibold text-brand-primary border">
                         {pharmacist.avatar}
                       </div>
-                      <span className="font-medium">{pharmacist.name}</span>
+                      <div>
+                        <div className="font-medium text-foreground">{pharmacist.name}</div>
+                        {pharmacist.email && (
+                          <div className="text-sm text-muted-foreground">{pharmacist.email}</div>
+                        )}
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="p-4">
                     <StatusBadge status={pharmacist.status} />
                   </td>
-                  <td className="px-6 py-4 text-gray-600">{pharmacist.submitted}</td>
-                  <td className="px-6 py-4">
-                    <button 
-                      className="text-blue-600 hover:underline"
-                      onClick={() => handleViewDocument(pharmacist.id, pharmacist.name)}
-                    >
-                      View
-                    </button>
+                  <td className="p-4 text-muted-foreground">{pharmacist.submitted}</td>
+                  <td className="p-4">
+                    <div className="text-sm">
+                      <div className="font-medium">{pharmacist.license || "N/A"}</div>
+                      {pharmacist.npi && (
+                        <div className="text-muted-foreground">NPI: {pharmacist.npi}</div>
+                      )}
+                    </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <button 
-                      className="text-gray-600 hover:bg-gray-100 p-2 rounded"
-                      onClick={() => handleEditPharmacist(pharmacist.id, pharmacist.name)}
-                    >
-                      Edit
-                    </button>
+                  <td className="p-4">
+                    <div className="flex items-center gap-2">
+                      <button 
+                        className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
+                        onClick={() => handleViewPharmacist(pharmacist)}
+                      >
+                        View
+                      </button>
+                      <span className="text-muted-foreground">•</span>
+                      <button 
+                        className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
+                        onClick={() => handleViewDocument(pharmacist)}
+                      >
+                        Documents
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                  No pharmacists found with {filterStatus} status.
+                <td colSpan={5} className="p-8 text-center text-muted-foreground">
+                  No pharmacists found{filterStatus ? ` with ${filterStatus} status` : ''}.
                 </td>
               </tr>
             )}
@@ -182,42 +136,58 @@ const PharmacistTable = ({ filterStatus }: PharmacistTableProps) => {
         </table>
       </div>
       
-      <div className="px-6 py-4 border-t flex items-center justify-between">
-        <span className="text-sm text-gray-500">
-          Showing {currentPharmacists.length} of {filteredPharmacists.length} records
-        </span>
-        <div className="flex items-center gap-2">
-          <button 
-            className="p-2 border rounded hover:bg-gray-50"
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft size={18} />
-          </button>
-          
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="px-6 py-4 border-t flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            Showing {startIndex + 1}-{Math.min(endIndex, allPharmacists.length)} of {allPharmacists.length} results
+          </div>
+          <div className="flex items-center gap-2">
             <button 
-              key={number}
-              onClick={() => paginate(number)}
-              className={`w-8 h-8 flex items-center justify-center rounded ${
-                currentPage === number 
-                  ? "bg-brand-primary font-medium" 
-                  : "hover:bg-gray-50"
-              }`}
+              className="p-2 border rounded hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
             >
-              {number}
+              <ChevronLeft size={18} />
             </button>
-          ))}
-          
-          <button 
-            className="p-2 border rounded hover:bg-gray-50"
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight size={18} />
-          </button>
+            
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNumber;
+              if (totalPages <= 5) {
+                pageNumber = i + 1;
+              } else if (currentPage <= 3) {
+                pageNumber = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNumber = totalPages - 4 + i;
+              } else {
+                pageNumber = currentPage - 2 + i;
+              }
+              
+              return (
+                <button 
+                  key={pageNumber}
+                  onClick={() => paginate(pageNumber)}
+                  className={`w-8 h-8 flex items-center justify-center rounded transition-colors ${
+                    currentPage === pageNumber 
+                      ? "bg-brand-primary text-primary-foreground font-medium shadow-sm" 
+                      : "hover:bg-accent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            })}
+            
+            <button 
+              className="p-2 border rounded hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -64,18 +64,19 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				brand: {
-          yellow: '#FEF7CD',
-          blue: '#D3E4FD',
-          green: '#F2FCE2',
-          red: '#FFDEE2',
-          primary: '#FFEC59'
-        },
-        status: {
-          blue: '#3b82f6',
-          yellow: '#f59e0b',
-          green: '#10b981',
-          red: '#ef4444',
-        }
+					DEFAULT: 'hsl(var(--brand-primary))',
+					primary: 'hsl(var(--brand-primary))',
+					yellow: 'hsl(var(--brand-yellow))',
+					blue: 'hsl(var(--brand-blue))',
+					green: 'hsl(var(--brand-green))',
+					red: 'hsl(var(--brand-red))'
+				},
+				status: {
+					blue: 'hsl(var(--status-blue))',
+					yellow: 'hsl(var(--status-yellow))',
+					green: 'hsl(var(--status-green))',
+					red: 'hsl(var(--status-red))'
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -17,7 +17,7 @@ interface ProfileFormValues {
 }
 
 const Profile = () => {
-  const { user, profile, userRole } = useAuth();
+  const { user, profile, userRole, refreshProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   
@@ -51,8 +51,8 @@ const Profile = () => {
         description: "Your profile has been updated successfully."
       });
       
-      // Redirect back to dashboard
-      navigate("/dashboard");
+      // Refresh the profile data in the auth context
+      await refreshProfile(user.id);
     } catch (error: any) {
       toast({
         title: "Error",

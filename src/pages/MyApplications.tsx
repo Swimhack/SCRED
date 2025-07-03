@@ -69,7 +69,7 @@ const MyApplications = () => {
         <div className="p-6 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">All Applications</h2>
           <Link to="/pharmacist-form">
-            <Button className="bg-brand-primary text-gray-900 hover:bg-yellow-300 transition-colors">
+            <Button className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90">
               New Application
             </Button>
           </Link>

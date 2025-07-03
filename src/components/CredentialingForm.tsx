@@ -49,7 +49,7 @@ const CredentialingForm = () => {
             <div className="flex justify-end mt-6">
               <Button 
                 onClick={() => setCurrentStep("education")}
-                className="bg-brand-primary hover:bg-yellow-400 text-black"
+                className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90"
               >
                 Next Step <ChevronRight size={16} className="ml-1" />
               </Button>
@@ -91,7 +91,7 @@ const CredentialingForm = () => {
             <div className="flex justify-end mt-6">
               <Button 
                 onClick={() => setCurrentStep("licenses")}
-                className="bg-brand-primary hover:bg-yellow-400 text-black"
+                className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90"
               >
                 Next Step <ChevronRight size={16} className="ml-1" />
               </Button>
@@ -136,7 +136,7 @@ const CredentialingForm = () => {
             <div className="flex justify-end mt-6">
               <Button 
                 onClick={() => setCurrentStep("practice")}
-                className="bg-brand-primary hover:bg-yellow-400 text-black"
+                className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90"
               >
                 Next Step <ChevronRight size={16} className="ml-1" />
               </Button>
@@ -185,7 +185,7 @@ const CredentialingForm = () => {
             <div className="flex justify-end mt-6">
               <Button 
                 onClick={() => alert("Form submitted successfully!")}
-                className="bg-brand-primary hover:bg-yellow-400 text-black"
+                className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90"
               >
                 Submit Application
               </Button>

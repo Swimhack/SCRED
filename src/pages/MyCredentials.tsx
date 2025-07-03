@@ -81,7 +81,7 @@ const MyCredentials = () => {
         <h1 className="text-2xl font-semibold">My Credentials</h1>
         <Button 
           variant="default" 
-          className="bg-brand-primary text-gray-900 hover:bg-yellow-300"
+          className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90"
           onClick={handleRenewCredential}
         >
           New Credential

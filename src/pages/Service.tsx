@@ -85,7 +85,7 @@ const Service = () => {
               <p className="text-lg mb-6">
                 Contact us today to learn how we can help streamline your credentialing process.
               </p>
-              <a href="/contact" className="bg-brand-primary text-gray-900 px-8 py-3 rounded-full font-medium hover:bg-yellow-300 transition-colors inline-block">
+              <a href="/contact" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-colors inline-block">
                 Contact Us
               </a>
             </div>

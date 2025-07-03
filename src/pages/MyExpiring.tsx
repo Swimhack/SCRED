@@ -99,7 +99,7 @@ const MyExpiring = () => {
                   </TableCell>
                   <TableCell>
                     <Button 
-                      className="bg-brand-primary text-gray-900 hover:bg-yellow-300 transition-colors"
+                      className="bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 transition-colors"
                       size="sm"
                       onClick={() => handleRenewNow(credential.id, credential.name)}
                     >

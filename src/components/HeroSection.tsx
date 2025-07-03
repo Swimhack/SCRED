@@ -18,7 +18,7 @@ const HeroSection = () => {
             before they can do so, they must complete a complex credentialing process.
           </p>
           
-          <Link to="/contact" className="bg-brand-primary text-gray-900 px-8 py-3 rounded-full font-medium hover:bg-yellow-300 transition-colors inline-block">
+          <Link to="/contact" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-colors inline-block">
             Contact Us
           </Link>
           

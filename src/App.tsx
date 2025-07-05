@@ -25,6 +25,8 @@ import MyApplications from "./pages/MyApplications";
 import MyCredentials from "./pages/MyCredentials";
 import MyExpiring from "./pages/MyExpiring";
 import Profile from "./pages/Profile";
+import LogsViewer from "./pages/LogsViewer";
+import { useAppLogger } from "./hooks/useAppLogger";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +37,106 @@ const queryClient = new QueryClient({
   },
 });
 
+const AppContent = () => {
+  useAppLogger(); // Initialize logging
+  return (
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/service" element={<Service />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Dashboard />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/pharmacist-form" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <PharmacistForm />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      
+      {/* Profile page */}
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Profile />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      
+      {/* Admin only routes */}
+      <Route path="/pharmacists" element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <DashboardLayout>
+            <Pharmacists />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/pending" element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <DashboardLayout>
+            <Pending />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/completed" element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <DashboardLayout>
+            <Completed />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/expiring" element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <DashboardLayout>
+            <Expiring />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      
+      {/* Accessible to all authenticated users */}
+      <Route path="/my-applications" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <MyApplications />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/my-credentials" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <MyCredentials />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+              <Route path="/my-expiring" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <MyExpiring />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              {/* Admin-only logs viewer */}
+              <Route path="/logs" element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <DashboardLayout>
+                    <LogsViewer />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -43,91 +145,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AuthProvider>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/service" element={<Service />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/unauthorized" element={<Unauthorized />} />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <Dashboard />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/pharmacist-form" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <PharmacistForm />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              
-              {/* Profile page */}
-              <Route path="/profile" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <Profile />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              
-              {/* Admin only routes */}
-              <Route path="/pharmacists" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <DashboardLayout>
-                    <Pharmacists />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/pending" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <DashboardLayout>
-                    <Pending />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/completed" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <DashboardLayout>
-                    <Completed />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/expiring" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <DashboardLayout>
-                    <Expiring />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              
-              {/* Accessible to all authenticated users */}
-              <Route path="/my-applications" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <MyApplications />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/my-credentials" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <MyCredentials />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/my-expiring" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <MyExpiring />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AppContent />
           </AuthProvider>
         </BrowserRouter>
       </HelmetProvider>

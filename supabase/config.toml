@@ -1,1 +1,4 @@
 project_id = "tvqyozyjqcswojsbduzw"
+
+[functions.get-logs]
+verify_jwt = true

@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      application_logs: {
+        Row: {
+          component: string | null
+          created_at: string
+          error_stack: string | null
+          id: string
+          ip_address: unknown | null
+          level: string
+          message: string
+          metadata: Json | null
+          request_id: string | null
+          route: string | null
+          session_id: string | null
+          timestamp: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          component?: string | null
+          created_at?: string
+          error_stack?: string | null
+          id?: string
+          ip_address?: unknown | null
+          level: string
+          message: string
+          metadata?: Json | null
+          request_id?: string | null
+          route?: string | null
+          session_id?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          component?: string | null
+          created_at?: string
+          error_stack?: string | null
+          id?: string
+          ip_address?: unknown | null
+          level?: string
+          message?: string
+          metadata?: Json | null
+          request_id?: string | null
+          route?: string | null
+          session_id?: string | null
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -67,6 +118,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_current_user_role_id: {
         Args: Record<PropertyKey, never>
         Returns: number

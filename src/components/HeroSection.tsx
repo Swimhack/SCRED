@@ -1,12 +1,18 @@
 
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import pharmaceuticalLabImage from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center">
-      {/* Single overlay layer to prevent text duplication */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 z-10"></div>
+    <section 
+      className="relative min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url(${pharmaceuticalLabImage})`
+      }}
+    >
+      {/* Dark overlay to ensure text visibility */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/60 z-10"></div>
       
       <div className="container mx-auto px-4 z-20 text-white">
         <div className="max-w-4xl">

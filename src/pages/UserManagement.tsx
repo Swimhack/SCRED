@@ -17,12 +17,12 @@ interface User {
   id: string;
   first_name: string | null;
   last_name: string | null;
+  email: string | null;
   created_at: string;
   role_id: number;
   roles: {
     name: string;
   };
-  email?: string;
 }
 
 interface Role {
@@ -54,18 +54,14 @@ const UserManagement = () => {
     try {
       setLoading(true);
       
-      // Get all users from auth.users with their profiles
-      const { data: { users: authUsers }, error: authError } = await supabase.auth.admin.listUsers();
-      
-      if (authError) throw authError;
-
-      // Get profiles with roles
+      // Get profiles with roles and emails from profiles table
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select(`
           id,
           first_name,
           last_name,
+          email,
           created_at,
           role_id,
           roles (
@@ -76,16 +72,7 @@ const UserManagement = () => {
 
       if (profilesError) throw profilesError;
 
-      // Merge auth users with profiles
-      const usersWithEmails = (profilesData || []).map(profile => {
-        const authUser = authUsers?.find((user: any) => user.id === profile.id);
-        return {
-          ...profile,
-          email: authUser?.email || 'N/A'
-        };
-      });
-
-      setUsers(usersWithEmails);
+      setUsers(profilesData || []);
     } catch (error: any) {
       console.error('Error fetching users:', error);
       toast({
@@ -93,34 +80,6 @@ const UserManagement = () => {
         description: "Failed to fetch users",
         variant: "destructive",
       });
-      
-      // Fallback to profiles only if auth admin access fails
-      try {
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select(`
-            id,
-            first_name,
-            last_name,
-            created_at,
-            role_id,
-            roles (
-              name
-            )
-          `)
-          .order('created_at', { ascending: false });
-
-        if (profilesError) throw profilesError;
-
-        const usersWithPlaceholderEmails = (profilesData || []).map(profile => ({
-          ...profile,
-          email: `user_${profile.id.slice(0, 8)}@example.com`
-        }));
-
-        setUsers(usersWithPlaceholderEmails);
-      } catch (fallbackError) {
-        console.error('Fallback error:', fallbackError);
-      }
     } finally {
       setLoading(false);
     }

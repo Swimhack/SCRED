@@ -24,14 +24,20 @@ const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Check for password reset mode on component mount
+  // Check for password reset mode or invitation on component mount
   useEffect(() => {
     const mode = searchParams.get('mode');
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
+    const inviteToken = searchParams.get('invite');
     
     if (mode === 'reset') {
       setShowPasswordReset(true);
+    }
+    
+    // Handle invitation acceptance
+    if (inviteToken) {
+      handleInvitationAcceptance(inviteToken);
     }
     
     // Handle email verification confirmation
@@ -61,6 +67,62 @@ const Auth = () => {
       toast({
         title: "Email verification failed",
         description: error.message || "Please try signing in again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleInvitationAcceptance = async (token: string) => {
+    try {
+      // Get invitation details
+      const { data: invitation, error: inviteError } = await supabase
+        .from('user_invitations')
+        .select('*')
+        .eq('token', token)
+        .single();
+
+      if (inviteError || !invitation) {
+        toast({
+          title: "Invalid Invitation",
+          description: "This invitation link is invalid or has expired.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check if invitation is expired
+      if (new Date(invitation.expires_at) < new Date()) {
+        toast({
+          title: "Invitation Expired",
+          description: "This invitation has expired. Please contact an administrator.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check if already accepted
+      if (invitation.accepted_at) {
+        toast({
+          title: "Invitation Already Accepted",
+          description: "This invitation has already been used.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Pre-populate email and show signup form
+      setEmail(invitation.email);
+      setIsLogin(false);
+      
+      toast({
+        title: "Welcome to StreetCredRX",
+        description: "Please complete your registration below.",
+      });
+    } catch (error: any) {
+      console.error('Invitation error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process invitation",
         variant: "destructive",
       });
     }
@@ -133,6 +195,53 @@ const Auth = () => {
       } catch (err) {
         // Continue even if this fails
       }
+
+      // Check if this is an invitation signup
+      const inviteToken = searchParams.get('invite');
+      let inviteData = null;
+      
+      if (inviteToken) {
+        // Get invitation details
+        const { data: invitation, error: inviteError } = await supabase
+          .from('user_invitations')
+          .select('*')
+          .eq('token', inviteToken)
+          .single();
+
+        if (inviteError || !invitation) {
+          toast({
+            title: "Invalid Invitation",
+            description: "This invitation link is invalid or has expired.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Check if invitation is expired
+        if (new Date(invitation.expires_at) < new Date()) {
+          toast({
+            title: "Invitation Expired",
+            description: "This invitation has expired. Please contact an administrator.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Check if already accepted
+        if (invitation.accepted_at) {
+          toast({
+            title: "Invitation Already Accepted",
+            description: "This invitation has already been used.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
+        inviteData = invitation;
+      }
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -141,6 +250,7 @@ const Auth = () => {
           data: {
             first_name: firstName,
             last_name: lastName,
+            invited_role_id: inviteData?.role_id
           },
           emailRedirectTo: "https://streetcredrx.lovable.app/dashboard"
         }
@@ -148,10 +258,29 @@ const Auth = () => {
       
       if (error) throw error;
       
+      if (data.user && inviteData) {
+        // Mark invitation as accepted
+        await supabase
+          .from('user_invitations')
+          .update({ 
+            accepted_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .eq('token', inviteToken);
+
+        // Update user profile with invited role
+        await supabase
+          .from('profiles')
+          .update({ role_id: inviteData.role_id })
+          .eq('id', data.user.id);
+      }
+      
       if (data.user) {
         toast({
           title: "Registration successful",
-          description: "Please check your email for a verification link.",
+          description: inviteData 
+            ? "Welcome to StreetCredRX! Your account has been created with the assigned role."
+            : "Please check your email for a verification link.",
         });
         // Switch to login view after successful signup
         setIsLogin(true);

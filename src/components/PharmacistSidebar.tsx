@@ -22,6 +22,7 @@ const PharmacistSidebar = () => {
       { icon: Clock, label: "Pending Requests", path: "/pending" },
       { icon: CheckCircle, label: "Completed", path: "/completed" },
       { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
+      { icon: Users, label: "User Management", path: "/user-management" },
       { icon: MessageSquare, label: "Admin Messages", path: "/admin-messages" },
       { icon: FileText, label: "System Logs", path: "/logs" },
       { icon: Code, label: "Dev Console", path: "/dev-console" },

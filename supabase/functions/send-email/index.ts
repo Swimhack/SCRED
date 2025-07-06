@@ -14,11 +14,15 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  type: 'welcome' | 'password-reset' | 'verification';
+  type: 'welcome' | 'password-reset' | 'verification' | 'user-invitation' | 'role-change';
   to: string;
   firstName?: string;
   resetLink?: string;
   verificationLink?: string;
+  roleName?: string;
+  invitationToken?: string;
+  inviteLink?: string;
+  newRole?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -28,7 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { type, to, firstName, resetLink, verificationLink }: EmailRequest = await req.json();
+    const { type, to, firstName, resetLink, verificationLink, roleName, invitationToken, inviteLink, newRole }: EmailRequest = await req.json();
 
     let emailSubject: string;
     let emailHtml: string;
@@ -72,6 +76,102 @@ const handler = async (req: Request): Promise<Response> => {
             <a href="${verificationLink}" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">Verify Email</a>
             <p>If you didn't create an account with us, please ignore this email.</p>
             <p>Best regards,<br>The StreetCredRX Team</p>
+          </div>
+        `;
+        break;
+
+      case 'user-invitation':
+        emailSubject = "You're Invited to Join StreetCredRX!";
+        emailHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+            <div style="background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #1f2937; font-size: 28px; margin-bottom: 10px;">Welcome to StreetCredRX!</h1>
+                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #3b82f6, #06b6d4); margin: 0 auto;"></div>
+              </div>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                You've been invited to join StreetCredRX as a <strong>${roleName?.replace('_', ' ').toUpperCase()}</strong>.
+              </p>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                StreetCredRX is a comprehensive platform for managing pharmacy credentialing and enrollment services. 
+                Click the button below to accept your invitation and set up your account.
+              </p>
+              
+              <div style="text-align: center; margin: 40px 0;">
+                <a href="${inviteLink}" style="background: linear-gradient(90deg, #3b82f6, #06b6d4); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                  Accept Invitation
+                </a>
+              </div>
+              
+              <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 30px 0;">
+                <p style="color: #64748b; font-size: 14px; margin: 0; text-align: center;">
+                  <strong>Your Role:</strong> ${roleName?.replace('_', ' ').toUpperCase()}<br>
+                  <strong>Invitation Token:</strong> ${invitationToken}
+                </p>
+              </div>
+              
+              <p style="color: #6b7280; font-size: 14px; line-height: 1.5; margin-top: 30px;">
+                This invitation will expire in 7 days. If you have any questions, please contact our support team.
+              </p>
+              
+              <div style="border-top: 1px solid #e5e7eb; margin-top: 30px; padding-top: 20px; text-align: center;">
+                <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                  Best regards,<br>
+                  <strong style="color: #374151;">The StreetCredRX Team</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+        break;
+
+      case 'role-change':
+        emailSubject = "Your Role Has Been Updated - StreetCredRX";
+        emailHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+            <div style="background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #1f2937; font-size: 28px; margin-bottom: 10px;">Role Update Notification</h1>
+                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #10b981, #059669); margin: 0 auto;"></div>
+              </div>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                Hello ${firstName || 'there'},
+              </p>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                Your role in StreetCredRX has been updated to <strong>${newRole?.replace('_', ' ').toUpperCase()}</strong>.
+              </p>
+              
+              <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 30px 0;">
+                <p style="color: #065f46; font-size: 16px; margin: 0;">
+                  <strong>New Role:</strong> ${newRole?.replace('_', ' ').toUpperCase()}
+                </p>
+              </div>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                This change may affect your access permissions within the platform. Please log in to see your updated dashboard and available features.
+              </p>
+              
+              <div style="text-align: center; margin: 40px 0;">
+                <a href="https://streetcredrx.lovable.app/dashboard" style="background: linear-gradient(90deg, #10b981, #059669); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                  Go to Dashboard
+                </a>
+              </div>
+              
+              <p style="color: #6b7280; font-size: 14px; line-height: 1.5; margin-top: 30px;">
+                If you have any questions about this change or need assistance, please contact our support team.
+              </p>
+              
+              <div style="border-top: 1px solid #e5e7eb; margin-top: 30px; padding-top: 20px; text-align: center;">
+                <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                  Best regards,<br>
+                  <strong style="color: #374151;">The StreetCredRX Team</strong>
+                </p>
+              </div>
+            </div>
           </div>
         `;
         break;

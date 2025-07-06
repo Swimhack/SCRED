@@ -28,6 +28,7 @@ import Profile from "./pages/Profile";
 import LogsViewer from "./pages/LogsViewer";
 import DevConsole from "./pages/DevConsole";
 import AdminMessages from "./pages/AdminMessages";
+import UserManagement from "./pages/UserManagement";
 import { useAppLogger } from "./hooks/useAppLogger";
 
 const queryClient = new QueryClient({
@@ -145,6 +146,13 @@ const AppContent = () => {
                 <ProtectedRoute allowedRoles={["super_admin"]}>
                   <DashboardLayout>
                     <AdminMessages />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/user-management" element={
+                <ProtectedRoute allowedRoles={["super_admin"]}>
+                  <DashboardLayout>
+                    <UserManagement />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />

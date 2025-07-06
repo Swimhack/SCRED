@@ -76,7 +76,7 @@ const LogsViewer = () => {
   }, [user, session, filters]);
 
   const fetchLogs = async () => {
-    if (!user || userRole !== 'admin') {
+    if (!user || userRole !== 'super_admin') {
       toast({
         title: 'Access Denied',
         description: 'Only administrators can access application logs.',
@@ -199,7 +199,7 @@ const LogsViewer = () => {
     fetchLogs();
   }, [filters.level, filters.component, filters.limit, filters.offset]);
 
-  if (userRole !== 'admin') {
+  if (userRole !== 'super_admin') {
     return (
       <div className="container mx-auto p-6">
         <Card>

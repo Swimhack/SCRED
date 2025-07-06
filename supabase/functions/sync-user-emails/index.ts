@@ -20,44 +20,107 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Get all users from auth
-    const { data: { users }, error: authError } = await supabaseAdmin.auth.admin.listUsers();
+    console.log("Starting email sync process...");
+
+    // Get all users from auth with pagination to handle large user bases
+    let allUsers: any[] = [];
+    let page = 1;
+    const perPage = 1000;
     
-    if (authError) {
-      throw new Error(`Failed to fetch users: ${authError.message}`);
+    while (true) {
+      const { data: { users }, error: authError } = await supabaseAdmin.auth.admin.listUsers({
+        page,
+        perPage
+      });
+      
+      if (authError) {
+        throw new Error(`Failed to fetch users (page ${page}): ${authError.message}`);
+      }
+
+      if (!users || users.length === 0) {
+        break;
+      }
+
+      allUsers = allUsers.concat(users);
+      
+      if (users.length < perPage) {
+        break; // Last page
+      }
+      
+      page++;
     }
 
-    console.log(`Found ${users?.length || 0} users in auth`);
+    console.log(`Found ${allUsers.length} total users in auth`);
 
     // Update profiles with email addresses
     let updatedCount = 0;
+    let skippedCount = 0;
+    let errorCount = 0;
     
-    if (users) {
-      for (const user of users) {
-        if (user.email) {
+    for (const user of allUsers) {
+      // Get email from user object (works for both regular signup and OAuth)
+      const email = user.email;
+      
+      if (!email) {
+        console.log(`Skipping user ${user.id} - no email found`);
+        skippedCount++;
+        continue;
+      }
+
+      try {
+        // Check if profile exists first
+        const { data: existingProfile, error: fetchError } = await supabaseAdmin
+          .from('profiles')
+          .select('id, email')
+          .eq('id', user.id)
+          .single();
+
+        if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 = not found
+          console.error(`Error fetching profile for user ${user.id}:`, fetchError);
+          errorCount++;
+          continue;
+        }
+
+        if (existingProfile) {
+          // Update existing profile
           const { error: updateError } = await supabaseAdmin
             .from('profiles')
-            .update({ email: user.email })
+            .update({ 
+              email: email,
+              updated_at: new Date().toISOString()
+            })
             .eq('id', user.id);
             
           if (updateError) {
             console.error(`Failed to update email for user ${user.id}:`, updateError);
+            errorCount++;
           } else {
+            console.log(`Updated email for user ${user.id}: ${email}`);
             updatedCount++;
           }
+        } else {
+          console.log(`Profile not found for user ${user.id}, skipping`);
+          skippedCount++;
         }
+      } catch (error) {
+        console.error(`Error processing user ${user.id}:`, error);
+        errorCount++;
       }
     }
 
-    console.log(`Updated ${updatedCount} user emails`);
+    const summary = {
+      success: true,
+      message: `Email sync completed: ${updatedCount} updated, ${skippedCount} skipped, ${errorCount} errors`,
+      totalUsers: allUsers.length,
+      updatedCount,
+      skippedCount,
+      errorCount
+    };
+
+    console.log("Sync summary:", summary);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: `Successfully synced ${updatedCount} user emails`,
-        totalUsers: users?.length || 0,
-        updatedCount 
-      }),
+      JSON.stringify(summary),
       {
         status: 200,
         headers: {

@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,54 @@ const Auth = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordResetLoading, setPasswordResetLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Check for password reset mode on component mount
+  useEffect(() => {
+    const mode = searchParams.get('mode');
+    const accessToken = searchParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token');
+    
+    if (mode === 'reset') {
+      setShowPasswordReset(true);
+    }
+    
+    // Handle email verification confirmation
+    if (accessToken && refreshToken) {
+      handleEmailVerification(accessToken, refreshToken);
+    }
+  }, [searchParams]);
+
+  const handleEmailVerification = async (accessToken: string, refreshToken: string) => {
+    try {
+      const { data, error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken
+      });
+      
+      if (error) throw error;
+      
+      if (data.user?.email_confirmed_at) {
+        toast({
+          title: "Email verified successfully",
+          description: "Your email has been confirmed. Welcome!",
+        });
+        navigate("/dashboard");
+      }
+    } catch (error: any) {
+      console.error("Email verification error:", error);
+      toast({
+        title: "Email verification failed",
+        description: error.message || "Please try signing in again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const cleanupAuthState = () => {
     // Remove all Supabase auth keys from localStorage
@@ -148,6 +195,129 @@ const Auth = () => {
       setResetLoading(false);
     }
   };
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setPasswordResetLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Password updated successfully",
+        description: "You can now sign in with your new password.",
+      });
+      
+      // Redirect to login after successful password reset
+      setShowPasswordReset(false);
+      setIsLogin(true);
+      setNewPassword("");
+      setConfirmPassword("");
+      
+      // Remove the mode parameter from URL
+      navigate("/auth", { replace: true });
+      
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update password",
+        variant: "destructive",
+      });
+    } finally {
+      setPasswordResetLoading(false);
+    }
+  };
+
+  if (showPasswordReset) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-lg shadow-md">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+              Set your new password
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Please enter your new password below
+            </p>
+          </div>
+          
+          <form className="mt-8 space-y-6" onSubmit={handlePasswordReset}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  required
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  minLength={6}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  minLength={6}
+                />
+              </div>
+            </div>
+            <div>
+              <Button
+                type="submit"
+                className="w-full mb-4"
+                disabled={passwordResetLoading}
+              >
+                {passwordResetLoading ? "Updating..." : "Update Password"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  setShowPasswordReset(false);
+                  navigate("/auth", { replace: true });
+                }}
+              >
+                Back to login
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   if (showForgotPassword) {
     return (

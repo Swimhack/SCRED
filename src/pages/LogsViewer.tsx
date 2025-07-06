@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
-import { Loader2, Search, Calendar, Filter, ExternalLink } from 'lucide-react';
+import { Loader2, Search, Calendar, Filter, ExternalLink, Download } from 'lucide-react';
 
 interface LogEntry {
   id: string;
@@ -138,6 +138,63 @@ const LogsViewer = () => {
     });
   };
 
+  const exportLogsAsJSON = () => {
+    const dataStr = JSON.stringify(logs, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `logs-export-${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    toast({
+      title: 'Export Complete',
+      description: 'Logs exported as JSON file'
+    });
+  };
+
+  const exportLogsAsCSV = () => {
+    if (logs.length === 0) {
+      toast({
+        title: 'No Data',
+        description: 'No logs to export',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const csvHeaders = ['timestamp', 'level', 'message', 'component', 'route', 'user_id', 'session_id'];
+    const csvData = logs.map(log => [
+      log.timestamp,
+      log.level,
+      `"${log.message.replace(/"/g, '""')}"`, // Escape quotes
+      log.component || '',
+      log.route || '',
+      log.user_id || '',
+      log.session_id || ''
+    ]);
+
+    const csvContent = [
+      csvHeaders.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const dataUri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
+    const exportFileDefaultName = `logs-export-${new Date().toISOString().split('T')[0]}.csv`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    toast({
+      title: 'Export Complete',
+      description: 'Logs exported as CSV file'
+    });
+  };
+
   useEffect(() => {
     fetchLogs();
   }, [filters.level, filters.component, filters.limit, filters.offset]);
@@ -166,10 +223,20 @@ const LogsViewer = () => {
             Monitor and analyze application events and errors
           </p>
         </div>
-        <Button onClick={fetchLogs} disabled={loading}>
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-          Refresh
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={fetchLogs} disabled={loading}>
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+            Refresh
+          </Button>
+          <Button onClick={exportLogsAsJSON} variant="outline" disabled={logs.length === 0}>
+            <Download className="h-4 w-4 mr-2" />
+            Export JSON
+          </Button>
+          <Button onClick={exportLogsAsCSV} variant="outline" disabled={logs.length === 0}>
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+        </div>
       </div>
 
       {/* API URL Card for External Agents */}

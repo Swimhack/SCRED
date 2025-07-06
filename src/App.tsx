@@ -26,6 +26,8 @@ import MyCredentials from "./pages/MyCredentials";
 import MyExpiring from "./pages/MyExpiring";
 import Profile from "./pages/Profile";
 import LogsViewer from "./pages/LogsViewer";
+import DevConsole from "./pages/DevConsole";
+import AdminMessages from "./pages/AdminMessages";
 import { useAppLogger } from "./hooks/useAppLogger";
 
 const queryClient = new QueryClient({
@@ -124,11 +126,25 @@ const AppContent = () => {
                 </ProtectedRoute>
               } />
               
-              {/* Admin-only logs viewer */}
+              {/* Admin-only routes */}
               <Route path="/logs" element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <DashboardLayout>
                     <LogsViewer />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/dev-console" element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <DashboardLayout>
+                    <DevConsole />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/admin-messages" element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <DashboardLayout>
+                    <AdminMessages />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />

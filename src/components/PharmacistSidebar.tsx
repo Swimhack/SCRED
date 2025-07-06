@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight, MessageSquare, Code, FileText } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -22,6 +22,9 @@ const PharmacistSidebar = () => {
       { icon: Clock, label: "Pending Requests", path: "/pending" },
       { icon: CheckCircle, label: "Completed", path: "/completed" },
       { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
+      { icon: MessageSquare, label: "Admin Messages", path: "/admin-messages" },
+      { icon: FileText, label: "System Logs", path: "/logs" },
+      { icon: Code, label: "Dev Console", path: "/dev-console" },
     ];
 
     const pharmacistItems = [

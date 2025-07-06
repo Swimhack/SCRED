@@ -95,7 +95,7 @@ const Auth = () => {
             first_name: firstName,
             last_name: lastName,
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`
+          emailRedirectTo: "https://streetcredrx.lovable.app/dashboard"
         }
       });
       
@@ -126,7 +126,7 @@ const Auth = () => {
     
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/auth?mode=reset`,
+        redirectTo: "https://streetcredrx.lovable.app/auth?mode=reset",
       });
       
       if (error) throw error;

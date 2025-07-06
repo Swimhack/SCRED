@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { UserPlus, Mail, Shield, Eye, Search, RefreshCw, Edit, Trash2 } from "lucide-react";
+import { UserPlus, Mail, Shield, Eye, Search, RefreshCw, Edit, Trash2, RotateCcw } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SEO from "@/components/SEO";
 
@@ -44,6 +44,7 @@ const UserManagement = () => {
   const [editLastName, setEditLastName] = useState("");
   const [editLoading, setEditLoading] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [syncLoading, setSyncLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -315,6 +316,33 @@ const UserManagement = () => {
     }
   };
 
+  const syncUserEmails = async () => {
+    try {
+      setSyncLoading(true);
+      
+      const { data, error } = await supabase.functions.invoke('sync-user-emails');
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Emails Synced",
+        description: data.message || "User emails have been synchronized",
+      });
+      
+      // Refresh users list to show updated emails
+      fetchUsers();
+    } catch (error: any) {
+      console.error('Error syncing emails:', error);
+      toast({
+        title: "Error",
+        description: "Failed to sync user emails",
+        variant: "destructive",
+      });
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
   const getRoleBadgeVariant = (roleName: string) => {
     switch (roleName) {
       case 'super_admin':
@@ -345,6 +373,14 @@ const UserManagement = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">User Management</h1>
         <div className="flex gap-3">
+          <Button
+            onClick={syncUserEmails}
+            variant="outline"
+            disabled={syncLoading}
+          >
+            <RotateCcw className={`w-4 h-4 mr-2 ${syncLoading ? 'animate-spin' : ''}`} />
+            Sync Emails
+          </Button>
           <Button
             onClick={fetchUsers}
             variant="outline"

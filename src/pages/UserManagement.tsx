@@ -496,7 +496,7 @@ const UserManagement = () => {
                         }
                       </div>
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.email || 'No email'}</TableCell>
                     <TableCell>
                       <Badge variant={getRoleBadgeVariant(user.roles.name)}>
                         {user.roles.name.replace('_', ' ').toUpperCase()}

@@ -17,7 +17,7 @@ const PharmacistSidebar = () => {
       { icon: Home, label: "Dashboard", path: "/dashboard" },
     ];
 
-    const adminItems = [
+    const superAdminItems = [
       { icon: Users, label: "Total Pharmacists", path: "/pharmacists" },
       { icon: Clock, label: "Pending Requests", path: "/pending" },
       { icon: CheckCircle, label: "Completed", path: "/completed" },
@@ -28,16 +28,26 @@ const PharmacistSidebar = () => {
       { icon: Code, label: "Dev Console", path: "/dev-console" },
     ];
 
-    const pharmacistItems = [
+    const adminItems = [
+      { icon: Users, label: "Total Pharmacists", path: "/pharmacists" },
+      { icon: Clock, label: "Pending Requests", path: "/pending" },
+      { icon: CheckCircle, label: "Completed", path: "/completed" },
+      { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
+      { icon: MessageSquare, label: "Admin Messages", path: "/admin-messages" },
+    ];
+
+    const userItems = [
       { icon: Clock, label: "My Applications", path: "/my-applications" },
       { icon: CheckCircle, label: "My Credentials", path: "/my-credentials" },
       { icon: AlertTriangle, label: "Expiring Soon", path: "/my-expiring" },
     ];
 
     if (userRole === "super_admin") {
+      return [...commonItems, ...superAdminItems];
+    } else if (userRole === "admin_manager" || userRole === "admin_regional") {
       return [...commonItems, ...adminItems];
     } else {
-      return [...commonItems, ...pharmacistItems];
+      return [...commonItems, ...userItems];
     }
   };
 

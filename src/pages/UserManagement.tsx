@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { UserPlus, Mail, Shield, Eye, Search, RefreshCw } from "lucide-react";
+import { UserPlus, Mail, Shield, Eye, Search, RefreshCw, Edit, Trash2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SEO from "@/components/SEO";
 
@@ -39,6 +39,11 @@ const UserManagement = () => {
   const [inviteRoleId, setInviteRoleId] = useState<string>("");
   const [inviteLoading, setInviteLoading] = useState(false);
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editFirstName, setEditFirstName] = useState("");
+  const [editLastName, setEditLastName] = useState("");
+  const [editLoading, setEditLoading] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -299,6 +304,58 @@ const UserManagement = () => {
     }
   };
 
+  const openEditDialog = (user: User) => {
+    setEditingUser(user);
+    setEditFirstName(user.first_name || "");
+    setEditLastName(user.last_name || "");
+    setIsEditDialogOpen(true);
+  };
+
+  const updateUserProfile = async () => {
+    if (!editingUser) return;
+
+    try {
+      setEditLoading(true);
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: editFirstName,
+          last_name: editLastName,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', editingUser.id);
+
+      if (error) throw error;
+
+      // Log the activity
+      await logUserActivity(editingUser.id, 'profile_update', {
+        old_first_name: editingUser.first_name,
+        old_last_name: editingUser.last_name,
+        new_first_name: editFirstName,
+        new_last_name: editLastName
+      });
+
+      toast({
+        title: "User Updated",
+        description: "User profile has been successfully updated",
+      });
+
+      setIsEditDialogOpen(false);
+      setEditingUser(null);
+      fetchUsers(); // Refresh the list
+    } catch (error: any) {
+      console.error('Error updating user profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update user profile",
+        variant: "destructive",
+      });
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   const getRoleBadgeVariant = (roleName: string) => {
     switch (roleName) {
       case 'super_admin':
@@ -384,6 +441,51 @@ const UserManagement = () => {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Edit User Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit User</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="editFirstName">First Name</Label>
+                  <Input
+                    id="editFirstName"
+                    value={editFirstName}
+                    onChange={(e) => setEditFirstName(e.target.value)}
+                    placeholder="First name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="editLastName">Last Name</Label>
+                  <Input
+                    id="editLastName"
+                    value={editLastName}
+                    onChange={(e) => setEditLastName(e.target.value)}
+                    placeholder="Last name"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <Button 
+                    onClick={updateUserProfile}
+                    disabled={editLoading}
+                    className="flex-1"
+                  >
+                    {editLoading ? "Updating..." : "Update User"}
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => setIsEditDialogOpen(false)}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -466,6 +568,14 @@ const UserManagement = () => {
                             ))}
                           </SelectContent>
                         </Select>
+                        
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openEditDialog(user)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
                         
                         <Button
                           variant="outline"

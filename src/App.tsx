@@ -74,37 +74,66 @@ const AppContent = () => {
         </ProtectedRoute>
       } />
       
-      {/* Admin only routes */}
+      {/* Admin routes - different levels */}
       <Route path="/pharmacists" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Pharmacists />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/pending" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Pending />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/completed" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Completed />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/expiring" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Expiring />
           </DashboardLayout>
         </ProtectedRoute>
       } />
+      <Route path="/admin-messages" element={
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+          <DashboardLayout>
+            <AdminMessages />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
       
-      {/* Accessible to all authenticated users */}
+      {/* Super admin only routes */}
+      <Route path="/user-management" element={
+        <ProtectedRoute allowedRoles={["super_admin"]}>
+          <DashboardLayout>
+            <UserManagement />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/logs" element={
+        <ProtectedRoute allowedRoles={["super_admin"]}>
+          <DashboardLayout>
+            <LogsViewer />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/dev-console" element={
+        <ProtectedRoute allowedRoles={["super_admin"]}>
+          <DashboardLayout>
+            <DevConsole />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      {/* User routes - accessible to all authenticated users */}
       <Route path="/my-applications" element={
         <ProtectedRoute>
           <DashboardLayout>
@@ -119,43 +148,13 @@ const AppContent = () => {
           </DashboardLayout>
         </ProtectedRoute>
       } />
-              <Route path="/my-expiring" element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <MyExpiring />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              
-              {/* Admin-only routes */}
-              <Route path="/logs" element={
-                <ProtectedRoute allowedRoles={["super_admin"]}>
-                  <DashboardLayout>
-                    <LogsViewer />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/dev-console" element={
-                <ProtectedRoute allowedRoles={["super_admin"]}>
-                  <DashboardLayout>
-                    <DevConsole />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/admin-messages" element={
-                <ProtectedRoute allowedRoles={["super_admin"]}>
-                  <DashboardLayout>
-                    <AdminMessages />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              <Route path="/user-management" element={
-                <ProtectedRoute allowedRoles={["super_admin"]}>
-                  <DashboardLayout>
-                    <UserManagement />
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
+      <Route path="/my-expiring" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <MyExpiring />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

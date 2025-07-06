@@ -20,10 +20,10 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mb-10">
-            <Link to="/auth" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block shadow-lg text-center">
+            <Link to="/auth" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block text-center">
               Log In
             </Link>
-            <Link to="/contact" className="bg-transparent border-2 border-brand-primary text-brand-primary px-8 py-3 rounded-full font-medium hover:bg-brand-primary hover:text-primary-foreground transition-all duration-300 inline-block shadow-lg text-center">
+            <Link to="/contact" className="bg-transparent border-2 border-brand-primary text-brand-primary px-8 py-3 rounded-full font-medium hover:bg-brand-primary hover:text-primary-foreground transition-all duration-300 inline-block text-center">
               Contact Us
             </Link>
           </div>
@@ -32,16 +32,16 @@ const HeroSection = () => {
             <p className="mb-4 text-sm opacity-90">Satisfied Clients</p>
             <div className="flex items-center gap-4">
               <div className="flex -space-x-3">
-                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
                   DR
                 </div>
-                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-semibold text-sm">
                   SM
                 </div>
-                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
                   JL
                 </div>
-                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                <div className="w-12 h-12 rounded-full border-3 border-white bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold text-sm">
                   +50
                 </div>
               </div>

@@ -19,9 +19,14 @@ const HeroSection = () => {
             credentialing process.
           </p>
           
-          <Link to="/contact" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block shadow-lg">
-            Contact Us
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 mb-10">
+            <Link to="/auth" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block shadow-lg text-center">
+              Log In
+            </Link>
+            <Link to="/contact" className="bg-transparent border-2 border-brand-primary text-brand-primary px-8 py-3 rounded-full font-medium hover:bg-brand-primary hover:text-primary-foreground transition-all duration-300 inline-block shadow-lg text-center">
+              Contact Us
+            </Link>
+          </div>
           
           <div className="mt-16">
             <p className="mb-4 text-sm opacity-90">Satisfied Clients</p>

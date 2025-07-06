@@ -246,14 +246,14 @@ const AdminMessages = () => {
             Send Reply
           </CardTitle>
           <CardDescription>
-            Reply to the developer messages
+            Provide guidance, feedback on development updates, or discuss website improvements
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
             value={replyMessage}
             onChange={(e) => setReplyMessage(e.target.value)}
-            placeholder="Type your reply to the developer..."
+            placeholder="Share feedback, provide guidance, or discuss next steps for development..."
             rows={4}
           />
           <Button onClick={sendReply} disabled={loading || !replyMessage.trim()}>

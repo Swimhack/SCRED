@@ -159,14 +159,14 @@ const DevConsole = () => {
             Send Message to Admin
           </CardTitle>
           <CardDescription>
-            Send real-time messages to the super admin user
+            Share updates about website development, upload images, discuss content changes, and collaborate on next steps
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type your message to the admin..."
+            placeholder="Share development updates, ask for guidance, or discuss content changes..."
             rows={4}
           />
           <Button onClick={sendMessage} disabled={loading || !message.trim()}>

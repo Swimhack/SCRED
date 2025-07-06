@@ -2,3 +2,6 @@ project_id = "tvqyozyjqcswojsbduzw"
 
 [functions.get-logs]
 verify_jwt = true
+
+[functions.send-email]
+verify_jwt = true

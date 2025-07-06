@@ -11,8 +11,10 @@ interface AuthContextType {
   profile: any | null;
   userRole: string | null;
   loading: boolean;
+  isEmailVerified: boolean;
   signOut: () => Promise<void>;
   refreshProfile: (userId: string) => Promise<void>;
+  resendVerification: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileError, setProfileError] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log("Auth state changed:", event);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
+        setIsEmailVerified(currentSession?.user?.email_confirmed_at ? true : false);
         
         // Wait before fetching profile to avoid potential deadlocks
         if (currentSession?.user) {
@@ -42,6 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           setProfile(null);
           setUserRole(null);
+          setIsEmailVerified(false);
         }
       }
     );
@@ -50,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
+      setIsEmailVerified(currentSession?.user?.email_confirmed_at ? true : false);
       
       if (currentSession?.user) {
         await fetchUserProfile(currentSession.user.id);
@@ -118,6 +124,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await fetchUserProfile(userId);
   };
 
+  const resendVerification = async (): Promise<boolean> => {
+    if (!user?.email) return false;
+    
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: user.email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Verification email sent",
+        description: "Please check your email for the verification link.",
+      });
+      
+      return true;
+    } catch (error: any) {
+      console.error("Error resending verification:", error);
+      toast({
+        title: "Error",
+        description: "Failed to resend verification email. Please try again.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   const signOut = async () => {
     try {
       // Clean up auth state
@@ -132,6 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(null);
       setProfile(null);
       setUserRole(null);
+      setIsEmailVerified(false);
       
       navigate("/auth");
       
@@ -155,8 +193,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     profile,
     userRole,
     loading,
+    isEmailVerified,
     signOut,
-    refreshProfile
+    refreshProfile,
+    resendVerification
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

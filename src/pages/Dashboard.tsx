@@ -174,17 +174,17 @@ const Dashboard = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <SEO 
-        title={userRole === "admin" ? "Admin Dashboard - StreetCredRX" : "Provider Dashboard - StreetCredRX"}
-        description={userRole === "admin" 
+        title={userRole === "super_admin" ? "Admin Dashboard - StreetCredRX" : "Provider Dashboard - StreetCredRX"}
+        description={userRole === "super_admin" 
           ? "Manage pharmacy credentialing applications and track enrollment statuses across your organization." 
           : "Monitor your pharmacy credentials, track application status, and manage upcoming renewals."}
         canonicalPath="/dashboard"
       />
       <h1 className="text-2xl font-semibold mb-6">
-        {userRole === "admin" ? "Admin Dashboard" : "My Dashboard"}
+        {userRole === "super_admin" ? "Admin Dashboard" : "My Dashboard"}
       </h1>
       
-      {userRole === "admin" ? <AdminDashboard /> : <PharmacistDashboard />}
+      {userRole === "super_admin" ? <AdminDashboard /> : <PharmacistDashboard />}
     </div>
   );
 };

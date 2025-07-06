@@ -116,7 +116,7 @@ const DevConsole = () => {
     }
   };
 
-  if (userRole !== 'admin') {
+  if (userRole !== 'super_admin') {
     return (
       <div className="container mx-auto p-6">
         <Card>

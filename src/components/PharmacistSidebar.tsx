@@ -33,7 +33,7 @@ const PharmacistSidebar = () => {
       { icon: AlertTriangle, label: "Expiring Soon", path: "/my-expiring" },
     ];
 
-    if (userRole === "admin") {
+    if (userRole === "super_admin") {
       return [...commonItems, ...adminItems];
     } else {
       return [...commonItems, ...pharmacistItems];

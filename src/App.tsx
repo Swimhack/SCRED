@@ -75,28 +75,28 @@ const AppContent = () => {
       
       {/* Admin only routes */}
       <Route path="/pharmacists" element={
-        <ProtectedRoute allowedRoles={["admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin"]}>
           <DashboardLayout>
             <Pharmacists />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/pending" element={
-        <ProtectedRoute allowedRoles={["admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin"]}>
           <DashboardLayout>
             <Pending />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/completed" element={
-        <ProtectedRoute allowedRoles={["admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin"]}>
           <DashboardLayout>
             <Completed />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/expiring" element={
-        <ProtectedRoute allowedRoles={["admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin"]}>
           <DashboardLayout>
             <Expiring />
           </DashboardLayout>
@@ -128,21 +128,21 @@ const AppContent = () => {
               
               {/* Admin-only routes */}
               <Route path="/logs" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["super_admin"]}>
                   <DashboardLayout>
                     <LogsViewer />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
               <Route path="/dev-console" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["super_admin"]}>
                   <DashboardLayout>
                     <DevConsole />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
               <Route path="/admin-messages" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["super_admin"]}>
                   <DashboardLayout>
                     <AdminMessages />
                   </DashboardLayout>

@@ -140,7 +140,7 @@ const AdminMessages = () => {
       : 'bg-green-100 text-green-800';
   };
 
-  if (userRole !== 'admin') {
+  if (userRole !== 'super_admin') {
     return (
       <div className="container mx-auto p-6">
         <Card>

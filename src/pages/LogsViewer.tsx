@@ -8,18 +8,23 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2, Search, Calendar, Filter, ExternalLink, Download } from 'lucide-react';
+import SEO from '@/components/SEO';
 
 interface LogEntry {
   id: string;
   timestamp: string;
   level: string;
   message: string;
-  metadata: Record<string, any>;
-  user_id?: string;
-  session_id?: string;
-  component?: string;
-  route?: string;
-  error_stack?: string;
+  metadata: any; // Can be JSON object, string, null, etc
+  user_id?: string | null;
+  session_id?: string | null;
+  component?: string | null;
+  route?: string | null;
+  error_stack?: string | null;
+  created_at?: string;
+  ip_address?: any;
+  request_id?: string | null;
+  user_agent?: string | null;
 }
 
 interface LogsResponse {
@@ -87,22 +92,57 @@ const LogsViewer = () => {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('get-logs', {
-        body: filters,
-        headers: {
-          Authorization: `Bearer ${session?.access_token}`
-        }
-      });
+      // Apply filters to the query
+      let query = supabase
+        .from('application_logs')
+        .select('*')
+        .order('timestamp', { ascending: false });
 
-      if (error) throw error;
-
-      const response = data as LogsResponse;
-      if (response.success) {
-        setLogs(response.data);
-        setPagination(response.pagination);
-      } else {
-        throw new Error('Failed to fetch logs');
+      if (filters.level) {
+        query = query.eq('level', filters.level);
       }
+      if (filters.component) {
+        query = query.eq('component', filters.component);
+      }
+      if (filters.search) {
+        query = query.or(`message.ilike.%${filters.search}%,component.ilike.%${filters.search}%`);
+      }
+      if (filters.start_date) {
+        query = query.gte('timestamp', filters.start_date);
+      }
+      if (filters.end_date) {
+        query = query.lte('timestamp', filters.end_date);
+      }
+
+      // Apply pagination
+      query = query.range(filters.offset, filters.offset + filters.limit - 1);
+
+      const { data: directLogs, error: directError } = await query;
+        
+      if (!directError && directLogs) {
+        // Transform the data to match our interface expectations
+        const transformedLogs = directLogs.map((log: any) => ({
+          ...log,
+          metadata: typeof log.metadata === 'object' && log.metadata !== null 
+            ? log.metadata 
+            : {}
+        }));
+        setLogs(transformedLogs);
+        // Get total count for pagination
+        const { count } = await supabase
+          .from('application_logs')
+          .select('*', { count: 'exact', head: true });
+
+        setPagination({
+          total: count || 0,
+          limit: filters.limit,
+          offset: filters.offset,
+          has_more: (count || 0) > filters.offset + filters.limit
+        });
+        return;
+      }
+      
+      throw new Error('Failed to fetch logs from database');
     } catch (error: any) {
       console.error('Error fetching logs:', error);
       toast({
@@ -110,6 +150,7 @@ const LogsViewer = () => {
         description: error.message || 'Failed to fetch logs',
         variant: 'destructive'
       });
+      setLogs([]);
     } finally {
       setLoading(false);
     }
@@ -216,6 +257,12 @@ const LogsViewer = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <SEO 
+        title="System Logs - StreetCredRX Admin"
+        description="Monitor and analyze application events and errors"
+        canonicalPath="/logs"
+      />
+      
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Application Logs</h1>
@@ -401,7 +448,7 @@ const LogsViewer = () => {
                     </div>
                   )}
                   
-                  {Object.keys(log.metadata).length > 0 && (
+                  {log.metadata && typeof log.metadata === 'object' && Object.keys(log.metadata).length > 0 && (
                     <details className="text-sm">
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
                         Metadata

@@ -22,6 +22,17 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only allow GET and POST methods
+  if (!['GET', 'POST'].includes(req.method)) {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      { 
+        status: 405, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
+  }
+
   try {
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -72,17 +83,26 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Parse query parameters
-    const url = new URL(req.url)
-    const filters: LogFilters = {
-      level: url.searchParams.get('level') || undefined,
-      component: url.searchParams.get('component') || undefined,
-      user_id: url.searchParams.get('user_id') || undefined,
-      start_date: url.searchParams.get('start_date') || undefined,
-      end_date: url.searchParams.get('end_date') || undefined,
-      limit: parseInt(url.searchParams.get('limit') || '100'),
-      offset: parseInt(url.searchParams.get('offset') || '0'),
-      search: url.searchParams.get('search') || undefined,
+    // Parse query parameters OR body for filters
+    let filters: LogFilters = {};
+    
+    if (req.method === 'GET') {
+      // Parse from URL parameters
+      const url = new URL(req.url);
+      filters = {
+        level: url.searchParams.get('level') || undefined,
+        component: url.searchParams.get('component') || undefined,
+        user_id: url.searchParams.get('user_id') || undefined,
+        start_date: url.searchParams.get('start_date') || undefined,
+        end_date: url.searchParams.get('end_date') || undefined,
+        limit: parseInt(url.searchParams.get('limit') || '100'),
+        offset: parseInt(url.searchParams.get('offset') || '0'),
+        search: url.searchParams.get('search') || undefined,
+      };
+    } else if (req.method === 'POST') {
+      // Parse from request body
+      const body = await req.json();
+      filters = body;
     }
 
     // Validate and sanitize filters

@@ -29,6 +29,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const navigate = useNavigate();
 
+  // Check and clean up expired remember me preferences on app start
+  useEffect(() => {
+    const rememberMe = localStorage.getItem('supabase_remember_me');
+    const expiresAt = localStorage.getItem('supabase_remember_me_expires');
+    
+    if (rememberMe === 'true' && expiresAt) {
+      const expiryDate = new Date(expiresAt);
+      const now = new Date();
+      
+      if (now >= expiryDate) {
+        // Clean up expired remember me preference
+        localStorage.removeItem('supabase_remember_me');
+        localStorage.removeItem('supabase_remember_me_expires');
+        // Also clear any existing session data if it was in localStorage
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+            localStorage.removeItem(key);
+          }
+        });
+      }
+    }
+  }, []);
+
   useEffect(() => {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(

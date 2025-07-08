@@ -6,6 +6,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,6 +22,7 @@ const Auth = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordResetLoading, setPasswordResetLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -157,7 +159,24 @@ const Auth = () => {
         // Continue even if this fails
       }
       
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Configure storage based on remember me preference
+      const storageType = rememberMe ? localStorage : sessionStorage;
+      
+      // Create a new client instance with the appropriate storage
+      const { createClient } = await import('@supabase/supabase-js');
+      const tempClient = createClient(
+        "https://tvqyozyjqcswojsbduzw.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cXlvenlqcWNzd29qc2JkdXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1MzIyMzUsImV4cCI6MjA2MzEwODIzNX0.MJl1EtbDCjzT5PvBxoA7j4_4iM_FtX_1IjcDexcwz9Y",
+        {
+          auth: {
+            storage: storageType,
+            persistSession: true,
+            autoRefreshToken: true,
+          }
+        }
+      );
+      
+      const { data, error } = await tempClient.auth.signInWithPassword({
         email,
         password,
       });
@@ -165,6 +184,18 @@ const Auth = () => {
       if (error) throw error;
       
       if (data.user) {
+        // Store remember me preference
+        if (rememberMe) {
+          localStorage.setItem('supabase_remember_me', 'true');
+          // Set a 30-day expiry for the preference
+          const expiryDate = new Date();
+          expiryDate.setDate(expiryDate.getDate() + 30);
+          localStorage.setItem('supabase_remember_me_expires', expiryDate.toISOString());
+        } else {
+          localStorage.removeItem('supabase_remember_me');
+          localStorage.removeItem('supabase_remember_me_expires');
+        }
+        
         toast({
           title: "Login successful",
           description: "Welcome back!",
@@ -567,15 +598,27 @@ const Auth = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
             />
-          </div>
-          <div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? "Processing..." : isLogin ? "Sign in" : "Sign up"}
-            </Button>
+           </div>
+           {isLogin && (
+             <div className="flex items-center space-x-2">
+               <Checkbox
+                 id="rememberMe"
+                 checked={rememberMe}
+                 onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+               />
+               <Label htmlFor="rememberMe" className="text-sm text-gray-600 cursor-pointer">
+                 Remember me for 30 days
+               </Label>
+             </div>
+           )}
+           <div>
+             <Button
+               type="submit"
+               className="w-full"
+               disabled={loading}
+             >
+               {loading ? "Processing..." : isLogin ? "Sign in" : "Sign up"}
+             </Button>
             {isLogin && (
               <div className="mt-3 text-center">
                 <button

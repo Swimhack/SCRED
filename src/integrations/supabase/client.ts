@@ -6,12 +6,34 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://tvqyozyjqcswojsbduzw.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cXlvenlqcWNzd29qc2JkdXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1MzIyMzUsImV4cCI6MjA2MzEwODIzNX0.MJl1EtbDCjzT5PvBxoA7j4_4iM_FtX_1IjcDexcwz9Y";
 
+// Function to determine storage type based on remember me preference
+const getStorageType = () => {
+  const rememberMe = localStorage.getItem('supabase_remember_me');
+  const expiresAt = localStorage.getItem('supabase_remember_me_expires');
+  
+  // Check if remember me is set and not expired
+  if (rememberMe === 'true' && expiresAt) {
+    const expiryDate = new Date(expiresAt);
+    const now = new Date();
+    
+    if (now < expiryDate) {
+      return localStorage;
+    } else {
+      // Clean up expired remember me preference
+      localStorage.removeItem('supabase_remember_me');
+      localStorage.removeItem('supabase_remember_me_expires');
+    }
+  }
+  
+  return sessionStorage;
+};
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
+    storage: getStorageType(),
     persistSession: true,
     autoRefreshToken: true,
   }

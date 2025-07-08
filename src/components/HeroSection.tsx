@@ -13,10 +13,10 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 relative z-20 text-white">
         <div className="max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-lg" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
             Provider Credentialing &<br />Enrollment Services
           </h1>
-          <p className="text-lg md:text-xl mb-10 max-w-2xl leading-relaxed text-white/95 drop-shadow-md" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
+          <p className="text-lg md:text-xl mb-10 max-w-2xl leading-relaxed text-white/95">
             Pharmacists in certain states can now bill insurance companies for their 
             services, but before they can do so, they must complete a complex 
             credentialing process.

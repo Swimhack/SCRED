@@ -7,16 +7,16 @@ const HeroSection = () => {
     <section 
       className="relative min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url('/lovable-uploads/be98bba8-f7a4-4c5b-862a-41b0e9468e67.png')"
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.6)), url('/lovable-uploads/be98bba8-f7a4-4c5b-862a-41b0e9468e67.png')"
       }}
     >
       
-      <div className="container mx-auto px-4 z-20 text-white">
+      <div className="container mx-auto px-4 relative z-20 text-white">
         <div className="max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-lg" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
             Provider Credentialing &<br />Enrollment Services
           </h1>
-          <p className="text-lg md:text-xl mb-10 max-w-2xl leading-relaxed">
+          <p className="text-lg md:text-xl mb-10 max-w-2xl leading-relaxed text-white/95 drop-shadow-md" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
             Pharmacists in certain states can now bill insurance companies for their 
             services, but before they can do so, they must complete a complex 
             credentialing process.

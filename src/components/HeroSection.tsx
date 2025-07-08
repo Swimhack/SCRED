@@ -1,17 +1,18 @@
 
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const HeroSection = () => {
   return (
     <section 
       className="relative min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('/lovable-uploads/be98bba8-f7a4-4c5b-862a-41b0e9468e67.png')"
+        backgroundImage: `url(${pharmaceuticalHero})`
       }}
     >
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/40 z-10"></div>
+      {/* Simplified overlay for better text contrast */}
+      <div className="absolute inset-0 bg-black/50 z-10"></div>
       
       <div className="container mx-auto px-4 relative z-20">
         <div className="max-w-4xl">

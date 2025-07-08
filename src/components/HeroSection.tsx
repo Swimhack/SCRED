@@ -1,18 +1,15 @@
 
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import pharmaceuticalLabImage from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const HeroSection = () => {
   return (
     <section 
       className="relative min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `url(${pharmaceuticalLabImage})`
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url('/lovable-uploads/be98bba8-f7a4-4c5b-862a-41b0e9468e67.png')"
       }}
     >
-      {/* Dark overlay to ensure text visibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/60 z-10"></div>
       
       <div className="container mx-auto px-4 z-20 text-white">
         <div className="max-w-4xl">
@@ -26,11 +23,11 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mb-10">
-            <Link to="/auth" className="bg-brand-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block text-center">
-              Log In
-            </Link>
-            <Link to="/contact" className="bg-transparent border-2 border-brand-primary text-brand-primary px-8 py-3 rounded-full font-medium hover:bg-brand-primary hover:text-primary-foreground transition-all duration-300 inline-block text-center">
+            <Link to="/contact" className="bg-brand-primary text-black px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block text-center">
               Contact Us
+            </Link>
+            <Link to="/auth" className="bg-transparent border-2 border-brand-primary text-brand-primary px-8 py-3 rounded-full font-medium hover:bg-brand-primary hover:text-black transition-all duration-300 inline-block text-center">
+              Log In
             </Link>
           </div>
           

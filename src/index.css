@@ -13,17 +13,17 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 55 100% 67%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 45 100% 67%;
+    --primary-foreground: 222.2 84% 4.9%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 45 100% 95%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 100% 67%;
+    --accent-foreground: 222.2 84% 4.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -35,16 +35,16 @@
     --radius: 0.5rem;
 
     /* Brand colors */
-    --brand-primary: 55 100% 67%;
-    --brand-yellow: 54 100% 91%;
+    --brand-primary: 45 100% 67%;
+    --brand-yellow: 45 100% 85%;
     --brand-blue: 214 100% 90%;
-    --brand-green: 100 89% 93%;
-    --brand-red: 343 89% 94%;
+    --brand-green: 134 61% 41%;
+    --brand-red: 0 84% 60%;
 
     /* Status colors */
-    --status-blue: 217 91% 60%;
-    --status-yellow: 43 96% 56%;
-    --status-green: 151 55% 42%;
+    --status-blue: 214 91% 60%;
+    --status-yellow: 45 100% 67%;
+    --status-green: 134 61% 41%;
     --status-red: 0 84% 60%;
 
     --sidebar-background: 0 0% 98%;

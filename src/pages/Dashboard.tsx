@@ -60,32 +60,32 @@ const Dashboard = () => {
           <StatCard 
             title="Total Pharmacists" 
             value={statistics.total}
-            icon={<Users size={24} className="text-gray-700" />} 
             bgColor="bg-brand-yellow"
+            variant="primary"
           />
         </Link>
         <Link to="/pending">
           <StatCard 
             title="Pending Requests" 
             value={statistics.pending}
-            icon={<Clock size={24} className="text-gray-700" />} 
             bgColor="bg-brand-blue"
+            variant="warning"
           />
         </Link>
         <Link to="/completed">
           <StatCard 
             title="Completed" 
             value={statistics.completed}
-            icon={<CheckCircle size={24} className="text-gray-700" />} 
             bgColor="bg-brand-green"
+            variant="success"
           />
         </Link>
         <Link to="/expiring">
           <StatCard 
             title="Expiring Soon" 
             value={statistics.expiring}
-            icon={<AlertTriangle size={24} className="text-gray-700" />} 
             bgColor="bg-brand-red"
+            variant="error"
           />
         </Link>
       </div>
@@ -101,24 +101,24 @@ const Dashboard = () => {
           <StatCard 
             title="Active Credentials" 
             value="3" 
-            icon={<CheckCircle size={24} className="text-gray-700" />} 
             bgColor="bg-brand-green"
+            variant="success"
           />
         </Link>
         <Link to="/my-applications">
           <StatCard 
             title="Pending Applications" 
             value="1" 
-            icon={<Clock size={24} className="text-gray-700" />} 
             bgColor="bg-brand-blue"
+            variant="warning"
           />
         </Link>
         <Link to="/my-expiring">
           <StatCard 
             title="Expiring Soon" 
             value="1" 
-            icon={<AlertTriangle size={24} className="text-gray-700" />} 
             bgColor="bg-brand-red"
+            variant="error"
           />
         </Link>
       </div>

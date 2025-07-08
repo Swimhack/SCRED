@@ -1,17 +1,19 @@
 
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import BrandIcon from "./BrandIcon";
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: ReactNode;
+  icon?: ReactNode;
   bgColor: string;
   className?: string;
   onClick?: () => void;
+  variant?: "primary" | "secondary" | "neutral" | "success" | "warning" | "error";
 }
 
-const StatCard = ({ title, value, icon, bgColor, className, onClick }: StatCardProps) => {
+const StatCard = ({ title, value, icon, bgColor, className, onClick, variant = "primary" }: StatCardProps) => {
   const isClickable = !!onClick;
   
   return (
@@ -31,8 +33,8 @@ const StatCard = ({ title, value, icon, bgColor, className, onClick }: StatCardP
         }
       } : undefined}
     >
-      <div className={cn("p-3 rounded-lg", bgColor)}>
-        {icon}
+      <div className={cn("p-3 rounded-lg flex items-center justify-center", bgColor)}>
+        {icon || <BrandIcon variant={variant} size="md" />}
       </div>
       <div>
         <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>

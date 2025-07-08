@@ -1,14 +1,18 @@
 
 import Navbar from "@/components/Navbar";
 import SEO from "@/components/SEO";
+import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const About = () => {
   return (
-    <div className="relative min-h-screen" style={{ 
-      backgroundImage: "url('/lovable-uploads/b0b5c3c7-14d1-4e71-881c-a520bcdc11c8.png')", 
-      backgroundSize: "cover", 
-      backgroundPosition: "center"
-    }}>
+    <div 
+      className="relative min-h-screen bg-cover bg-center bg-no-repeat" 
+      style={{ 
+        backgroundImage: `url(${pharmaceuticalHero})`
+      }}
+    >
+      {/* Simplified overlay for better text contrast */}
+      <div className="absolute inset-0 bg-black/50 z-10"></div>
       <SEO 
         title="About Our Pharmacy Credentialing Services" 
         description="Learn about StreetCredRX's mission to streamline the credentialing process for pharmacists. Founded by pharmacists for pharmacists."
@@ -16,10 +20,21 @@ const About = () => {
       />
       <Navbar />
       
-      <div className="pt-24 pb-16">
+      <div className="pt-24 pb-16 relative z-20">
         <div className="container mx-auto px-4">
           <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl p-8 md:p-12 shadow-xl text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-8 text-brand-primary">About StreetCredRX</h1>
+            <h1 
+              className="text-4xl md:text-5xl font-bold mb-8 text-brand-primary"
+              style={{
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale',
+                textRendering: 'optimizeLegibility',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden'
+              }}
+            >
+              About StreetCredRX
+            </h1>
             
             <div className="space-y-8">
               <div>

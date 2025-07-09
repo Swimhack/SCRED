@@ -51,12 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
       .select(`
         id,
         user_id,
-        metadata,
-        profiles!user_id (
-          first_name,
-          last_name,
-          email
-        )
+        metadata
       `)
       .eq('message_id', messageId)
       .eq('notification_type', 'email')
@@ -77,10 +72,13 @@ const handler = async (req: Request): Promise<Response> => {
     // Process each email notification
     const emailPromises = notifications.map(async (notification) => {
       try {
-        const recipientProfile = notification.profiles;
         const senderProfile = message.profiles;
         
-        if (!recipientProfile?.email) {
+        // Get recipient email from metadata
+        const recipientEmail = notification.metadata?.email;
+        const recipientFirstName = notification.metadata?.first_name;
+        
+        if (!recipientEmail) {
           console.warn(`No email found for user ${notification.user_id}`);
           return { success: false, error: 'No email address' };
         }
@@ -89,8 +87,8 @@ const handler = async (req: Request): Promise<Response> => {
         const emailResponse = await supabase.functions.invoke('send-email', {
           body: {
             type: 'developer-message',
-            to: recipientProfile.email,
-            firstName: recipientProfile.first_name,
+            to: recipientEmail,
+            firstName: recipientFirstName,
             message: message.message,
             senderType: message.sender_type,
             senderName: senderProfile ? `${senderProfile.first_name} ${senderProfile.last_name}`.trim() : undefined,
@@ -111,8 +109,8 @@ const handler = async (req: Request): Promise<Response> => {
           })
           .eq('id', notification.id);
 
-        console.log(`Email sent successfully to ${recipientProfile.email}`);
-        return { success: true, email: recipientProfile.email };
+        console.log(`Email sent successfully to ${recipientEmail}`);
+        return { success: true, email: recipientEmail };
 
       } catch (error) {
         console.error(`Failed to send email notification ${notification.id}:`, error);

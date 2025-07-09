@@ -14,7 +14,7 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  type: 'welcome' | 'password-reset' | 'verification' | 'user-invitation' | 'role-change';
+  type: 'welcome' | 'password-reset' | 'verification' | 'user-invitation' | 'role-change' | 'developer-message';
   to: string;
   firstName?: string;
   resetLink?: string;
@@ -23,6 +23,11 @@ interface EmailRequest {
   invitationToken?: string;
   inviteLink?: string;
   newRole?: string;
+  // Developer message fields
+  message?: string;
+  senderType?: string;
+  senderName?: string;
+  messageId?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -32,7 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { type, to, firstName, resetLink, verificationLink, roleName, invitationToken, inviteLink, newRole }: EmailRequest = await req.json();
+    const { type, to, firstName, resetLink, verificationLink, roleName, invitationToken, inviteLink, newRole, message, senderType, senderName, messageId }: EmailRequest = await req.json();
 
     let emailSubject: string;
     let emailHtml: string;
@@ -163,6 +168,53 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="color: #6b7280; font-size: 14px; line-height: 1.5; margin-top: 30px;">
                 If you have any questions about this change or need assistance, please contact our support team.
+              </p>
+              
+              <div style="border-top: 1px solid #e5e7eb; margin-top: 30px; padding-top: 20px; text-align: center;">
+                <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                  Best regards,<br>
+                  <strong style="color: #374151;">The StreetCredRX Team</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+        break;
+
+      case 'developer-message':
+        emailSubject = `New Developer Message - StreetCredRX`;
+        emailHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+            <div style="background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #1f2937; font-size: 28px; margin-bottom: 10px;">New Developer Message</h1>
+                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #3b82f6, #06b6d4); margin: 0 auto;"></div>
+              </div>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                Hello ${firstName || 'there'},
+              </p>
+              
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                You have received a new message from the ${senderType === 'developer' ? 'development team' : 'administration team'}.
+              </p>
+              
+              <div style="background-color: #f1f5f9; border-left: 4px solid #3b82f6; padding: 20px; margin: 30px 0;">
+                <p style="color: #1e293b; font-size: 16px; margin: 0; line-height: 1.6;">
+                  <strong>From:</strong> ${senderName || (senderType === 'developer' ? 'Development Team' : 'Administration Team')}<br>
+                  <strong>Message:</strong><br><br>
+                  ${message || 'No message content'}
+                </p>
+              </div>
+              
+              <div style="text-align: center; margin: 40px 0;">
+                <a href="https://streetcredrx.lovable.app/${senderType === 'developer' ? 'admin-messages' : 'dev-console'}" style="background: linear-gradient(90deg, #3b82f6, #06b6d4); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                  View Message
+                </a>
+              </div>
+              
+              <p style="color: #6b7280; font-size: 14px; line-height: 1.5; margin-top: 30px;">
+                You can reply to this message directly through the platform. To manage your notification preferences, visit your account settings.
               </p>
               
               <div style="border-top: 1px solid #e5e7eb; margin-top: 30px; padding-top: 20px; text-align: center;">

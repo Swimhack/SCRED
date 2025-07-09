@@ -29,6 +29,7 @@ import LogsViewer from "./pages/LogsViewer";
 import DevConsole from "./pages/DevConsole";
 import AdminMessages from "./pages/AdminMessages";
 import UserManagement from "./pages/UserManagement";
+import NotificationPreferences from "./pages/NotificationPreferences";
 import { useAppLogger } from "./hooks/useAppLogger";
 
 const queryClient = new QueryClient({
@@ -127,13 +128,21 @@ const AppContent = () => {
         </ProtectedRoute>
       } />
       <Route path="/dev-console" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <DevConsole />
           </DashboardLayout>
         </ProtectedRoute>
       } />
+      
       {/* User routes - accessible to all authenticated users */}
+      <Route path="/notification-preferences" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <NotificationPreferences />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
       <Route path="/my-applications" element={
         <ProtectedRoute>
           <DashboardLayout>

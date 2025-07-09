@@ -106,21 +106,36 @@ const AdminMessages = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('developer_messages')
         .insert({
           message: replyMessage.trim(),
           sender_id: user?.id,
           sender_type: 'admin',
           recipient_type: 'developer'
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Trigger email notifications
+      try {
+        const { error: notificationError } = await supabase.functions.invoke('process-message-notifications', {
+          body: { messageId: data.id }
+        });
+        
+        if (notificationError) {
+          console.warn('Failed to trigger email notifications:', notificationError);
+        }
+      } catch (notificationError) {
+        console.warn('Failed to trigger email notifications:', notificationError);
+      }
 
       setReplyMessage('');
       toast({
         title: 'Reply Sent',
-        description: 'Your reply has been sent to the developer'
+        description: 'Your reply has been sent to all administrators'
       });
     } catch (error: any) {
       console.error('Error sending reply:', error);
@@ -140,14 +155,14 @@ const AdminMessages = () => {
       : 'bg-green-100 text-green-800';
   };
 
-  if (userRole !== 'super_admin') {
+  if (!['super_admin', 'admin_manager', 'admin_regional'].includes(userRole || '')) {
     return (
       <div className="container mx-auto p-6">
         <Card>
           <CardHeader>
             <CardTitle>Access Denied</CardTitle>
             <CardDescription>
-              Only super administrators can access admin messages.
+              Only administrators can access admin messages.
             </CardDescription>
           </CardHeader>
         </Card>

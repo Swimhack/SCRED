@@ -79,21 +79,36 @@ const DevConsole = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('developer_messages')
         .insert({
           message: message.trim(),
           sender_id: user?.id,
           sender_type: 'developer',
           recipient_type: 'admin'
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Trigger email notifications
+      try {
+        const { error: notificationError } = await supabase.functions.invoke('process-message-notifications', {
+          body: { messageId: data.id }
+        });
+        
+        if (notificationError) {
+          console.warn('Failed to trigger email notifications:', notificationError);
+        }
+      } catch (notificationError) {
+        console.warn('Failed to trigger email notifications:', notificationError);
+      }
 
       setMessage('');
       toast({
         title: 'Message Sent',
-        description: 'Your message has been sent to the admin'
+        description: 'Your message has been sent to all administrators'
       });
     } catch (error: any) {
       console.error('Error sending message:', error);
@@ -116,14 +131,14 @@ const DevConsole = () => {
     }
   };
 
-  if (userRole !== 'super_admin') {
+  if (!['super_admin', 'admin_manager', 'admin_regional'].includes(userRole || '')) {
     return (
       <div className="container mx-auto p-6">
         <Card>
           <CardHeader>
             <CardTitle>Access Denied</CardTitle>
             <CardDescription>
-              Only developers and super administrators can access the developer console.
+              Only administrators can access the developer console.
             </CardDescription>
           </CardHeader>
         </Card>

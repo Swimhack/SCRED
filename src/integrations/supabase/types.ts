@@ -104,6 +104,89 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_logs: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          message_id: string
+          metadata: Json | null
+          notification_type: string
+          read_at: string | null
+          sent_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          message_id: string
+          metadata?: Json | null
+          notification_type: string
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          message_id?: string
+          metadata?: Json | null
+          notification_type?: string
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_logs_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "developer_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_preferences: {
+        Row: {
+          browser_notifications: boolean
+          created_at: string
+          developer_messages_email: boolean
+          email_frequency: string
+          email_notifications: boolean
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          browser_notifications?: boolean
+          created_at?: string
+          developer_messages_email?: boolean
+          email_frequency?: string
+          email_notifications?: boolean
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          browser_notifications?: boolean
+          created_at?: string
+          developer_messages_email?: boolean
+          email_frequency?: string
+          email_notifications?: boolean
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -239,6 +322,19 @@ export type Database = {
       cleanup_old_logs: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      create_message_notifications: {
+        Args: { message_id_param: string }
+        Returns: undefined
+      }
+      get_admin_notification_recipients: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          user_id: string
+          email: string
+          first_name: string
+          role_name: string
+        }[]
       }
       get_current_user_role_id: {
         Args: Record<PropertyKey, never>

@@ -67,7 +67,7 @@ export const usePharmacistApplications = () => {
   // Statistics derived from real data
   const statistics = useMemo(() => {
     const total = applications.length;
-    const pending = applications.filter(app => app.status === "pending").length;
+    const pending = applications.filter(app => app.status === "pending_documents").length;
     const completed = applications.filter(app => app.status === "approved").length;
     const expiring = applications.filter(app => {
       if (!app.license_expiration_date) return false;
@@ -76,7 +76,9 @@ export const usePharmacistApplications = () => {
       threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
       return expirationDate <= threeMonthsFromNow;
     }).length;
-    const inProgress = applications.filter(app => app.status === "in_review" || app.status === "draft").length;
+    const inProgress = applications.filter(app => 
+      app.status === "in_review" || app.status === "draft" || app.status === "submitted"
+    ).length;
 
     return {
       total: total.toString(),
@@ -91,9 +93,10 @@ export const usePharmacistApplications = () => {
   const mapStatus = (dbStatus: string): "In Progress" | "Pending" | "Completed" | "Expiring Soon" | "Rejected" => {
     switch (dbStatus) {
       case "draft":
+      case "submitted":
       case "in_review":
         return "In Progress";
-      case "pending":
+      case "pending_documents":
         return "Pending";
       case "approved":
         return "Completed";

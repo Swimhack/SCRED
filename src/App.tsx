@@ -26,8 +26,7 @@ import MyCredentials from "./pages/MyCredentials";
 import MyExpiring from "./pages/MyExpiring";
 import Profile from "./pages/Profile";
 import LogsViewer from "./pages/LogsViewer";
-import DevConsole from "./pages/DevConsole";
-import AdminMessages from "./pages/AdminMessages";
+import Messages from "./pages/Messages";
 import UserManagement from "./pages/UserManagement";
 import NotificationPreferences from "./pages/NotificationPreferences";
 import { useAppLogger } from "./hooks/useAppLogger";
@@ -104,10 +103,10 @@ const AppContent = () => {
           </DashboardLayout>
         </ProtectedRoute>
       } />
-      <Route path="/admin-messages" element={
+      <Route path="/messages" element={
         <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
-            <AdminMessages />
+            <Messages />
           </DashboardLayout>
         </ProtectedRoute>
       } />
@@ -124,13 +123,6 @@ const AppContent = () => {
         <ProtectedRoute allowedRoles={["super_admin"]}>
           <DashboardLayout>
             <LogsViewer />
-          </DashboardLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/dev-console" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
-          <DashboardLayout>
-            <DevConsole />
           </DashboardLayout>
         </ProtectedRoute>
       } />

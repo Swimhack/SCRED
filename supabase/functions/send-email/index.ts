@@ -2,6 +2,16 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
+// HTML escape function to prevent injection
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -47,7 +57,7 @@ const handler = async (req: Request): Promise<Response> => {
         emailSubject = "Welcome to StreetCredRX!";
         emailHtml = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #333;">Welcome to StreetCredRX, ${firstName || 'there'}!</h1>
+            <h1 style="color: #333;">Welcome to StreetCredRX, ${escapeHtml(firstName || 'there')}!</h1>
             <p>Thank you for joining our platform. We're excited to help you manage your pharmacy credentials efficiently.</p>
             <p>You can now access your dashboard and start managing your applications and credentials.</p>
             <p>If you have any questions, feel free to reach out to our support team.</p>
@@ -96,7 +106,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                You've been invited to join StreetCredRX as a <strong>${roleName?.replace('_', ' ').toUpperCase()}</strong>.
+                You've been invited to join StreetCredRX as a <strong>${escapeHtml(roleName?.replace('_', ' ').toUpperCase() || 'User')}</strong>.
               </p>
               
               <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
@@ -105,15 +115,15 @@ const handler = async (req: Request): Promise<Response> => {
               </p>
               
               <div style="text-align: center; margin: 40px 0;">
-                <a href="${inviteLink}" style="background: linear-gradient(90deg, #3b82f6, #06b6d4); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                <a href="${escapeHtml(inviteLink || '#')}" style="background: linear-gradient(90deg, #3b82f6, #06b6d4); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
                   Accept Invitation
                 </a>
               </div>
               
               <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 30px 0;">
                 <p style="color: #64748b; font-size: 14px; margin: 0; text-align: center;">
-                  <strong>Your Role:</strong> ${roleName?.replace('_', ' ').toUpperCase()}<br>
-                  <strong>Invitation Token:</strong> ${invitationToken}
+                  <strong>Your Role:</strong> ${escapeHtml(roleName?.replace('_', ' ').toUpperCase() || 'User')}<br>
+                  <strong>Invitation Token:</strong> ${escapeHtml(invitationToken || 'N/A')}
                 </p>
               </div>
               
@@ -143,16 +153,16 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                Hello ${firstName || 'there'},
+                Hello ${escapeHtml(firstName || 'there')},
               </p>
               
               <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
-                Your role in StreetCredRX has been updated to <strong>${newRole?.replace('_', ' ').toUpperCase()}</strong>.
+                Your role in StreetCredRX has been updated to <strong>${escapeHtml(newRole?.replace('_', ' ').toUpperCase() || 'Unknown')}</strong>.
               </p>
               
               <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 30px 0;">
                 <p style="color: #065f46; font-size: 16px; margin: 0;">
-                  <strong>New Role:</strong> ${newRole?.replace('_', ' ').toUpperCase()}
+                  <strong>New Role:</strong> ${escapeHtml(newRole?.replace('_', ' ').toUpperCase() || 'Unknown')}
                 </p>
               </div>
               
@@ -192,7 +202,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-                Hello ${firstName || 'there'},
+                Hello ${escapeHtml(firstName || 'there')},
               </p>
               
               <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
@@ -201,9 +211,9 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div style="background-color: #f1f5f9; border-left: 4px solid #3b82f6; padding: 20px; margin: 30px 0;">
                 <p style="color: #1e293b; font-size: 16px; margin: 0; line-height: 1.6;">
-                  <strong>From:</strong> ${senderName || (senderType === 'developer' ? 'Development Team' : 'Administration Team')}<br>
+                  <strong>From:</strong> ${escapeHtml(senderName || (senderType === 'developer' ? 'Development Team' : 'Administration Team'))}<br>
                   <strong>Message:</strong><br><br>
-                  ${message || 'No message content'}
+                  ${escapeHtml(message || 'No message content')}
                 </p>
               </div>
               

@@ -100,9 +100,28 @@ Deno.serve(async (req) => {
         search: url.searchParams.get('search') || undefined,
       };
     } else if (req.method === 'POST') {
-      // Parse from request body
+      // Parse from request body with input validation
       const body = await req.json();
-      filters = body;
+      
+      // Sanitize and validate inputs
+      filters = {
+        level: typeof body.level === 'string' ? body.level.slice(0, 50) : undefined,
+        component: typeof body.component === 'string' ? body.component.slice(0, 100) : undefined,
+        user_id: typeof body.user_id === 'string' ? body.user_id.slice(0, 50) : undefined,
+        start_date: typeof body.start_date === 'string' ? body.start_date.slice(0, 50) : undefined,
+        end_date: typeof body.end_date === 'string' ? body.end_date.slice(0, 50) : undefined,
+        limit: Math.min(Math.max(parseInt(body.limit) || 100, 1), 1000),
+        offset: Math.max(parseInt(body.offset) || 0, 0),
+        search: typeof body.search === 'string' ? body.search.slice(0, 500) : undefined,
+      };
+      
+      // Validate date formats if provided
+      if (filters.start_date && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(filters.start_date)) {
+        throw new Error('Invalid start_date format');
+      }
+      if (filters.end_date && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(filters.end_date)) {
+        throw new Error('Invalid end_date format');
+      }
     }
 
     // Validate and sanitize filters

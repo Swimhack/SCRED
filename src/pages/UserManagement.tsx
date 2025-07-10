@@ -176,7 +176,7 @@ const UserManagement = () => {
           to: inviteEmail,
           roleName,
           invitationToken: token,
-          inviteLink: `${window.location.origin}/auth?invite=${token}`
+          inviteLink: `${window.location.protocol}//${window.location.host}/auth?invite=${token}`
         }
       });
 

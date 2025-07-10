@@ -3,10 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
-import { MessageSquare, Send, Bell, CheckCircle } from 'lucide-react';
+import { MessageSquare, Send, Bell, CheckCircle, User, Code2, Clock } from 'lucide-react';
 import SEO from '@/components/SEO';
 
 interface DeveloperMessage {
@@ -149,10 +151,33 @@ const AdminMessages = () => {
     }
   };
 
-  const getSenderBadgeColor = (senderType: string) => {
-    return senderType === 'developer' 
-      ? 'bg-blue-100 text-blue-800' 
-      : 'bg-green-100 text-green-800';
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  const formatLongTimestamp = (timestamp: string) => {
+    return new Date(timestamp).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
   if (!['super_admin', 'admin_manager', 'admin_regional'].includes(userRole || '')) {
@@ -196,8 +221,8 @@ const AdminMessages = () => {
       </div>
 
       {/* Messages */}
-      <Card>
-        <CardHeader>
+      <Card className="h-[600px] flex flex-col">
+        <CardHeader className="flex-shrink-0 border-b bg-muted/30">
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Message Thread
@@ -206,48 +231,137 @@ const AdminMessages = () => {
             Messages from the development team and your replies
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 p-0 overflow-hidden">
           {messages.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              No messages yet
+            <div className="flex items-center justify-center h-full text-muted-foreground">
+              <div className="text-center space-y-2">
+                <MessageSquare className="h-12 w-12 mx-auto opacity-50" />
+                <p className="text-lg font-medium">No messages yet</p>
+                <p className="text-sm">Messages will appear here when the development team sends updates</p>
+              </div>
             </div>
           ) : (
-            <div className="space-y-4 max-h-96 overflow-y-auto">
-              {messages.map((msg) => (
-                <div 
-                  key={msg.id} 
-                  className={`border rounded-lg p-4 space-y-2 ${
-                    msg.sender_type === 'developer' && msg.status === 'sent' 
-                      ? 'bg-blue-50 border-blue-200' 
-                      : ''
-                  }`}
-                  onClick={() => {
-                    if (msg.sender_type === 'developer' && msg.status === 'sent') {
-                      markAsRead(msg.id);
-                    }
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Badge className={getSenderBadgeColor(msg.sender_type)}>
-                        {msg.sender_type === 'developer' ? 'Developer' : 'You'}
-                      </Badge>
-                      {msg.sender_type === 'developer' && msg.status === 'sent' && (
-                        <Badge variant="outline" className="text-red-600">
-                          New
-                        </Badge>
-                      )}
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(msg.created_at).toLocaleString()}
-                      </span>
-                    </div>
-                    {msg.status === 'read' && (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
+            <div className="h-full overflow-y-auto p-4 space-y-4">
+              {messages.map((msg, index) => {
+                const isDeveloper = msg.sender_type === 'developer';
+                const isUnread = isDeveloper && msg.status === 'sent';
+                const showDateSeparator = index === 0 || 
+                  new Date(msg.created_at).toDateString() !== new Date(messages[index - 1].created_at).toDateString();
+                
+                return (
+                  <div key={msg.id} className="space-y-3">
+                    {/* Date separator */}
+                    {showDateSeparator && (
+                      <div className="flex items-center justify-center py-2">
+                        <Separator className="flex-1" />
+                        <div className="px-3 py-1 bg-muted text-muted-foreground text-xs font-medium rounded-full">
+                          {new Date(msg.created_at).toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </div>
+                        <Separator className="flex-1" />
+                      </div>
                     )}
+                    
+                    {/* Message bubble */}
+                    <div 
+                      className={`group flex items-start gap-3 ${
+                        isDeveloper ? 'justify-start' : 'justify-end'
+                      }`}
+                      onClick={() => {
+                        if (isUnread) {
+                          markAsRead(msg.id);
+                        }
+                      }}
+                    >
+                      {/* Avatar for developer messages */}
+                      {isDeveloper && (
+                        <Avatar className="h-8 w-8 border-2 border-background shadow-sm">
+                          <AvatarFallback className="bg-blue-500 text-white text-xs">
+                            <Code2 className="h-4 w-4" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      
+                      {/* Message content */}
+                      <div className={`flex flex-col space-y-1 max-w-[80%] ${
+                        isDeveloper ? 'items-start' : 'items-end'
+                      }`}>
+                        {/* Sender info */}
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-medium ${
+                            isDeveloper ? 'text-blue-600' : 'text-green-600'
+                          }`}>
+                            {isDeveloper ? 'Development Team' : 'You'}
+                          </span>
+                          {isUnread && (
+                            <Badge 
+                              variant="destructive" 
+                              className="text-xs px-1.5 py-0.5 h-5 animate-pulse"
+                            >
+                              New
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {/* Message bubble */}
+                        <div 
+                          className={`relative px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 ${
+                            isDeveloper 
+                              ? `bg-white border ${isUnread ? 'border-blue-200 shadow-blue-100' : 'border-border'} hover:shadow-md` 
+                              : 'bg-primary text-primary-foreground'
+                          } ${isUnread ? 'ring-2 ring-blue-100' : ''}`}
+                        >
+                          {/* Message text with better typography */}
+                          <div className={`text-sm leading-relaxed ${
+                            isDeveloper ? 'text-foreground' : 'text-primary-foreground'
+                          }`}>
+                            {msg.message.split('\n').map((line, i) => (
+                              <div key={i} className={i > 0 ? 'mt-2' : ''}>
+                                {line}
+                              </div>
+                            ))}
+                          </div>
+                          
+                          {/* Message tail */}
+                          <div 
+                            className={`absolute top-4 w-0 h-0 ${
+                              isDeveloper 
+                                ? `left-[-6px] border-r-[6px] ${isUnread ? 'border-r-blue-50' : 'border-r-white'} border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent`
+                                : 'right-[-6px] border-l-[6px] border-l-primary border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent'
+                            }`}
+                          />
+                        </div>
+                        
+                        {/* Timestamp and status */}
+                        <div className="flex items-center gap-2 px-1">
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Clock className="h-3 w-3" />
+                            <span title={formatLongTimestamp(msg.created_at)}>
+                              {formatTimestamp(msg.created_at)}
+                            </span>
+                          </div>
+                          {msg.status === 'read' && !isDeveloper && (
+                            <CheckCircle className="h-3 w-3 text-green-500" />
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Avatar for admin messages */}
+                      {!isDeveloper && (
+                        <Avatar className="h-8 w-8 border-2 border-background shadow-sm">
+                          <AvatarFallback className="bg-green-500 text-white text-xs">
+                            <User className="h-4 w-4" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
                   </div>
-                  <div className="font-medium">{msg.message}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>

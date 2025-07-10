@@ -110,6 +110,13 @@ const AppContent = () => {
           </DashboardLayout>
         </ProtectedRoute>
       } />
+      <Route path="/dev-console" element={
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+          <DashboardLayout>
+            <Messages />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
       
       {/* Super admin only routes */}
       <Route path="/user-management" element={

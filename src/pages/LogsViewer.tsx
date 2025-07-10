@@ -329,12 +329,12 @@ const LogsViewer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="text-sm font-medium">Log Level</label>
-              <Select value={filters.level} onValueChange={(value) => setFilters({...filters, level: value, offset: 0})}>
+              <Select value={filters.level || "all"} onValueChange={(value) => setFilters({...filters, level: value === "all" ? "" : value, offset: 0})}>
                 <SelectTrigger>
                   <SelectValue placeholder="All levels" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All levels</SelectItem>
+                  <SelectItem value="all">All levels</SelectItem>
                   <SelectItem value="debug">Debug</SelectItem>
                   <SelectItem value="info">Info</SelectItem>
                   <SelectItem value="warn">Warning</SelectItem>

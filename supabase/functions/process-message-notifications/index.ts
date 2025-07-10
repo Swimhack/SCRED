@@ -83,34 +83,46 @@ const handler = async (req: Request): Promise<Response> => {
           return { success: false, error: 'No email address' };
         }
 
-        // Send email via send-email function
-        const emailResponse = await supabase.functions.invoke('send-email', {
+        // Use the new notification engine for multi-channel delivery
+        const engineResponse = await supabase.functions.invoke('process-notification-engine', {
           body: {
-            type: 'developer-message',
-            to: recipientEmail,
-            firstName: recipientFirstName,
+            messageId: notification.message_id,
+            category: 'developer_message',
+            priority: 'normal', // Could be dynamic based on message priority
+            title: 'New Developer Message',
             message: message.message,
-            senderType: message.sender_type,
-            senderName: senderProfile ? `${senderProfile.first_name} ${senderProfile.last_name}`.trim() : undefined,
-            messageId: message.id
+            metadata: {
+              sender_name: senderProfile ? `${senderProfile.first_name} ${senderProfile.last_name}`.trim() : 'Development Team',
+              sender_type: message.sender_type,
+              message_preview: message.message.substring(0, 100) + (message.message.length > 100 ? '...' : ''),
+              message_id: message.id
+            }
           }
         });
 
-        if (emailResponse.error) {
-          throw new Error(`Email send failed: ${emailResponse.error.message}`);
+        if (engineResponse.error) {
+          throw new Error(`Notification engine failed: ${engineResponse.error.message}`);
         }
 
-        // Update notification status to sent
+        // Update notification status based on engine results
+        const engineData = engineResponse.data;
+        const hasSuccessful = engineData?.results?.sent > 0;
+        
         await supabase
           .from('notification_logs')
           .update({
-            status: 'sent',
-            sent_at: new Date().toISOString()
+            status: hasSuccessful ? 'sent' : 'failed',
+            sent_at: hasSuccessful ? new Date().toISOString() : null,
+            error_message: hasSuccessful ? null : 'All channels failed'
           })
           .eq('id', notification.id);
 
-        console.log(`Email sent successfully to ${recipientEmail}`);
-        return { success: true, email: recipientEmail };
+        console.log(`Notification processed for ${recipientEmail}:`, engineData?.results);
+        return { 
+          success: hasSuccessful, 
+          email: recipientEmail,
+          channels: engineData?.results
+        };
 
       } catch (error) {
         console.error(`Failed to send email notification ${notification.id}:`, error);

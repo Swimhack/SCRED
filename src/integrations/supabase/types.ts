@@ -284,6 +284,128 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_analytics: {
+        Row: {
+          avg_delivery_time_seconds: number | null
+          category: string | null
+          channel: string
+          created_at: string
+          date: string
+          hour: number | null
+          id: string
+          priority: string | null
+          total_cost_cents: number | null
+          total_delivered: number | null
+          total_failed: number | null
+          total_read: number | null
+          total_sent: number | null
+          user_role: string | null
+        }
+        Insert: {
+          avg_delivery_time_seconds?: number | null
+          category?: string | null
+          channel: string
+          created_at?: string
+          date: string
+          hour?: number | null
+          id?: string
+          priority?: string | null
+          total_cost_cents?: number | null
+          total_delivered?: number | null
+          total_failed?: number | null
+          total_read?: number | null
+          total_sent?: number | null
+          user_role?: string | null
+        }
+        Update: {
+          avg_delivery_time_seconds?: number | null
+          category?: string | null
+          channel?: string
+          created_at?: string
+          date?: string
+          hour?: number | null
+          id?: string
+          priority?: string | null
+          total_cost_cents?: number | null
+          total_delivered?: number | null
+          total_failed?: number | null
+          total_read?: number | null
+          total_sent?: number | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
+      notification_channels: {
+        Row: {
+          channel: string
+          channel_data: Json | null
+          cost_cents: number | null
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          failed_at: string | null
+          id: string
+          max_retries: number | null
+          next_retry_at: string | null
+          notification_id: string
+          provider_id: string | null
+          provider_response: Json | null
+          read_at: string | null
+          retry_count: number | null
+          sent_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          channel: string
+          channel_data?: Json | null
+          cost_cents?: number | null
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          failed_at?: string | null
+          id?: string
+          max_retries?: number | null
+          next_retry_at?: string | null
+          notification_id: string
+          provider_id?: string | null
+          provider_response?: Json | null
+          read_at?: string | null
+          retry_count?: number | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          channel_data?: Json | null
+          cost_cents?: number | null
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          failed_at?: string | null
+          id?: string
+          max_retries?: number | null
+          next_retry_at?: string | null
+          notification_id?: string
+          provider_id?: string | null
+          provider_response?: Json | null
+          read_at?: string | null
+          retry_count?: number | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_channels_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notification_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_logs: {
         Row: {
           created_at: string
@@ -336,34 +458,201 @@ export type Database = {
       }
       notification_preferences: {
         Row: {
+          application_updates_email: boolean
           browser_notifications: boolean
           created_at: string
+          critical_channels: string[] | null
           developer_messages_email: boolean
           email_frequency: string
           email_notifications: boolean
+          escalation_delay_minutes: number | null
+          escalation_enabled: boolean
+          escalation_recipient_id: string | null
+          haptic_enabled: boolean
+          high_channels: string[] | null
           id: string
+          low_channels: string[] | null
+          normal_channels: string[] | null
+          notification_sound: string | null
+          phone_number: string | null
+          phone_verified: boolean
+          push_subscription: Json | null
+          quiet_hours_enabled: boolean
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sms_critical_only: boolean
+          sms_enabled: boolean
+          sound_enabled: boolean
+          system_alerts_email: boolean
+          timezone: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          application_updates_email?: boolean
           browser_notifications?: boolean
           created_at?: string
+          critical_channels?: string[] | null
           developer_messages_email?: boolean
           email_frequency?: string
           email_notifications?: boolean
+          escalation_delay_minutes?: number | null
+          escalation_enabled?: boolean
+          escalation_recipient_id?: string | null
+          haptic_enabled?: boolean
+          high_channels?: string[] | null
           id?: string
+          low_channels?: string[] | null
+          normal_channels?: string[] | null
+          notification_sound?: string | null
+          phone_number?: string | null
+          phone_verified?: boolean
+          push_subscription?: Json | null
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_critical_only?: boolean
+          sms_enabled?: boolean
+          sound_enabled?: boolean
+          system_alerts_email?: boolean
+          timezone?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          application_updates_email?: boolean
           browser_notifications?: boolean
           created_at?: string
+          critical_channels?: string[] | null
           developer_messages_email?: boolean
           email_frequency?: string
           email_notifications?: boolean
+          escalation_delay_minutes?: number | null
+          escalation_enabled?: boolean
+          escalation_recipient_id?: string | null
+          haptic_enabled?: boolean
+          high_channels?: string[] | null
           id?: string
+          low_channels?: string[] | null
+          normal_channels?: string[] | null
+          notification_sound?: string | null
+          phone_number?: string | null
+          phone_verified?: boolean
+          push_subscription?: Json | null
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_critical_only?: boolean
+          sms_enabled?: boolean
+          sound_enabled?: boolean
+          system_alerts_email?: boolean
+          timezone?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      notification_queue: {
+        Row: {
+          channels_to_process: string[]
+          created_at: string
+          error_message: string | null
+          id: string
+          max_attempts: number | null
+          notification_id: string
+          priority: number
+          processed_at: string | null
+          processing_attempts: number | null
+          processing_started_at: string | null
+          scheduled_for: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          channels_to_process: string[]
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          max_attempts?: number | null
+          notification_id: string
+          priority?: number
+          processed_at?: string | null
+          processing_attempts?: number | null
+          processing_started_at?: string | null
+          scheduled_for?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          channels_to_process?: string[]
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          max_attempts?: number | null
+          notification_id?: string
+          priority?: number
+          processed_at?: string | null
+          processing_attempts?: number | null
+          processing_started_at?: string | null
+          scheduled_for?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_queue_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notification_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_templates: {
+        Row: {
+          body_template: string
+          category: string
+          channel: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_system_template: boolean
+          name: string
+          organization_id: string | null
+          priority: string
+          subject_template: string | null
+          updated_at: string
+          variables: Json | null
+        }
+        Insert: {
+          body_template: string
+          category: string
+          channel: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_system_template?: boolean
+          name: string
+          organization_id?: string | null
+          priority?: string
+          subject_template?: string | null
+          updated_at?: string
+          variables?: Json | null
+        }
+        Update: {
+          body_template?: string
+          category?: string
+          channel?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_system_template?: boolean
+          name?: string
+          organization_id?: string | null
+          priority?: string
+          subject_template?: string | null
+          updated_at?: string
+          variables?: Json | null
         }
         Relationships: []
       }
@@ -824,6 +1113,14 @@ export type Database = {
       get_current_user_role_id: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      get_notification_channels: {
+        Args: { user_id_param: string; priority_param: string }
+        Returns: string[]
+      }
+      is_user_in_quiet_hours: {
+        Args: { user_id_param: string }
+        Returns: boolean
       }
     }
     Enums: {

@@ -113,8 +113,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => onReply(message)}
+              className="h-6 px-2 text-xs opacity-70 hover:opacity-100 transition-opacity bg-muted/50 hover:bg-muted"
+              onClick={(e) => {
+                e.stopPropagation();
+                onReply(message);
+              }}
             >
               <Reply className="h-3 w-3 mr-1" />
               Reply

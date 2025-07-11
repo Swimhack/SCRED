@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_analysis: {
+        Row: {
+          analysis_type: string
+          confidence_score: number | null
+          created_at: string
+          developer_approved: boolean | null
+          developer_notes: string | null
+          generated_prompt: string | null
+          id: string
+          message_id: string
+          processed_at: string
+          sources: string[] | null
+          suggested_response: string | null
+          updated_at: string
+        }
+        Insert: {
+          analysis_type: string
+          confidence_score?: number | null
+          created_at?: string
+          developer_approved?: boolean | null
+          developer_notes?: string | null
+          generated_prompt?: string | null
+          id?: string
+          message_id: string
+          processed_at?: string
+          sources?: string[] | null
+          suggested_response?: string | null
+          updated_at?: string
+        }
+        Update: {
+          analysis_type?: string
+          confidence_score?: number | null
+          created_at?: string
+          developer_approved?: boolean | null
+          developer_notes?: string | null
+          generated_prompt?: string | null
+          id?: string
+          message_id?: string
+          processed_at?: string
+          sources?: string[] | null
+          suggested_response?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_analysis_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "developer_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       application_documents: {
         Row: {
           application_id: string

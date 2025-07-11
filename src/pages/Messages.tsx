@@ -10,6 +10,9 @@ import SEO from '@/components/SEO';
 import { MessageThread } from '@/components/MessageThread';
 import { MessageComposer } from '@/components/MessageComposer';
 import { useMessages, DeveloperMessage } from '@/hooks/useMessages';
+import { useAIAnalysis } from '@/hooks/useAIAnalysis';
+import { AIAnalysisPanel } from '@/components/AIAnalysisPanel';
+import { supabase } from '@/integrations/supabase/client';
 
 const Messages = () => {
   const {
@@ -27,6 +30,21 @@ const Messages = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPriority, setSelectedPriority] = useState<string>('all');
   const [activeTab, setActiveTab] = useState('all');
+
+  // Get all message IDs for AI analysis
+  const allMessageIds = useMemo(() => 
+    messages.map(msg => msg.id), [messages]
+  );
+
+  const {
+    analyses,
+    loading: aiLoading,
+    updateAnalysis,
+    triggerAIAnalysis
+  } = useAIAnalysis(allMessageIds);
+
+  // Check if user is super admin (developer)
+  const isDeveloper = userRole === '4';
 
   // Group messages by thread
   const messageThreads = useMemo(() => {
@@ -89,6 +107,27 @@ const Messages = () => {
       setReplyingTo(null);
     }
     return success;
+  };
+
+  // Function to trigger AI analysis on new messages from A.J.
+  const handleTriggerAIAnalysis = async (message: DeveloperMessage) => {
+    // Only analyze messages from A.J. (assuming A.J. has a specific sender_id)
+    // You can adjust this condition based on how A.J. is identified
+    if (message.sender_type === 'admin' && isDeveloper) {
+      try {
+        await triggerAIAnalysis(message.id, message.message, {
+          senderType: message.sender_type,
+          senderId: message.sender_id
+        });
+      } catch (error) {
+        console.error('Failed to trigger AI analysis:', error);
+      }
+    }
+  };
+
+  // Get AI analysis for a specific message
+  const getAnalysisForMessage = (messageId: string) => {
+    return analyses.find(analysis => analysis.message_id === messageId);
   };
 
   const handleCancelReply = () => {
@@ -286,6 +325,31 @@ const Messages = () => {
                     onMarkAsRead={markAsRead}
                     onReply={setReplyingTo}
                   />
+                  
+                  {/* AI Analysis for Developers */}
+                  {isDeveloper && threadMessages.map(message => {
+                    const analysis = getAnalysisForMessage(message.id);
+                    return analysis ? (
+                      <AIAnalysisPanel
+                        key={analysis.id}
+                        analysis={analysis}
+                        onUpdateAnalysis={updateAnalysis}
+                      />
+                    ) : (
+                      message.sender_type === 'admin' && (
+                        <div key={`trigger-${message.id}`} className="mt-3">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleTriggerAIAnalysis(message)}
+                            className="w-full"
+                          >
+                            🤖 Analyze with AI
+                          </Button>
+                        </div>
+                      )
+                    );
+                  })}
                 </CardContent>
               </Card>
             ))

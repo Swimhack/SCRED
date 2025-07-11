@@ -101,6 +101,24 @@ export const useMessages = () => {
         console.warn('Failed to trigger email notifications:', notificationError);
       }
 
+      // Automatically trigger AI analysis for messages from admins
+      if (isAdmin) {
+        try {
+          await supabase.functions.invoke('analyze-message-with-ai', {
+            body: {
+              messageId: data.id,
+              messageText: messageText.trim(),
+              senderInfo: {
+                senderType: 'admin',
+                senderId: user?.id
+              }
+            }
+          });
+        } catch (aiError) {
+          console.warn('Failed to trigger AI analysis:', aiError);
+        }
+      }
+
       toast({
         title: 'Message Sent',
         description: `Your message has been sent to ${isAdmin ? 'the development team' : 'all administrators'}`

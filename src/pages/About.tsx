@@ -15,7 +15,7 @@ const About = () => {
       <div className="absolute inset-0 bg-black/50 z-10"></div>
       <SEO 
         title="About Our Pharmacy Credentialing Services" 
-        description="Learn about StreetCredRX's mission to streamline the credentialing process for pharmacists. Founded by pharmacists for pharmacists."
+        description="Learn about StreetCredRx's mission to streamline the credentialing process for pharmacists. Founded by pharmacists for pharmacists."
         canonicalPath="/about"
       />
       <Navbar />
@@ -33,14 +33,14 @@ const About = () => {
                 backfaceVisibility: 'hidden'
               }}
             >
-              About StreetCredRX
+              About StreetCredRx
             </h1>
             
             <div className="space-y-8">
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Mission</h2>
                 <p className="text-lg">
-                  StreetCredRX exists to empower pharmacists by streamlining the complex credentialing process, 
+                  StreetCredRx exists to empower pharmacists by streamlining the complex credentialing process, 
                   allowing them to focus on what matters most - patient care. We believe that pharmacists 
                   play a crucial role in healthcare delivery, and our mission is to eliminate administrative 
                   barriers that prevent them from billing for their valuable clinical services.
@@ -50,7 +50,7 @@ const About = () => {
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Story</h2>
                 <p className="text-lg mb-4">
-                  Founded by pharmacists who experienced firsthand the challenges of credentialing, StreetCredRX 
+                  Founded by pharmacists who experienced firsthand the challenges of credentialing, StreetCredRx 
                   was born out of necessity. As states began allowing pharmacists to bill as providers, we 
                   identified a significant gap in the market for specialized credentialing support tailored 
                   to pharmacy practice.
@@ -74,7 +74,7 @@ const About = () => {
               <div className="border-t border-gray-700 pt-8">
                 <h2 className="text-2xl md:text-3xl font-semibold mb-4">Join Us</h2>
                 <p className="text-lg">
-                  Ready to unlock the full potential of your pharmacy practice? Partner with StreetCredRX today and 
+                  Ready to unlock the full potential of your pharmacy practice? Partner with StreetCredRx today and 
                   let us handle the complexity of provider credentialing while you focus on delivering exceptional 
                   patient care.
                 </p>

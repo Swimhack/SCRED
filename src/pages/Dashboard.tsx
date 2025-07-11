@@ -174,7 +174,7 @@ const Dashboard = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <SEO 
-        title={userRole === "super_admin" ? "Admin Dashboard - StreetCredRX" : "Provider Dashboard - StreetCredRX"}
+        title={userRole === "super_admin" ? "Admin Dashboard - StreetCredRx" : "Provider Dashboard - StreetCredRx"}
         description={userRole === "super_admin" 
           ? "Manage pharmacy credentialing applications and track enrollment statuses across your organization." 
           : "Monitor your pharmacy credentials, track application status, and manage upcoming renewals."}

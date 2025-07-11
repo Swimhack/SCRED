@@ -1,5 +1,5 @@
 
-# StreetCredRX Robots.txt
+# StreetCredRx Robots.txt
 User-agent: *
 Allow: /
 

@@ -26,7 +26,7 @@ const BrandIcon = ({ variant, size = "md", className }: BrandIconProps) => {
   return (
     <img 
       src={iconConfig[variant]}
-      alt="StreetCredRX Icon"
+      alt="StreetCredRx Icon"
       className={cn(sizeConfig[size], className)}
     />
   );

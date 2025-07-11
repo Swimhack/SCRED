@@ -48,7 +48,7 @@ const Contact = () => {
       {/* Simplified overlay for better text contrast */}
       <div className="absolute inset-0 bg-black/50 z-10"></div>
       <SEO 
-        title="Contact Us - StreetCredRX" 
+        title="Contact Us - StreetCredRx" 
         description="Get in touch with our pharmacy credentialing experts. We're here to help you navigate the provider enrollment process."
         canonicalPath="/contact"
       />

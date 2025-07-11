@@ -35,15 +35,15 @@
     --radius: 0.5rem;
 
     /* Brand colors */
-    --brand-primary: 45 100% 67%;
-    --brand-yellow: 45 100% 85%;
+    --brand-primary: 45 100% 50%;
+    --brand-yellow: 45 100% 45%;
     --brand-blue: 214 100% 90%;
     --brand-green: 134 61% 41%;
     --brand-red: 0 84% 60%;
 
     /* Status colors */
     --status-blue: 214 91% 60%;
-    --status-yellow: 45 100% 67%;
+    --status-yellow: 45 100% 45%;
     --status-green: 134 61% 41%;
     --status-red: 0 84% 60%;
 

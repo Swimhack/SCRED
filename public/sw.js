@@ -58,7 +58,7 @@ self.addEventListener('push', (event) => {
   }
 
   event.waitUntil(
-    self.registration.showNotification('StreetCredRX', options)
+    self.registration.showNotification('StreetCredRx', options)
   );
 });
 

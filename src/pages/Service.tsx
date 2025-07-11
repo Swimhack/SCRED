@@ -74,7 +74,7 @@ const Service = () => {
             </h1>
             
             <p className="text-xl mb-12">
-              StreetCredRX offers comprehensive credentialing and enrollment services designed specifically 
+              StreetCredRx offers comprehensive credentialing and enrollment services designed specifically 
               for pharmacists looking to bill for clinical services.
             </p>
             

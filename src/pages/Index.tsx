@@ -7,8 +7,8 @@ const Index = () => {
   return (
     <div className="relative">
       <SEO 
-        title="StreetCredRX - Pharmacy Credentialing & Enrollment Services" 
-        description="Simplify your pharmacy credentialing process with StreetCredRX. We help independent pharmacists navigate the complex provider enrollment requirements."
+        title="StreetCredRx - Pharmacy Credentialing & Enrollment Services" 
+        description="Simplify your pharmacy credentialing process with StreetCredRx. We help independent pharmacists navigate the complex provider enrollment requirements."
         canonicalPath="/"
       />
       <Navbar />

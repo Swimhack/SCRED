@@ -117,7 +117,7 @@ const Auth = () => {
       setIsLogin(false);
       
       toast({
-        title: "Welcome to StreetCredRX",
+        title: "Welcome to StreetCredRx",
         description: "Please complete your registration below.",
       });
     } catch (error: any) {
@@ -283,7 +283,7 @@ const Auth = () => {
             last_name: lastName,
             invited_role_id: inviteData?.role_id
           },
-          emailRedirectTo: "https://streetcredrx.lovable.app/dashboard"
+        emailRedirectTo: "https://streetcredrx.lovable.app/dashboard"
         }
       });
       
@@ -310,7 +310,7 @@ const Auth = () => {
         toast({
           title: "Registration successful",
           description: inviteData 
-            ? "Welcome to StreetCredRX! Your account has been created with the assigned role."
+            ? "Welcome to StreetCredRx! Your account has been created with the assigned role."
             : "Please check your email for a verification link.",
         });
         // Switch to login view after successful signup

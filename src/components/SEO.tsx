@@ -8,12 +8,12 @@ interface SEOProps {
 }
 
 const SEO = ({ 
-  title = 'StreetCredRX - Pharmacy Credentialing & Enrollment Services', 
-  description = 'Streamline your pharmacy credentialing process with StreetCredRX. We help pharmacists navigate complex provider enrollment and credentialing requirements.',
+  title = 'StreetCredRx - Pharmacy Credentialing & Enrollment Services', 
+  description = 'Streamline your pharmacy credentialing process with StreetCredRx. We help pharmacists navigate complex provider enrollment and credentialing requirements.',
   canonicalPath = ''
 }: SEOProps) => {
   const siteUrl = 'https://streetcredrx.com';
-  const fullTitle = title.includes('StreetCredRX') ? title : `${title} | StreetCredRX`;
+  const fullTitle = title.includes('StreetCredRx') ? title : `${title} | StreetCredRx`;
   
   return (
     <Helmet>

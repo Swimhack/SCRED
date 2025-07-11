@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
-import { MessageSquare, Send, Bell, CheckCircle, User, Code2, Clock } from 'lucide-react';
+import { MessageSquare, Send, Bell, CheckCircle, User, Code2, Clock, Reply, X } from 'lucide-react';
 import SEO from '@/components/SEO';
 
 interface DeveloperMessage {
@@ -20,6 +20,7 @@ interface DeveloperMessage {
   status: string;
   created_at: string;
   updated_at: string;
+  thread_id: string | null;
 }
 
 const Messages = () => {
@@ -28,6 +29,7 @@ const Messages = () => {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [replyingTo, setReplyingTo] = useState<DeveloperMessage | null>(null);
 
   const isAdmin = ['super_admin', 'admin_manager', 'admin_regional'].includes(userRole || '');
   
@@ -122,7 +124,8 @@ const Messages = () => {
           message: newMessage.trim(),
           sender_id: user?.id,
           sender_type: isAdmin ? 'admin' : 'developer',
-          recipient_type: isAdmin ? 'developer' : 'admin'
+          recipient_type: isAdmin ? 'developer' : 'admin',
+          thread_id: replyingTo?.thread_id || replyingTo?.id || null
         })
         .select()
         .single();
@@ -143,6 +146,7 @@ const Messages = () => {
       }
 
       setNewMessage('');
+      setReplyingTo(null);
       toast({
         title: 'Message Sent',
         description: `Your message has been sent to ${isAdmin ? 'the development team' : 'all administrators'}`
@@ -356,7 +360,7 @@ const Messages = () => {
                           />
                         </div>
                         
-                        {/* Timestamp and status */}
+                        {/* Timestamp, status, and reply button */}
                         <div className="flex items-center gap-2 px-1">
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
@@ -366,6 +370,17 @@ const Messages = () => {
                           </div>
                           {msg.status === 'read' && isOwnMessage && (
                             <CheckCircle className="h-3 w-3 text-green-500" />
+                          )}
+                          {!isOwnMessage && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => setReplyingTo(msg)}
+                            >
+                              <Reply className="h-3 w-3 mr-1" />
+                              Reply
+                            </Button>
                           )}
                         </div>
                       </div>
@@ -402,12 +417,33 @@ const Messages = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {replyingTo && (
+            <div className="bg-muted p-3 rounded-lg border-l-4 border-primary">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-muted-foreground">Replying to:</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                  onClick={() => setReplyingTo(null)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-sm text-foreground line-clamp-2">
+                {replyingTo.message}
+              </p>
+            </div>
+          )}
           <Textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder={isAdmin 
-              ? "Share feedback, provide guidance, or discuss next steps for development..."
-              : "Share development updates, ask for guidance, or discuss content changes..."
+            placeholder={replyingTo 
+              ? "Type your reply..."
+              : (isAdmin 
+                ? "Share feedback, provide guidance, or discuss next steps for development..."
+                : "Share development updates, ask for guidance, or discuss content changes..."
+              )
             }
             rows={4}
           />

@@ -200,7 +200,8 @@ const Auth = () => {
           title: "Login successful",
           description: "Welcome back!",
         });
-        navigate("/dashboard");
+        // Force page reload to ensure clean state
+        window.location.href = "/dashboard";
       }
     } catch (error: any) {
       toast({

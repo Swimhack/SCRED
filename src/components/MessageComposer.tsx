@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Send, X } from 'lucide-react';
 import { DeveloperMessage } from '@/hooks/useMessages';
 
@@ -9,7 +10,7 @@ interface MessageComposerProps {
   isAdmin: boolean;
   loading: boolean;
   replyingTo: DeveloperMessage | null;
-  onSendMessage: (message: string, replyTo?: DeveloperMessage) => Promise<boolean>;
+  onSendMessage: (message: string, replyTo?: DeveloperMessage, category?: string, priority?: string) => Promise<boolean>;
   onCancelReply: () => void;
 }
 
@@ -21,11 +22,15 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   onCancelReply
 }) => {
   const [newMessage, setNewMessage] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('update');
+  const [selectedPriority, setSelectedPriority] = useState('normal');
 
   const handleSend = async () => {
-    const success = await onSendMessage(newMessage, replyingTo || undefined);
+    const success = await onSendMessage(newMessage, replyingTo || undefined, selectedCategory, selectedPriority);
     if (success) {
       setNewMessage('');
+      setSelectedCategory('update');
+      setSelectedPriority('normal');
     }
   };
 
@@ -62,6 +67,41 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
             </p>
           </div>
         )}
+        
+        {!replyingTo && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Category</label>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="update">💬 Update</SelectItem>
+                  <SelectItem value="bug_report">🐛 Bug Report</SelectItem>
+                  <SelectItem value="feature_request">✨ Feature Request</SelectItem>
+                  <SelectItem value="question">❓ Question</SelectItem>
+                  <SelectItem value="approval_needed">✅ Approval Needed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Priority</label>
+              <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">⚫ Low</SelectItem>
+                  <SelectItem value="normal">🔵 Normal</SelectItem>
+                  <SelectItem value="high">🟠 High</SelectItem>
+                  <SelectItem value="urgent">🔴 Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+        
         <Textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

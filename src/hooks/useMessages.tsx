@@ -13,6 +13,8 @@ export interface DeveloperMessage {
   created_at: string;
   updated_at: string;
   thread_id: string | null;
+  category: string;
+  priority: string;
 }
 
 export const useMessages = () => {
@@ -65,7 +67,7 @@ export const useMessages = () => {
     }
   };
 
-  const sendMessage = async (messageText: string, replyToMessage?: DeveloperMessage) => {
+  const sendMessage = async (messageText: string, replyToMessage?: DeveloperMessage, category = 'update', priority = 'normal') => {
     if (!messageText.trim()) return;
 
     setLoading(true);
@@ -77,7 +79,9 @@ export const useMessages = () => {
           sender_id: user?.id,
           sender_type: isAdmin ? 'admin' : 'developer',
           recipient_type: isAdmin ? 'developer' : 'admin',
-          thread_id: replyToMessage?.thread_id || replyToMessage?.id || null
+          thread_id: replyToMessage?.thread_id || replyToMessage?.id || null,
+          category: replyToMessage ? replyToMessage.category : category,
+          priority: replyToMessage ? replyToMessage.priority : priority
         })
         .select()
         .single();

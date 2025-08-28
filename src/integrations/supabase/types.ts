@@ -1133,6 +1133,438 @@ export type Database = {
           },
         ]
       }
+      facility_questionnaires: {
+        Row: {
+          accepts_medicaid: boolean
+          accepts_medicare: boolean
+          additional_notes: string | null
+          annual_prescription_volume: number | null
+          automated_dispensing: boolean
+          backup_power_system: boolean
+          buying_group_membership: string | null
+          chain_affiliation: string | null
+          city: string
+          compounding_services: boolean
+          created_at: string
+          dea_expiration: string | null
+          dea_registration: string | null
+          delivery_available: boolean
+          disaster_recovery_plan: boolean
+          e_prescribing_enabled: boolean
+          electronic_health_records: boolean
+          email: string
+          emergency_plan: boolean
+          facility_name: string
+          facility_npi: string | null
+          facility_type: string | null
+          fax: string | null
+          hipaa_compliant: boolean
+          id: string
+          immunization_services: boolean
+          inspection_results: string | null
+          last_board_inspection: string | null
+          liability_coverage_amount: string
+          liability_expiration: string
+          liability_insurance_carrier: string
+          liability_policy_number: string
+          license_expiration: string
+          medication_therapy_management: boolean
+          number_of_locations: number
+          organization_id: string | null
+          ownership_type: string | null
+          pharmacy_management_system: string | null
+          phone: string
+          preferred_wholesaler: string | null
+          primary_address: string
+          quality_assurance_program: boolean
+          quality_program_description: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          state: string
+          state_pharmacy_license: string
+          status: string
+          submitted_at: string | null
+          submitted_by: string | null
+          tax_id: string | null
+          total_pharmacists: number
+          total_support_staff: number
+          total_technicians: number
+          updated_at: string
+          website: string | null
+          years_in_operation: number
+          zip_code: string
+        }
+        Insert: {
+          accepts_medicaid?: boolean
+          accepts_medicare?: boolean
+          additional_notes?: string | null
+          annual_prescription_volume?: number | null
+          automated_dispensing?: boolean
+          backup_power_system?: boolean
+          buying_group_membership?: string | null
+          chain_affiliation?: string | null
+          city: string
+          compounding_services?: boolean
+          created_at?: string
+          dea_expiration?: string | null
+          dea_registration?: string | null
+          delivery_available?: boolean
+          disaster_recovery_plan?: boolean
+          e_prescribing_enabled?: boolean
+          electronic_health_records?: boolean
+          email: string
+          emergency_plan?: boolean
+          facility_name: string
+          facility_npi?: string | null
+          facility_type?: string | null
+          fax?: string | null
+          hipaa_compliant?: boolean
+          id?: string
+          immunization_services?: boolean
+          inspection_results?: string | null
+          last_board_inspection?: string | null
+          liability_coverage_amount: string
+          liability_expiration: string
+          liability_insurance_carrier: string
+          liability_policy_number: string
+          license_expiration: string
+          medication_therapy_management?: boolean
+          number_of_locations: number
+          organization_id?: string | null
+          ownership_type?: string | null
+          pharmacy_management_system?: string | null
+          phone: string
+          preferred_wholesaler?: string | null
+          primary_address: string
+          quality_assurance_program?: boolean
+          quality_program_description?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state: string
+          state_pharmacy_license: string
+          status?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+          tax_id?: string | null
+          total_pharmacists: number
+          total_support_staff: number
+          total_technicians: number
+          updated_at?: string
+          website?: string | null
+          years_in_operation: number
+          zip_code: string
+        }
+        Update: {
+          accepts_medicaid?: boolean
+          accepts_medicare?: boolean
+          additional_notes?: string | null
+          annual_prescription_volume?: number | null
+          automated_dispensing?: boolean
+          backup_power_system?: boolean
+          buying_group_membership?: string | null
+          chain_affiliation?: string | null
+          city?: string
+          compounding_services?: boolean
+          created_at?: string
+          dea_expiration?: string | null
+          dea_registration?: string | null
+          delivery_available?: boolean
+          disaster_recovery_plan?: boolean
+          e_prescribing_enabled?: boolean
+          electronic_health_records?: boolean
+          email?: string
+          emergency_plan?: boolean
+          facility_name?: string
+          facility_npi?: string | null
+          facility_type?: string | null
+          fax?: string | null
+          hipaa_compliant?: boolean
+          id?: string
+          immunization_services?: boolean
+          inspection_results?: string | null
+          last_board_inspection?: string | null
+          liability_coverage_amount?: string
+          liability_expiration?: string
+          liability_insurance_carrier?: string
+          liability_policy_number?: string
+          license_expiration?: string
+          medication_therapy_management?: boolean
+          number_of_locations?: number
+          organization_id?: string | null
+          ownership_type?: string | null
+          pharmacy_management_system?: string | null
+          phone?: string
+          preferred_wholesaler?: string | null
+          primary_address?: string
+          quality_assurance_program?: boolean
+          quality_program_description?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string
+          state_pharmacy_license?: string
+          status?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+          tax_id?: string | null
+          total_pharmacists?: number
+          total_support_staff?: number
+          total_technicians?: number
+          updated_at?: string
+          website?: string | null
+          years_in_operation?: number
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "facility_questionnaires_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facility_questionnaires_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facility_questionnaires_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pharmacist_questionnaires: {
+        Row: {
+          additional_notes: string | null
+          application_id: string | null
+          available_start_date: string | null
+          city: string
+          coverage_amount: string
+          cpr_certified: boolean
+          created_at: string
+          criminal_history: boolean
+          criminal_history_explanation: string | null
+          current_employer: string
+          date_of_birth: string | null
+          dea_number: string | null
+          disciplinary_action: boolean
+          disciplinary_action_explanation: string | null
+          email: string
+          employer_address: string
+          employment_start_date: string
+          full_name: string
+          graduation_year: number
+          home_address: string
+          id: string
+          immunization_certified: boolean
+          languages_spoken: string[] | null
+          license_expiration: string
+          license_number: string
+          license_state: string
+          malpractice_insurance_carrier: string
+          npi_number: string
+          pharmacy_school: string
+          phone_number: string
+          policy_expiration: string
+          policy_number: string
+          position_title: string
+          preferred_work_schedule: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          ssn_last_four: string | null
+          state: string
+          status: string
+          submitted_at: string | null
+          updated_at: string
+          user_id: string | null
+          willing_to_travel: boolean
+          years_of_experience: number
+          zip_code: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          application_id?: string | null
+          available_start_date?: string | null
+          city: string
+          coverage_amount: string
+          cpr_certified?: boolean
+          created_at?: string
+          criminal_history?: boolean
+          criminal_history_explanation?: string | null
+          current_employer: string
+          date_of_birth?: string | null
+          dea_number?: string | null
+          disciplinary_action?: boolean
+          disciplinary_action_explanation?: string | null
+          email: string
+          employer_address: string
+          employment_start_date: string
+          full_name: string
+          graduation_year: number
+          home_address: string
+          id?: string
+          immunization_certified?: boolean
+          languages_spoken?: string[] | null
+          license_expiration: string
+          license_number: string
+          license_state: string
+          malpractice_insurance_carrier: string
+          npi_number: string
+          pharmacy_school: string
+          phone_number: string
+          policy_expiration: string
+          policy_number: string
+          position_title: string
+          preferred_work_schedule?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          ssn_last_four?: string | null
+          state: string
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+          willing_to_travel?: boolean
+          years_of_experience: number
+          zip_code: string
+        }
+        Update: {
+          additional_notes?: string | null
+          application_id?: string | null
+          available_start_date?: string | null
+          city?: string
+          coverage_amount?: string
+          cpr_certified?: boolean
+          created_at?: string
+          criminal_history?: boolean
+          criminal_history_explanation?: string | null
+          current_employer?: string
+          date_of_birth?: string | null
+          dea_number?: string | null
+          disciplinary_action?: boolean
+          disciplinary_action_explanation?: string | null
+          email?: string
+          employer_address?: string
+          employment_start_date?: string
+          full_name?: string
+          graduation_year?: number
+          home_address?: string
+          id?: string
+          immunization_certified?: boolean
+          languages_spoken?: string[] | null
+          license_expiration?: string
+          license_number?: string
+          license_state?: string
+          malpractice_insurance_carrier?: string
+          npi_number?: string
+          pharmacy_school?: string
+          phone_number?: string
+          policy_expiration?: string
+          policy_number?: string
+          position_title?: string
+          preferred_work_schedule?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          ssn_last_four?: string | null
+          state?: string
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+          willing_to_travel?: boolean
+          years_of_experience?: number
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pharmacist_questionnaires_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "pharmacist_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pharmacist_questionnaires_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pharmacist_questionnaires_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questionnaire_documents: {
+        Row: {
+          created_at: string
+          document_name: string
+          document_type: string
+          facility_questionnaire_id: string | null
+          file_path: string
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          pharmacist_questionnaire_id: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          document_name: string
+          document_type: string
+          facility_questionnaire_id?: string | null
+          file_path: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          pharmacist_questionnaire_id?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          document_name?: string
+          document_type?: string
+          facility_questionnaire_id?: string | null
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          pharmacist_questionnaire_id?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questionnaire_documents_facility_questionnaire_id_fkey"
+            columns: ["facility_questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "facility_questionnaires"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questionnaire_documents_pharmacist_questionnaire_id_fkey"
+            columns: ["pharmacist_questionnaire_id"]
+            isOneToOne: false
+            referencedRelation: "pharmacist_questionnaires"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questionnaire_documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

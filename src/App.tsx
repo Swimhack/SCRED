@@ -27,8 +27,12 @@ import MyExpiring from "./pages/MyExpiring";
 import Profile from "./pages/Profile";
 import LogsViewer from "./pages/LogsViewer";
 import Messages from "./pages/Messages";
+import ApiMessages from "./pages/ApiMessages";
 import UserManagement from "./pages/UserManagement";
+import ContactSubmissions from "./pages/ContactSubmissions";
 import NotificationPreferences from "./pages/NotificationPreferences";
+import PharmacistQuestionnaire from "./pages/PharmacistQuestionnaire";
+import FacilityQuestionnaire from "./pages/FacilityQuestionnaire";
 import { useAppLogger } from "./hooks/useAppLogger";
 
 const queryClient = new QueryClient({
@@ -133,6 +137,32 @@ const AppContent = () => {
           </DashboardLayout>
         </ProtectedRoute>
       } />
+      <Route path="/contact-submissions" element={
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+          <DashboardLayout>
+            <ContactSubmissions />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      
+      {/* Questionnaire routes */}
+      <Route path="/questionnaire/pharmacist" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <PharmacistQuestionnaire />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/questionnaire/facility" element={
+        <ProtectedRoute allowedRoles={["super_admin", "admin_manager"]}>
+          <DashboardLayout>
+            <FacilityQuestionnaire />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      
+      {/* Public API endpoint for messages - no authentication required */}
+      <Route path="/api/messages" element={<ApiMessages />} />
       
       {/* User routes - accessible to all authenticated users */}
       <Route path="/notification-preferences" element={

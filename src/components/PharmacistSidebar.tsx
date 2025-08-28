@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight, MessageSquare, Code, FileText } from "lucide-react";
+import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight, MessageSquare, Code, FileText, Mail, ClipboardList, Building2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -22,8 +22,10 @@ const PharmacistSidebar = () => {
       { icon: Clock, label: "Pending Requests", path: "/pending" },
       { icon: CheckCircle, label: "Completed", path: "/completed" },
       { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
+      { icon: Building2, label: "Facility Questionnaire", path: "/questionnaire/facility" },
       { icon: Users, label: "User Management", path: "/user-management" },
       { icon: MessageSquare, label: "Messages", path: "/messages" },
+      { icon: Mail, label: "Contact Forms", path: "/contact-submissions" },
       { icon: FileText, label: "System Logs", path: "/logs" },
     ];
 
@@ -32,10 +34,13 @@ const PharmacistSidebar = () => {
       { icon: Clock, label: "Pending Requests", path: "/pending" },
       { icon: CheckCircle, label: "Completed", path: "/completed" },
       { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
+      { icon: Building2, label: "Facility Questionnaire", path: "/questionnaire/facility" },
       { icon: MessageSquare, label: "Messages", path: "/messages" },
+      { icon: Mail, label: "Contact Forms", path: "/contact-submissions" },
     ];
 
     const userItems = [
+      { icon: ClipboardList, label: "Pharmacist Questionnaire", path: "/questionnaire/pharmacist" },
       { icon: Clock, label: "My Applications", path: "/my-applications" },
       { icon: CheckCircle, label: "My Credentials", path: "/my-credentials" },
       { icon: AlertTriangle, label: "Expiring Soon", path: "/my-expiring" },

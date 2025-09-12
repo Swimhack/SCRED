@@ -28,8 +28,8 @@ echo "✅ All required files present"
 
 # Deployment Summary
 echo "📋 Deployment Summary:"
-echo "   - App: streetcred"
-echo "   - Target: https://streetcred.fly.dev/"
+echo "   - App: streetcredrx"
+echo "   - Target: https://streetcredrx.fly.dev/"
 echo "   - Build files: $(ls -la dist/ | wc -l) files"
 echo "   - Build size: $(du -sh dist/ | cut -f1)"
 echo "   - New features: Pharmacist & Facility Questionnaires"
@@ -53,16 +53,16 @@ if command -v fly >/dev/null 2>&1; then
     fi
     
     # Deploy
-    fly deploy --app streetcred
+    fly deploy --app streetcredrx
     DEPLOY_EXIT_CODE=$?
     
     if [ $DEPLOY_EXIT_CODE -eq 0 ]; then
         echo "🎉 Deployment successful!"
-        echo "✅ Application deployed to: https://streetcred.fly.dev/"
+        echo "✅ Application deployed to: https://streetcredrx.fly.dev/"
         echo ""
         echo "🔗 New Questionnaire URLs:"
-        echo "   📋 Pharmacist: https://streetcred.fly.dev/questionnaire/pharmacist"
-        echo "   🏢 Facility: https://streetcred.fly.dev/questionnaire/facility"
+        echo "   📋 Pharmacist: https://streetcredrx.fly.dev/questionnaire/pharmacist"
+        echo "   🏢 Facility: https://streetcredrx.fly.dev/questionnaire/facility"
         echo ""
         echo "⚠️  IMPORTANT: Don't forget to run the database migration!"
         echo "   1. Go to Supabase Dashboard"
@@ -80,7 +80,7 @@ else
     echo "🔧 Quick deployment options:"
     echo "   1. Install Fly CLI: curl -L https://fly.io/install.sh | sh"
     echo "   2. Authenticate: fly auth login"
-    echo "   3. Deploy: fly deploy --app streetcred"
+    echo "   3. Deploy: fly deploy --app streetcredrx"
     echo ""
     echo "🗂️  Or follow the detailed instructions in DEPLOYMENT_INSTRUCTIONS.md"
 fi

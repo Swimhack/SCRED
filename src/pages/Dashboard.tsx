@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import SEO from "@/components/SEO";
+import featureFlags from "@/lib/featureFlags";
 
 const Dashboard = () => {
   const { userRole, profile } = useAuth();
@@ -90,7 +91,36 @@ const Dashboard = () => {
         </Link>
       </div>
       
-      <PharmacistTable />
+      {/* Show full table in Enterprise mode, simplified view in MVP */}
+      {featureFlags.features.dashboard.advancedAnalytics ? (
+        <PharmacistTable />
+      ) : (
+        <div className="bg-white rounded-lg border shadow-sm">
+          <div className="p-6 border-b">
+            <h2 className="text-xl font-semibold">Recent Applications</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              {featureFlags.isMvp ? "MVP Mode - Basic view" : "Recent pharmacist applications"}
+            </p>
+          </div>
+          <div className="p-6">
+            <div className="text-center py-8 text-gray-500">
+              <p>Click on the stat cards above to view detailed lists</p>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Link to="/pending">
+                  <Button variant="outline" className="w-full">
+                    View Pending Applications
+                  </Button>
+                </Link>
+                <Link to="/pharmacists">
+                  <Button variant="outline" className="w-full">
+                    View All Pharmacists
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
   
@@ -174,17 +204,18 @@ const Dashboard = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <SEO 
-        title={userRole === "super_admin" ? "Admin Dashboard - StreetCredRx" : "Provider Dashboard - StreetCredRx"}
-        description={userRole === "super_admin" 
+        title={featureFlags.hasRole(userRole || "", "admin") ? "Admin Dashboard - StreetCredRx" : "Provider Dashboard - StreetCredRx"}
+        description={featureFlags.hasRole(userRole || "", "admin") 
           ? "Manage pharmacy credentialing applications and track enrollment statuses across your organization." 
           : "Monitor your pharmacy credentials, track application status, and manage upcoming renewals."}
         canonicalPath="/dashboard"
       />
       <h1 className="text-2xl font-semibold mb-6">
-        {userRole === "super_admin" ? "Admin Dashboard" : "My Dashboard"}
+        {featureFlags.hasRole(userRole || "", "admin") ? "Admin Dashboard" : "My Dashboard"}
+        {featureFlags.isMvp && <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">MVP Mode</span>}
       </h1>
       
-      {userRole === "super_admin" ? <AdminDashboard /> : <PharmacistDashboard />}
+      {featureFlags.hasRole(userRole || "", "admin") ? <AdminDashboard /> : <PharmacistDashboard />}
     </div>
   );
 };

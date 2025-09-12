@@ -1,0 +1,38 @@
+{
+  "timestamp": "2025-08-26T02:13:14.044Z",
+  "formElements": {
+    "name": "found",
+    "email": "found",
+    "phone": "found",
+    "message": "found",
+    "submit": "found"
+  },
+  "networkRequests": [
+    {
+      "url": "https://tvqyozyjqcswojsbduzw.supabase.co/functions/v1/send-contact-email",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Linux\"",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cXlvenlqcWNzd29qc2JkdXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1MzIyMzUsImV4cCI6MjA2MzEwODIzNX0.MJl1EtbDCjzT5PvBxoA7j4_4iM_FtX_1IjcDexcwz9Y",
+        "referer": "https://streetcred.fly.dev/",
+        "sec-ch-ua": "\"Not=A?Brand\";v=\"24\", \"Chromium\";v=\"140\"",
+        "sec-ch-ua-mobile": "?0",
+        "x-client-info": "supabase-js-web/2.56.0",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+        "content-type": "application/json",
+        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cXlvenlqcWNzd29qc2JkdXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1MzIyMzUsImV4cCI6MjA2MzEwODIzNX0.MJl1EtbDCjzT5PvBxoA7j4_4iM_FtX_1IjcDexcwz9Y"
+      },
+      "postData": "{\"name\":\"Test User\",\"email\":\"test@example.com\",\"phone\":\"555-123-4567\",\"message\":\"This is a test submission to debug the contact form\",\"source\":\"website\",\"userAgent\":\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36\",\"referrer\":\"\"}"
+    }
+  ],
+  "networkResponses": [],
+  "messages": {
+    "toasts": [],
+    "errors": [],
+    "url": "https://streetcred.fly.dev/contact"
+  },
+  "consoleErrors": {
+    "errors": [],
+    "logs": []
+  }
+}

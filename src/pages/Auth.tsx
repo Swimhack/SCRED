@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from "@/hooks/useAuth";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,6 +26,7 @@ const Auth = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
 
   // Check for password reset mode or invitation on component mount
   useEffect(() => {
@@ -47,6 +49,13 @@ const Auth = () => {
       handleEmailVerification(accessToken, refreshToken);
     }
   }, [searchParams]);
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   const handleEmailVerification = async (accessToken: string, refreshToken: string) => {
     try {
@@ -525,6 +534,15 @@ const Auth = () => {
             </div>
           </form>
         </div>
+      </div>
+    );
+  }
+
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
       </div>
     );
   }

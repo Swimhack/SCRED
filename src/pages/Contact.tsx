@@ -4,11 +4,14 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
 import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const Contact = () => {
+  console.log('Contact component rendered');
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,19 +26,111 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    console.log('handleSubmit called', { formData });
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "We've received your message and will get back to you soon.",
+    try {
+      // Validate required fields
+      if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+        console.log('Validation failed - calling toast for missing fields');
+        toast({
+          title: "Missing required fields",
+          description: "Please fill in all required fields (name, email, and message).",
+          variant: "destructive",
+        });
+        console.log('Toast called for missing fields');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: "Invalid email address",
+          description: "Please enter a valid email address.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Get additional data for submission
+      const userAgent = navigator.userAgent;
+      const referrer = document.referrer;
+      
+      console.log('Submitting contact form with data:', {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message.substring(0, 50) + '...',
+        source: 'website',
+        userAgent: userAgent.substring(0, 50) + '...',
+        referrer
       });
-      setFormData({ name: "", email: "", phone: "", message: "" });
+      
+      // Submit contact form via Supabase Edge Function
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          message: formData.message.trim(),
+          source: 'website',
+          userAgent,
+          referrer
+        }
+      });
+
+      console.log('Supabase function response:', { data, error });
+
+      if (error) {
+        console.error('Contact form error:', error);
+        
+        // Provide more specific error messages
+        let errorMessage = "There was a problem sending your message. Please try again or contact us directly.";
+        if (error.message?.includes('404') || error.message?.includes('Not Found')) {
+          errorMessage = "The contact service is currently unavailable. Please try again later or email us directly at james@ekaty.com.";
+        } else if (error.message?.includes('CORS')) {
+          errorMessage = "Network error occurred. Please check your connection and try again.";
+        }
+        
+        toast({
+          title: "Error sending message",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.success) {
+        toast({
+          title: "Message sent!",
+          description: "We've received your message and will get back to you soon. Thank you for contacting us!",
+        });
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        console.error('Contact form failed with data:', data);
+        throw new Error(data?.error || 'Contact form submission failed');
+      }
+    } catch (error) {
+      console.error('Contact form submission failed:', error);
+      
+      let errorMessage = "There was a problem sending your message. Please try again or contact us directly.";
+      if (error.message?.includes('Failed to fetch')) {
+        errorMessage = "Network connection error. Please check your internet connection and try again.";
+      }
+      
+      toast({
+        title: "Error sending message",
+        description: errorMessage + " You can also reach us directly at james@ekaty.com.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -55,10 +150,10 @@ const Contact = () => {
       <Navbar />
       
       <div className="pt-24 pb-16 relative z-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto bg-gray-900/80 backdrop-blur-sm rounded-xl p-8 md:p-12 shadow-xl text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto bg-gray-900/80 backdrop-blur-sm rounded-xl p-4 sm:p-8 md:p-12 shadow-xl text-white">
             <h1 
-              className="text-4xl md:text-5xl font-bold mb-8 text-brand-primary text-center"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 text-brand-primary text-center"
               style={{
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
@@ -70,7 +165,7 @@ const Contact = () => {
               Contact Us
             </h1>
             <p 
-              className="text-xl mb-8 text-center opacity-90"
+              className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-center opacity-90"
               style={{
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
@@ -83,7 +178,7 @@ const Contact = () => {
               Contact our team today and we'll help you navigate the path to provider status.
             </p>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div>
                 <label htmlFor="name" className="block mb-2 text-sm font-medium">Your Name</label>
                 <Input 

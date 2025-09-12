@@ -1,0 +1,36 @@
+{
+  "landingPage": {
+    "passed": true,
+    "issues": []
+  },
+  "contactForm": {
+    "passed": true,
+    "issues": []
+  },
+  "authentication": {
+    "passed": true,
+    "issues": []
+  },
+  "dashboard": {
+    "passed": true,
+    "issues": []
+  },
+  "errorHandling": {
+    "passed": true,
+    "issues": []
+  },
+  "responsive": {
+    "passed": false,
+    "issues": [
+      "mobile layout may have horizontal overflow"
+    ]
+  },
+  "consoleErrors": [
+    "Console Error: Failed to load resource: the server responded with a status of 503 ()",
+    "Console Error: Failed to load resource: the server responded with a status of 503 ()",
+    "Console Error: 404 Error: User attempted to access non-existent route: /nonexistent-page"
+  ],
+  "performance": {
+    "landingPageLoad": 1328542
+  }
+}

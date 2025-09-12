@@ -1,9 +1,11 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight, MessageSquare, Code, FileText, Mail, ClipboardList, Building2 } from "lucide-react";
+import { Home, Users, Clock, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight, MessageSquare, Code, FileText, Mail, ClipboardList, Building2, Award, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { getNavigationItems } from "@/lib/featureFlags";
+import featureFlags from "@/lib/featureFlags";
 
 const PharmacistSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -11,51 +13,31 @@ const PharmacistSidebar = () => {
   const [activePath, setActivePath] = useState("/dashboard");
   const { userRole } = useAuth();
 
-  // Define menu items based on user role
-  const getMenuItems = () => {
-    const commonItems = [
-      { icon: Home, label: "Dashboard", path: "/dashboard" },
-    ];
-
-    const superAdminItems = [
-      { icon: Users, label: "Total Pharmacists", path: "/pharmacists" },
-      { icon: Clock, label: "Pending Requests", path: "/pending" },
-      { icon: CheckCircle, label: "Completed", path: "/completed" },
-      { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
-      { icon: Building2, label: "Facility Questionnaire", path: "/questionnaire/facility" },
-      { icon: Users, label: "User Management", path: "/user-management" },
-      { icon: MessageSquare, label: "Messages", path: "/messages" },
-      { icon: Mail, label: "Contact Forms", path: "/contact-submissions" },
-      { icon: FileText, label: "System Logs", path: "/logs" },
-    ];
-
-    const adminItems = [
-      { icon: Users, label: "Total Pharmacists", path: "/pharmacists" },
-      { icon: Clock, label: "Pending Requests", path: "/pending" },
-      { icon: CheckCircle, label: "Completed", path: "/completed" },
-      { icon: AlertTriangle, label: "Expiring Soon", path: "/expiring" },
-      { icon: Building2, label: "Facility Questionnaire", path: "/questionnaire/facility" },
-      { icon: MessageSquare, label: "Messages", path: "/messages" },
-      { icon: Mail, label: "Contact Forms", path: "/contact-submissions" },
-    ];
-
-    const userItems = [
-      { icon: ClipboardList, label: "Pharmacist Questionnaire", path: "/questionnaire/pharmacist" },
-      { icon: Clock, label: "My Applications", path: "/my-applications" },
-      { icon: CheckCircle, label: "My Credentials", path: "/my-credentials" },
-      { icon: AlertTriangle, label: "Expiring Soon", path: "/my-expiring" },
-    ];
-
-    if (userRole === "super_admin") {
-      return [...commonItems, ...superAdminItems];
-    } else if (userRole === "admin_manager" || userRole === "admin_regional") {
-      return [...commonItems, ...adminItems];
-    } else {
-      return [...commonItems, ...userItems];
-    }
+  // Define icon mapping for navigation items
+  const iconMap = {
+    Home,
+    Users,
+    Clock,
+    CheckCircle,
+    AlertCircle: AlertTriangle,
+    FileText,
+    Award,
+    MessageSquare,
+    Settings,
+    Mail,
+    ClipboardList,
+    Building2,
   };
 
-  const menuItems = getMenuItems();
+  // Get menu items from feature flags based on user role
+  const navigationItems = getNavigationItems(userRole || 'pharmacist');
+  
+  // Convert navigation items to include icons
+  const menuItems = navigationItems.map(item => ({
+    icon: iconMap[item.icon as keyof typeof iconMap] || FileText,
+    label: item.name,
+    path: item.path
+  }));
 
   // Update active path based on current location
   useEffect(() => {
@@ -100,7 +82,7 @@ const PharmacistSidebar = () => {
       <div className="p-4 border-t">
         {!collapsed && (
           <div className="text-xs text-gray-500">
-            StreetCredRx Admin v1.0
+            StreetCredRx {featureFlags.isMvp ? "MVP" : "Enterprise"} v1.0
           </div>
         )}
       </div>

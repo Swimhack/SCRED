@@ -1,0 +1,54 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - link "StreetCredRX StreetCredRX" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "StreetCredRX" [ref=e8] [cursor=pointer]
+          - text: StreetCredRX
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - link "Home" [ref=e11] [cursor=pointer]:
+              - /url: /
+            - link "About" [ref=e12] [cursor=pointer]:
+              - /url: /about
+            - link "Service" [ref=e13] [cursor=pointer]:
+              - /url: /service
+            - link "Contact" [ref=e14] [cursor=pointer]:
+              - /url: /contact
+          - link "Log In" [ref=e15] [cursor=pointer]:
+            - /url: /auth
+    - generic [ref=e19]:
+      - heading "Provider Credentialing & Enrollment Services" [level=1] [ref=e20]:
+        - text: Provider Credentialing &
+        - text: Enrollment Services
+      - paragraph [ref=e21]: Pharmacists in certain states can now bill insurance companies for their services, but before they can do so, they must complete a complex credentialing process.
+      - generic [ref=e22]:
+        - link "Contact Us" [ref=e23] [cursor=pointer]:
+          - /url: /contact
+        - link "Log In" [ref=e24] [cursor=pointer]:
+          - /url: /auth
+      - generic [ref=e25]:
+        - paragraph [ref=e26]: Satisfied Clients
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: DR
+            - generic [ref=e30]: SM
+            - generic [ref=e31]: JL
+            - generic [ref=e32]: "+50"
+          - generic [ref=e33]:
+            - generic [ref=e34]: "4.9"
+            - generic [ref=e35]:
+              - img [ref=e36]
+              - img [ref=e38]
+              - img [ref=e40]
+              - img [ref=e42]
+              - img [ref=e44]
+            - generic [ref=e46]: (150+ reviews)
+```

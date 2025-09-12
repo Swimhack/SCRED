@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { toast } from "@/components/ui/use-toast";
+import featureFlags from "@/lib/featureFlags";
 
 interface AuthContextType {
   user: User | null;
@@ -109,7 +110,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (profileData) {
           setProfile(profileData);
-          setUserRole(profileData.roles?.name || "user"); // Default to user role if roles is missing
+          // Use simplified role system based on feature flags
+          const rawRole = profileData.roles?.name || "user";
+          const simplifiedRole = featureFlags.isMvp 
+            ? (rawRole === "super_admin" || rawRole === "admin_manager" || rawRole === "admin_regional" ? "admin" : "pharmacist")
+            : rawRole;
+          setUserRole(simplifiedRole);
         }
       } catch (error: any) {
         console.error("Error fetching user profile:", error.message);
@@ -118,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setProfileError(true);
         
         // Set default user role to prevent blocking access
-        setUserRole("user");
+        setUserRole(featureFlags.isMvp ? "pharmacist" : "user");
         
         // Create a basic profile with available user data
         if (user) {

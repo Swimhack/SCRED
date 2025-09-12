@@ -1,9 +1,10 @@
 
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -34,6 +35,7 @@ import NotificationPreferences from "./pages/NotificationPreferences";
 import PharmacistQuestionnaire from "./pages/PharmacistQuestionnaire";
 import FacilityQuestionnaire from "./pages/FacilityQuestionnaire";
 import { useAppLogger } from "./hooks/useAppLogger";
+import featureFlags from "@/lib/featureFlags";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +48,13 @@ const queryClient = new QueryClient({
 
 const AppContent = () => {
   useAppLogger(); // Initialize logging
+  
+  // Update document title based on feature flags
+  React.useEffect(() => {
+    const baseTitle = "StreetCredRX - Pharmacy Credentialing & Enrollment Services";
+    document.title = featureFlags.isMvp ? `${baseTitle} (MVP)` : baseTitle;
+  }, []);
+  
   return (
     <Routes>
       <Route path="/" element={<Index />} />
@@ -54,6 +63,9 @@ const AppContent = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
+      
+      {/* Admin route - redirects to dashboard */}
+      <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <DashboardLayout>
@@ -78,65 +90,75 @@ const AppContent = () => {
         </ProtectedRoute>
       } />
       
-      {/* Admin routes - different levels */}
+      {/* Admin routes - conditional based on feature flags */}
       <Route path="/pharmacists" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+        <ProtectedRoute allowedRoles={featureFlags.isMvp ? ["admin"] : ["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Pharmacists />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/pending" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+        <ProtectedRoute allowedRoles={featureFlags.isMvp ? ["admin"] : ["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Pending />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/completed" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+        <ProtectedRoute allowedRoles={featureFlags.isMvp ? ["admin"] : ["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Completed />
           </DashboardLayout>
         </ProtectedRoute>
       } />
       <Route path="/expiring" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+        <ProtectedRoute allowedRoles={featureFlags.isMvp ? ["admin"] : ["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>
             <Expiring />
           </DashboardLayout>
         </ProtectedRoute>
       } />
-      <Route path="/messages" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
-          <DashboardLayout>
-            <Messages />
-          </DashboardLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/dev-console" element={
-        <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
-          <DashboardLayout>
-            <Messages />
-          </DashboardLayout>
-        </ProtectedRoute>
-      } />
       
-      {/* Super admin only routes */}
-      <Route path="/user-management" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
-          <DashboardLayout>
-            <UserManagement />
-          </DashboardLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/logs" element={
-        <ProtectedRoute allowedRoles={["super_admin"]}>
-          <DashboardLayout>
-            <LogsViewer />
-          </DashboardLayout>
-        </ProtectedRoute>
-      } />
+      {/* Enterprise-only routes - conditionally rendered */}
+      {featureFlags.features.messaging.enabled && (
+        <>
+          <Route path="/messages" element={
+            <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+              <DashboardLayout>
+                <Messages />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dev-console" element={
+            <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+              <DashboardLayout>
+                <Messages />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+        </>
+      )}
+      
+      {/* Super admin only routes - Enterprise only */}
+      {featureFlags.features.admin.userManagement && (
+        <Route path="/user-management" element={
+          <ProtectedRoute allowedRoles={["super_admin"]}>
+            <DashboardLayout>
+              <UserManagement />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+      )}
+      {featureFlags.features.admin.activityLogs && (
+        <Route path="/logs" element={
+          <ProtectedRoute allowedRoles={["super_admin"]}>
+            <DashboardLayout>
+              <LogsViewer />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+      )}
       <Route path="/contact-submissions" element={
         <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
           <DashboardLayout>

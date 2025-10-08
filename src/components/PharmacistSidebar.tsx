@@ -12,6 +12,7 @@ const PharmacistSidebar = () => {
   const location = useLocation();
   const [activePath, setActivePath] = useState("/dashboard");
   const { userRole } = useAuth();
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Define icon mapping for navigation items
   const iconMap = {
@@ -43,6 +44,25 @@ const PharmacistSidebar = () => {
   useEffect(() => {
     setActivePath(location.pathname);
   }, [location.pathname]);
+
+  // Update timestamp every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format timestamp in CST
+  const formatTimestamp = (date: Date) => {
+    return date.toLocaleTimeString('en-US', {
+      timeZone: 'America/Chicago',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).toLowerCase() + ' cst';
+  };
 
   return (
     <div className={cn(
@@ -81,8 +101,13 @@ const PharmacistSidebar = () => {
       
       <div className="p-4 border-t">
         {!collapsed && (
-          <div className="text-xs text-gray-500">
-            StreetCredRx
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500">
+              StreetCredRx
+            </div>
+            <div className="text-xs text-gray-400">
+              {formatTimestamp(currentTime)}
+            </div>
           </div>
         )}
       </div>

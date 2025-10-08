@@ -20,30 +20,18 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Production image, copy all the files and run the app
-FROM base AS runner
-WORKDIR /app
+# Production image with nginx
+FROM nginx:alpine AS runner
 
-ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy built assets from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/public ./public
-
-# Create a simple server to serve the static files
-RUN npm install -g serve
-
-USER nextjs
-
+# Expose port 8080
 EXPOSE 8080
 
-ENV PORT 8080
-ENV HOSTNAME "0.0.0.0"
-
-# Start the application
-CMD ["serve", "-s", "dist", "-l", "8080"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
 

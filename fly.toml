@@ -2,8 +2,8 @@
 #
 # This file configures the deployment settings for the production environment.
 
-app = "streetcredrx-app"
-primary_region = "iad"
+app = "streetcredrx1"
+primary_region = "dfw"
 
 [build]
 

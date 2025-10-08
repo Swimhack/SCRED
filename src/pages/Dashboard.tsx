@@ -224,7 +224,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen flex flex-col">
+    <div className="p-6 bg-gray-50">
       <SEO 
         title={featureFlags.hasRole(userRole || "", "admin") ? "Admin Dashboard - StreetCredRx" : "Provider Dashboard - StreetCredRx"}
         description={featureFlags.hasRole(userRole || "", "admin") 
@@ -237,9 +237,7 @@ const Dashboard = () => {
         {featureFlags.isMvp && <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">MVP Mode</span>}
       </h1>
       
-      <div className="flex-1">
-        {featureFlags.hasRole(userRole || "", "admin") ? <AdminDashboard /> : <PharmacistDashboard />}
-      </div>
+      {featureFlags.hasRole(userRole || "", "admin") ? <AdminDashboard /> : <PharmacistDashboard />}
       
       {/* Discreet footer with last updated timestamp */}
       <div className="mt-8 pt-4 border-t border-gray-200">

@@ -82,7 +82,7 @@ const PharmacistSidebar = () => {
       <div className="p-4 border-t">
         {!collapsed && (
           <div className="text-xs text-gray-500">
-            StreetCredRx {featureFlags.isMvp ? "MVP" : "Enterprise"} v1.0
+            StreetCredRx
           </div>
         )}
       </div>

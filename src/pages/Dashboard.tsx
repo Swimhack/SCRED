@@ -1,4 +1,9 @@
 
+/**
+ * Dashboard Component
+ * Displays admin or pharmacist dashboard with live timestamp footer
+ * Last updated: 2025-01-08 - Added timestamp footer in CST timezone
+ */
 import { Users, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import PharmacistTable from "@/components/PharmacistTable";

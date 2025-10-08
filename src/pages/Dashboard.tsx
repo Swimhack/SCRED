@@ -16,6 +16,7 @@ const Dashboard = () => {
   const { statistics } = usePharmacistData();
   const navigate = useNavigate();
   const [recentActivity, setRecentActivity] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
 
   // This would be replaced with actual data from Supabase
   useEffect(() => {
@@ -25,7 +26,13 @@ const Dashboard = () => {
       { date: "May 15, 2025", action: "Insurance verification", status: "Pending" },
       { date: "May 10, 2025", action: "Application submitted", status: "In Progress" },
     ]);
+    setLastUpdated(new Date());
   }, []);
+
+  // Update timestamp when statistics change
+  useEffect(() => {
+    setLastUpdated(new Date());
+  }, [statistics]);
 
   const handleNewApplication = () => {
     toast({
@@ -201,8 +208,18 @@ const Dashboard = () => {
     </>
   );
 
+  // Format timestamp in CST
+  const formatTimestamp = (date: Date) => {
+    return date.toLocaleTimeString('en-US', {
+      timeZone: 'America/Chicago',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).toLowerCase() + ' cst';
+  };
+
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50 min-h-screen flex flex-col">
       <SEO 
         title={featureFlags.hasRole(userRole || "", "admin") ? "Admin Dashboard - StreetCredRx" : "Provider Dashboard - StreetCredRx"}
         description={featureFlags.hasRole(userRole || "", "admin") 
@@ -215,7 +232,16 @@ const Dashboard = () => {
         {featureFlags.isMvp && <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">MVP Mode</span>}
       </h1>
       
-      {featureFlags.hasRole(userRole || "", "admin") ? <AdminDashboard /> : <PharmacistDashboard />}
+      <div className="flex-1">
+        {featureFlags.hasRole(userRole || "", "admin") ? <AdminDashboard /> : <PharmacistDashboard />}
+      </div>
+      
+      {/* Discreet footer with last updated timestamp */}
+      <div className="mt-8 pt-4 border-t border-gray-200">
+        <p className="text-xs text-gray-400 text-right">
+          Last updated: {formatTimestamp(lastUpdated)}
+        </p>
+      </div>
     </div>
   );
 };

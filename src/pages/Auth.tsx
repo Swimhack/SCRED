@@ -293,7 +293,7 @@ const Auth = () => {
             last_name: lastName,
             invited_role_id: inviteData?.role_id
           },
-        emailRedirectTo: "https://streetcredrx.lovable.app/dashboard"
+          emailRedirectTo: "https://streetcredrx.netlify.app/dashboard"
         }
       });
       
@@ -343,7 +343,7 @@ const Auth = () => {
     
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: "https://streetcredrx.lovable.app/auth?mode=reset",
+        redirectTo: "https://streetcredrx.netlify.app/auth?mode=reset",
       });
       
       if (error) throw error;

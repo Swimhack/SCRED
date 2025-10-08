@@ -161,7 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         type: 'signup',
         email: user.email,
         options: {
-          emailRedirectTo: "https://streetcredrx.lovable.app/dashboard"
+          emailRedirectTo: "https://streetcredrx.netlify.app/dashboard"
         }
       });
       

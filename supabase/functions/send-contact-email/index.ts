@@ -78,19 +78,18 @@ serve(async (req) => {
       )
     }
 
-    // Send email via Gmail SMTP
+    // Send email via Resend
     try {
-      const gmailUser = Deno.env.get('GMAIL_USER')
-      const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD')
-      const recipientEmail = Deno.env.get('CONTACT_RECIPIENT_EMAIL') || 'james@ekaty.com'
+      const resendApiKey = Deno.env.get('RESEND_API_KEY')
+      const recipientEmail = 'contact@streetcredrx.com' // Fixed recipient for inquiries
 
-      if (!gmailUser || !gmailPassword) {
-        console.error('Gmail credentials not configured')
+      if (!resendApiKey) {
+        console.error('Resend API key not configured')
         // Update submission to mark email error but don't fail the request
         await supabase
           .from('contact_submissions')
           .update({ 
-            email_error: 'Gmail credentials not configured',
+            email_error: 'Resend API key not configured',
             email_sent: false
           })
           .eq('id', submission.id)
@@ -109,79 +108,86 @@ serve(async (req) => {
         )
       }
 
+      // Import Resend
+      const { Resend } = await import('https://esm.sh/resend@2.0.0')
+      const resend = new Resend(resendApiKey)
+
+      // Determine if this is an investor inquiry
+      const isInvestorInquiry = source === 'investor-homepage'
+      
       // Prepare email content
-      const emailSubject = `🔔 New Contact Form Submission from ${name}`
-      const emailBody = `
-🆕 NEW CONTACT FORM SUBMISSION RECEIVED
-═══════════════════════════════════════════
+      const emailSubject = isInvestorInquiry 
+        ? `🚀 New Investor Inquiry from ${name} - StreetCredRx`
+        : `💼 New Contact Form Submission from ${name} - StreetCredRx`
+      
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+          <div style="background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #1f2937; font-size: 28px; margin-bottom: 10px;">
+                ${isInvestorInquiry ? '🚀 New Investor Inquiry' : '💼 New Contact Form Submission'}
+              </h1>
+              <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #3b82f6, #06b6d4); margin: 0 auto;"></div>
+            </div>
+            
+            <div style="background-color: #f1f5f9; border-left: 4px solid #3b82f6; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #1e293b; margin-top: 0;">Contact Information</h3>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Name:</strong> ${name}</p>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Source:</strong> ${source || 'Website'}</p>
+            </div>
+            
+            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #065f46; margin-top: 0;">Message</h3>
+              <p style="color: #065f46; line-height: 1.6; margin: 0;">${message.replace(/\n/g, '<br>')}</p>
+            </div>
+            
+            <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #92400e; margin-top: 0;">Submission Details</h3>
+              <p style="color: #92400e; margin: 5px 0;"><strong>Submission ID:</strong> ${submission.id}</p>
+              <p style="color: #92400e; margin: 5px 0;"><strong>Submitted:</strong> ${new Date(submission.created_at).toLocaleString()}</p>
+              <p style="color: #92400e; margin: 5px 0;"><strong>IP Address:</strong> ${finalIpAddress || 'Not provided'}</p>
+              <p style="color: #92400e; margin: 5px 0;"><strong>Referrer:</strong> ${referrer || 'Not provided'}</p>
+            </div>
+            
+            ${isInvestorInquiry ? `
+            <div style="text-align: center; margin: 30px 0;">
+              <div style="background: linear-gradient(90deg, #dc2626, #b91c1c); color: white; padding: 20px; border-radius: 8px;">
+                <h3 style="margin: 0; color: white;">🎯 INVESTOR PRIORITY</h3>
+                <p style="margin: 10px 0 0 0; color: white;">This inquiry came from the investor-focused homepage. Please prioritize response.</p>
+              </div>
+            </div>
+            ` : ''}
+            
+            <div style="border-top: 1px solid #e5e7eb; margin-top: 30px; padding-top: 20px; text-align: center;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                Automatically generated by StreetCredRx Contact Form System<br>
+                <strong style="color: #374151;">StreetCredRx Platform</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      `
 
-📋 CONTACT INFORMATION:
-━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 Name: ${name}
-📧 Email: ${email}
-📱 Phone: ${phone || 'Not provided'}
-🌐 Source: ${source}
-
-💬 MESSAGE:
-━━━━━━━━━━━━━━━━━━━━━━━━━
-${message}
-
-🔍 SUBMISSION DETAILS:
-━━━━━━━━━━━━━━━━━━━━━━━━━
-🆔 Submission ID: ${submission.id}
-🕒 Submitted at: ${new Date(submission.created_at).toLocaleString()}
-🌍 IP Address: ${finalIpAddress || 'Not provided'}
-🔗 Referrer: ${referrer || 'Not provided'}
-💻 User Agent: ${userAgent || 'Not provided'}
-
-═══════════════════════════════════════════
-
-📊 You can view and manage this submission in the admin dashboard:
-🔗 Admin Panel: /contact-submissions
-
-⚡ This email was automatically generated by StreetCredRx contact form system.
-      `.trim()
-
-      // Send email using Gmail SMTP
-      const emailData = {
-        to: recipientEmail,
+      // Send email using Resend
+      const emailResponse = await resend.emails.send({
+        from: 'StreetCredRx Contact Form <noreply@resend.dev>',
+        to: [recipientEmail],
         subject: emailSubject,
-        body: emailBody,
-        from: gmailUser
-      }
-
-      // Call the existing send-email function
-      const emailResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(emailData)
+        html: emailHtml,
       })
 
-      if (emailResponse.ok) {
-        // Update submission to mark email sent
-        await supabase
-          .from('contact_submissions')
-          .update({ 
-            email_sent: true,
-            email_sent_at: new Date().toISOString()
-          })
-          .eq('id', submission.id)
-      } else {
-        const emailError = await emailResponse.text()
-        console.error('Email sending failed:', emailError)
-        
-        // Update submission to mark email error
-        await supabase
-          .from('contact_submissions')
-          .update({ 
-            email_error: `Email sending failed: ${emailError}`,
-            email_sent: false
-          })
-          .eq('id', submission.id)
-      }
+      console.log('Email sent successfully:', emailResponse)
+
+      // Update submission to mark email sent
+      await supabase
+        .from('contact_submissions')
+        .update({ 
+          email_sent: true,
+          email_sent_at: new Date().toISOString()
+        })
+        .eq('id', submission.id)
 
     } catch (emailError) {
       console.error('Email error:', emailError)

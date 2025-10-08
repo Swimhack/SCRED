@@ -7,10 +7,25 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
+build
+.output
+.vercel
+.netlify
+
+# Environment variables
 *.local
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Editor directories and files
 .vscode/*
@@ -23,5 +38,49 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local Netlify folder
-.netlify
+# Test results and artifacts
+test-results/
+playwright-report/
+*.spec.js.map
+*.test.js.map
+test-screenshots/
+coverage/
+.nyc_output/
+
+# Test files that are temporary
+test-*.cjs
+test-*.json
+*-test-results.json
+
+# Screenshot and image artifacts
+*.png
+*.jpg
+*.jpeg
+*.gif
+!public/**/*.png
+!public/**/*.jpg
+!public/**/*.jpeg
+!src/assets/**/*.png
+!src/assets/**/*.jpg
+!src/assets/**/*.jpeg
+
+# Documentation and notes (temporary)
+*_BACKUP.md
+*_STEERING.md
+*_SUMMARY.md
+*_ANALYSIS.md
+PLAN.md
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Lock files (keep package-lock.json but ignore others)
+yarn.lock
+pnpm-lock.yaml

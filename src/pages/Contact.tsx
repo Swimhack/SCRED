@@ -71,61 +71,62 @@ const Contact = () => {
         referrer
       });
       
-      // Submit contact form via Supabase Edge Function
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          message: formData.message.trim(),
-          source: 'website',
-          userAgent,
-          referrer
-        }
-      });
-
-      console.log('Supabase function response:', { data, error });
-
-      if (error) {
-        console.error('Contact form error:', error);
-        
-        // Provide more specific error messages
-        let errorMessage = "There was a problem sending your message. Please try again or contact us directly.";
-        if (error.message?.includes('404') || error.message?.includes('Not Found')) {
-          errorMessage = "The contact service is currently unavailable. Please try again later or email us directly at james@ekaty.com.";
-        } else if (error.message?.includes('CORS')) {
-          errorMessage = "Network error occurred. Please check your connection and try again.";
-        }
-        
-        toast({
-          title: "Error sending message",
-          description: errorMessage,
-          variant: "destructive",
+      // First try Supabase Edge Function
+      try {
+        const { data, error } = await supabase.functions.invoke('send-contact-email', {
+          body: {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            message: formData.message.trim(),
+            source: 'website',
+            userAgent,
+            referrer
+          }
         });
-        return;
-      }
 
-      if (data?.success) {
-        toast({
-          title: "Message sent!",
-          description: "We've received your message and will get back to you soon. Thank you for contacting us!",
-        });
-        setFormData({ name: "", email: "", phone: "", message: "" });
-      } else {
-        console.error('Contact form failed with data:', data);
-        throw new Error(data?.error || 'Contact form submission failed');
+        console.log('Supabase function response:', { data, error });
+
+        if (!error && data?.success) {
+          toast({
+            title: "Message sent!",
+            description: "We've received your message and will get back to you soon. Thank you for contacting us!",
+          });
+          setFormData({ name: "", email: "", phone: "", message: "" });
+          return;
+        }
+        
+        console.log('Supabase function failed, trying Formspree fallback');
+      } catch (supabaseError) {
+        console.log('Supabase function error, trying Formspree fallback:', supabaseError);
       }
-    } catch (error) {
-      console.error('Contact form submission failed:', error);
       
-      let errorMessage = "There was a problem sending your message. Please try again or contact us directly.";
-      if (error.message?.includes('Failed to fetch')) {
-        errorMessage = "Network connection error. Please check your internet connection and try again.";
-      }
+      // Fallback - Open email client with pre-filled message
+      const emailSubject = encodeURIComponent(`Contact Form Submission from ${formData.name.trim()}`);
+      const emailBody = encodeURIComponent(
+        `Name: ${formData.name.trim()}\n` +
+        `Email: ${formData.email.trim()}\n` +
+        `Phone: ${formData.phone.trim() || 'Not provided'}\n\n` +
+        `Message:\n${formData.message.trim()}\n\n` +
+        `---\nSource: Contact Page\n` +
+        `User Agent: ${userAgent}\n` +
+        `Referrer: ${referrer || 'Direct'}`
+      );
+      
+      window.open(`mailto:ajlipka@gmail.com?subject=${emailSubject}&body=${emailBody}`, '_blank');
       
       toast({
-        title: "Error sending message",
-        description: errorMessage + " You can also reach us directly at james@ekaty.com.",
+        title: "Opening email client...",
+        description: "We've opened your email client with a pre-filled message. Please send the email to complete your inquiry.",
+      });
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      
+    } catch (error) {
+      console.error('Contact form submission failed completely:', error);
+      
+      toast({
+        title: "Unable to send message",
+        description: "We're experiencing technical difficulties. Please email us directly at ajlipka@gmail.com or try again later.",
         variant: "destructive",
       });
     } finally {

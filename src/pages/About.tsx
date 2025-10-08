@@ -40,10 +40,10 @@ const About = () => {
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Mission</h2>
                 <p className="text-lg">
-                  StreetCredRx exists to empower pharmacists by streamlining the complex credentialing process, 
-                  allowing them to focus on what matters most - patient care. We believe that pharmacists 
-                  play a crucial role in healthcare delivery, and our mission is to eliminate administrative 
-                  barriers that prevent them from billing for their valuable clinical services.
+                  StreetCredRx's mission is to make pharmacist credentialing affordable and accessible, empowering 
+                  pharmacies to unlock stronger revenue streams, expand patient services, and fuel long-term industry 
+                  growth. By removing administrative barriers and advancing the role of pharmacists in healthcare, 
+                  we help the profession thrive in a rapidly changing landscape.
                 </p>
               </div>
               

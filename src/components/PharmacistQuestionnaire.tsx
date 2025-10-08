@@ -32,6 +32,11 @@ const pharmacistQuestionnaireSchema = z.object({
   phone_number: z.string().regex(/^[\d\s\-()]+$/, "Invalid phone number"),
   email: z.string().email("Invalid email address"),
   
+  // CAQH Profile Information
+  caqh_username: z.string().optional(),
+  caqh_password: z.string().optional(),
+  caqh_provider_id: z.string().optional(),
+  
   // Professional Information
   license_number: z.string().min(1, "License number is required"),
   license_state: z.string().length(2, "State must be 2 characters"),
@@ -252,6 +257,7 @@ export default function PharmacistQuestionnaire() {
   const tabs = [
     { id: "personal", label: "Personal Information" },
     { id: "professional", label: "Professional" },
+    { id: "caqh", label: "CAQH Profile" },
     { id: "employment", label: "Employment" },
     { id: "certifications", label: "Certifications" },
     { id: "insurance", label: "Insurance" },
@@ -288,7 +294,7 @@ export default function PharmacistQuestionnaire() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid grid-cols-4 lg:grid-cols-7 mb-6">
+                <TabsList className="grid grid-cols-4 lg:grid-cols-8 mb-6">
                   {tabs.map((tab) => (
                     <TabsTrigger key={tab.id} value={tab.id} className="text-xs">
                       {tab.label}
@@ -628,6 +634,71 @@ export default function PharmacistQuestionnaire() {
                               onChange={(e) => field.onChange(parseInt(e.target.value))}
                             />
                           </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="caqh" className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <h3 className="text-lg font-semibold mb-2 text-blue-900">CAQH Profile Information</h3>
+                    <p className="text-sm text-blue-800 mb-3">
+                      Please provide your CAQH profile login details and Provider ID so our team can manage your account 
+                      and use it to submit applications on your behalf.
+                    </p>
+                    <div className="text-sm text-blue-700">
+                      <p className="mb-2"><strong>⚠️ If you do NOT already have a CAQH Profile:</strong></p>
+                      <ol className="list-decimal ml-5 space-y-1">
+                        <li>Visit the <a href="https://proview.caqh.org/pr/" target="_blank" rel="noopener noreferrer" className="underline font-medium">CAQH ProView website</a> and select "Register"</li>
+                        <li>Follow the prompts and provide the required information in the CAQH Provider Data Portal</li>
+                        <li>Return to this form and provide your CAQH credentials below</li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="caqh_username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CAQH Username</FormLabel>
+                          <FormControl>
+                            <Input placeholder="your.email@example.com" {...field} />
+                          </FormControl>
+                          <FormDescription>Your CAQH login username/email</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="caqh_password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CAQH Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" placeholder="••••••••" {...field} />
+                          </FormControl>
+                          <FormDescription>Your CAQH account password</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="caqh_provider_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CAQH Provider ID</FormLabel>
+                          <FormControl>
+                            <Input placeholder="123456789" {...field} />
+                          </FormControl>
+                          <FormDescription>Your unique CAQH Provider ID number</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}

@@ -48,11 +48,11 @@ export const features = {
 
   // Messaging System
   messaging: {
-    enabled: IS_ENTERPRISE,
+    enabled: true, // Always enabled - critical for client communication
     aiAnalysis: IS_ENTERPRISE,
-    threading: IS_ENTERPRISE,
-    priorities: IS_ENTERPRISE,
-    categories: IS_ENTERPRISE,
+    threading: true, // Enable threading for MVP
+    priorities: true, // Enable priorities for MVP
+    categories: true, // Enable categories for MVP
     notifications: IS_ENTERPRISE,
   },
 
@@ -149,8 +149,10 @@ export const routeAccess = {
   '/completed': IS_MVP || IS_ENTERPRISE,
   '/expiring': IS_MVP || IS_ENTERPRISE,
   
+  // Messages - enabled for all modes (critical for client communication)
+  '/messages': true,
+  
   // Enterprise-only routes
-  '/messages': IS_ENTERPRISE,
   '/user-management': IS_ENTERPRISE,
   '/logs': IS_ENTERPRISE,
   '/api-keys': IS_ENTERPRISE,
@@ -215,16 +217,18 @@ export const getNavigationItems = (userRole: string) => {
     );
   }
 
+  // Messages - always show for admins (critical communication)
+  if (features.messaging.enabled && isAdmin) {
+    items.push({
+      name: 'Messages',
+      path: '/messages',
+      icon: 'MessageSquare',
+      show: true,
+    });
+  }
+
   // Enterprise-only items
   if (IS_ENTERPRISE) {
-    if (features.messaging.enabled && isAdmin) {
-      items.push({
-        name: 'Messages',
-        path: '/messages',
-        icon: 'MessageSquare',
-        show: true,
-      });
-    }
 
     if (features.admin.userManagement && userRole === 'super_admin') {
       items.push({

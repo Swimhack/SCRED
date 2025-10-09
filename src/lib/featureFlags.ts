@@ -256,8 +256,8 @@ export const databaseAccess = {
   pharmacist_applications: true,
   application_documents: true,
 
-  // Enterprise tables
-  developer_messages: IS_ENTERPRISE,
+  // Enterprise tables (messaging enabled for MVP for critical client communication)
+  developer_messages: true, // Always enabled - critical for client communication
   ai_analysis: IS_ENTERPRISE,
   user_invitations: IS_ENTERPRISE,
   activity_logs: IS_ENTERPRISE,

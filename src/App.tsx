@@ -124,14 +124,14 @@ const AppContent = () => {
       {featureFlags.features.messaging.enabled && (
         <>
           <Route path="/messages" element={
-            <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+            <ProtectedRoute allowedRoles={featureFlags.isMvp ? ["admin"] : ["super_admin", "admin_manager", "admin_regional"]}>
               <DashboardLayout>
                 <Messages />
               </DashboardLayout>
             </ProtectedRoute>
           } />
           <Route path="/dev-console" element={
-            <ProtectedRoute allowedRoles={["super_admin", "admin_manager", "admin_regional"]}>
+            <ProtectedRoute allowedRoles={featureFlags.isMvp ? ["admin"] : ["super_admin", "admin_manager", "admin_regional"]}>
               <DashboardLayout>
                 <Messages />
               </DashboardLayout>

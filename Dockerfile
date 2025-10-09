@@ -17,6 +17,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Copy .env.mvp as .env for build
+RUN cp .env.mvp .env || true
+
 # Build the application
 RUN npm run build
 

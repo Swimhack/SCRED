@@ -43,8 +43,8 @@ const Messages = () => {
     triggerAIAnalysis
   } = useAIAnalysis(allMessageIds);
 
-  // Check if user is super admin (developer)
-  const isDeveloper = userRole === '4';
+  // Check if user is super admin (developer) - works with role ID or name
+  const isDeveloper = userRole === '4' || userRole === 'super_admin';
 
   // Group messages by thread
   const messageThreads = useMemo(() => {

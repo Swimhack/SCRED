@@ -23,7 +23,8 @@ export const useMessages = () => {
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const isAdmin = ['super_admin', 'admin_manager', 'admin_regional'].includes(userRole || '');
+  // Check if user is admin (works with both MVP simplified roles and full role names)
+  const isAdmin = ['super_admin', 'admin_manager', 'admin_regional', 'admin'].includes(userRole || '');
 
   const fetchMessages = async () => {
     try {

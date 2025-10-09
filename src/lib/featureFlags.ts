@@ -151,10 +151,10 @@ export const routeAccess = {
   
   // Messages - enabled for all modes (critical for client communication)
   '/messages': true,
+  '/user-management': true, // Always available for super_admin
+  '/logs': true, // Always available for super_admin
   
   // Enterprise-only routes
-  '/user-management': IS_ENTERPRISE,
-  '/logs': IS_ENTERPRISE,
   '/api-keys': IS_ENTERPRISE,
   '/workflows': IS_ENTERPRISE,
   '/analytics': IS_ENTERPRISE,
@@ -227,26 +227,21 @@ export const getNavigationItems = (userRole: string) => {
     });
   }
 
-  // Enterprise-only items
-  if (IS_ENTERPRISE) {
-
-    if (features.admin.userManagement && userRole === 'super_admin') {
-      items.push({
-        name: 'User Management',
-        path: '/user-management',
-        icon: 'Settings',
-        show: true,
-      });
-    }
-
-    if (features.admin.activityLogs && userRole === 'super_admin') {
-      items.push({
-        name: 'Activity Logs',
-        path: '/logs',
-        icon: 'FileText',
-        show: true,
-      });
-    }
+  // Super Admin only items - show in all modes
+  if (userRole === 'super_admin') {
+    items.push({
+      name: 'User Management',
+      path: '/user-management',
+      icon: 'Settings',
+      show: true,
+    });
+    
+    items.push({
+      name: 'System Logs',
+      path: '/logs',
+      icon: 'FileText',
+      show: true,
+    });
   }
 
   return items.filter(item => item.show);

@@ -72,7 +72,7 @@ After redeployment:
 The Edge Function uses Resend's sandbox domain:
 ```typescript
 from: 'StreetCredRx Contact Form <noreply@resend.dev>'
-to: ['james@stricklandtm.com']  // Updated for testing
+to: ['ajlipka@gmail.com']  // Updated for testing
 ```
 
 ### Sandbox Limitations
@@ -83,7 +83,7 @@ Original recipient `contact@streetcredrx.com` won't work unless:
 2. You add custom domain `streetcredrx.com` to Resend
 
 ### Temporary Fix Applied
-I updated the recipient to `james@stricklandtm.com` for testing.
+I updated the recipient to `ajlipka@gmail.com` for testing.
 
 **File changed:** `supabase/functions/send-contact-email/index.ts` (line 100)
 
@@ -118,7 +118,7 @@ To send from `@streetcredrx.com` and to any recipient:
 ## Files Modified
 
 ### `supabase/functions/send-contact-email/index.ts`
-- **Line 100:** Changed recipient to `james@stricklandtm.com` for testing
+- **Line 128:** Changed recipient to `ajlipka@gmail.com` for testing
 - **Added:** TODO comment to add custom domain
 
 ## Testing Checklist

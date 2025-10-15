@@ -109,7 +109,7 @@ if (!trimmedName || !trimmedEmail || !trimmedMessage) {
 
 ### Expected Result
 ✅ Success message appears
-✅ Email arrives at `james@stricklandtm.com`
+✅ Email arrives at `ajlipka@gmail.com`
 ✅ Submission saved to database
 
 ### Check Logs
@@ -146,12 +146,12 @@ The new detailed logging will show exactly what's happening!
 ### Email not sending but form submits
 - Check that RESEND_API_KEY is in Supabase Vault
 - Check Resend dashboard for bounces: https://resend.com/emails
-- Verify recipient email is correct: `james@stricklandtm.com`
+- Verify recipient email is correct: `ajlipka@gmail.com`
 
 ## Next Steps After Successful Deployment
 
 1. ✅ **Test the form** multiple times
-2. ✅ **Check emails arrive** at james@stricklandtm.com
+2. ✅ **Check emails arrive** at ajlipka@gmail.com
 3. ✅ **Verify database entries** in `contact_submissions` table
 4. 🔄 **Optional: Add custom domain** to Resend for production
 5. 🔄 **Update recipient** back to `contact@streetcredrx.com` after adding domain

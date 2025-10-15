@@ -125,7 +125,7 @@ serve(async (req) => {
       const resendApiKey = Deno.env.get('RESEND_API_KEY')
       // TEMPORARY: Using verified email for testing with Resend sandbox
       // TODO: Add custom domain to send to contact@streetcredrx.com
-      const recipientEmail = 'james@stricklandtm.com' // Replace with your verified Resend email
+      const recipientEmail = 'ajlipka@gmail.com'
 
       if (!resendApiKey) {
         console.error('Resend API key not configured')

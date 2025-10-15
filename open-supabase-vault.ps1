@@ -70,7 +70,7 @@ Write-Host "   A) Verify 'contact@streetcredrx.com' in Resend" -ForegroundColor 
 Write-Host "   B) Add custom domain 'streetcredrx.com' to Resend" -ForegroundColor White
 Write-Host ""
 Write-Host "   For now, I've updated the code to send to:" -ForegroundColor White
-Write-Host "   james@stricklandtm.com (for testing)" -ForegroundColor Green
+Write-Host "   ajlipka@gmail.com (for testing)" -ForegroundColor Green
 Write-Host ""
 
 Write-Host "================================================" -ForegroundColor Cyan

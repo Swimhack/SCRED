@@ -81,7 +81,7 @@ to: ['contact@streetcredrx.com'],  // This won't work with sandbox!
 #### Option A: Quick Fix - Use Your Verified Email (Testing)
 Change line 100 to use your verified Resend email:
 ```typescript
-const recipientEmail = 'james@stricklandtm.com' // Your verified email
+const recipientEmail = 'ajlipka@gmail.com' // Your verified email
 ```
 
 #### Option B: Production Fix - Add Custom Domain

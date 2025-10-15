@@ -42,17 +42,45 @@ serve(async (req) => {
                      req.headers.get('cf-connecting-ip') ||
                      'unknown'
 
-    const { name, email, phone, message, source = 'website', userAgent, ipAddress, referrer }: ContactFormData = await req.json()
+    const requestBody = await req.json()
+    console.log('Received request body:', JSON.stringify(requestBody, null, 2))
+    
+    const { name, email, phone, message, source = 'website', userAgent, ipAddress, referrer }: ContactFormData = requestBody
 
     // Use client IP from headers if not provided in request body
     // x-forwarded-for can contain multiple IPs, take the first one
     const rawIpAddress = ipAddress || clientIP
     const finalIpAddress = rawIpAddress.split(',')[0].trim()
 
-    // Validate required fields
-    if (!name || !email || !message) {
+    // Validate required fields - check for undefined, null, or empty strings
+    const trimmedName = name?.trim()
+    const trimmedEmail = email?.trim()
+    const trimmedMessage = message?.trim()
+    
+    console.log('Validation check:', {
+      name: trimmedName,
+      email: trimmedEmail,
+      message: trimmedMessage ? trimmedMessage.substring(0, 50) : null,
+      hasName: !!trimmedName,
+      hasEmail: !!trimmedEmail,
+      hasMessage: !!trimmedMessage
+    })
+    
+    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+      console.error('Validation failed:', {
+        name: !trimmedName ? 'missing' : 'ok',
+        email: !trimmedEmail ? 'missing' : 'ok',
+        message: !trimmedMessage ? 'missing' : 'ok'
+      })
       return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
+        JSON.stringify({ 
+          error: 'Missing required fields',
+          details: {
+            name: !trimmedName ? 'Name is required' : undefined,
+            email: !trimmedEmail ? 'Email is required' : undefined,
+            message: !trimmedMessage ? 'Message is required' : undefined
+          }
+        }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -60,14 +88,14 @@ serve(async (req) => {
       )
     }
 
-    // Store submission in database
+    // Store submission in database using trimmed values
     const { data: submission, error: dbError } = await supabase
       .from('contact_submissions')
       .insert({
-        name,
-        email,
-        phone,
-        message,
+        name: trimmedName,
+        email: trimmedEmail,
+        phone: phone?.trim() || null,
+        message: trimmedMessage,
         source,
         user_agent: userAgent,
         ip_address: finalIpAddress,
@@ -133,8 +161,8 @@ serve(async (req) => {
       
       // Prepare email content
       const emailSubject = isInvestorInquiry 
-        ? `🚀 New Investor Inquiry from ${name} - StreetCredRx`
-        : `💼 New Contact Form Submission from ${name} - StreetCredRx`
+        ? `🚀 New Investor Inquiry from ${trimmedName} - StreetCredRx`
+        : `💼 New Contact Form Submission from ${trimmedName} - StreetCredRx`
       
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
@@ -148,15 +176,15 @@ serve(async (req) => {
             
             <div style="background-color: #f1f5f9; border-left: 4px solid #3b82f6; padding: 20px; margin: 20px 0;">
               <h3 style="color: #1e293b; margin-top: 0;">Contact Information</h3>
-              <p style="color: #1e293b; margin: 5px 0;"><strong>Name:</strong> ${name}</p>
-              <p style="color: #1e293b; margin: 5px 0;"><strong>Email:</strong> ${email}</p>
-              <p style="color: #1e293b; margin: 5px 0;"><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Name:</strong> ${trimmedName}</p>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Email:</strong> ${trimmedEmail}</p>
+              <p style="color: #1e293b; margin: 5px 0;"><strong>Phone:</strong> ${phone?.trim() || 'Not provided'}</p>
               <p style="color: #1e293b; margin: 5px 0;"><strong>Source:</strong> ${source || 'Website'}</p>
             </div>
             
             <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 20px 0;">
               <h3 style="color: #065f46; margin-top: 0;">Message</h3>
-              <p style="color: #065f46; line-height: 1.6; margin: 0;">${message.replace(/\n/g, '<br>')}</p>
+              <p style="color: #065f46; line-height: 1.6; margin: 0;">${trimmedMessage.replace(/\n/g, '<br>')}</p>
             </div>
             
             <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin: 20px 0;">

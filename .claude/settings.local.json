@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx supabase secrets set:*)",
+      "Bash($env:SUPABASE_ACCESS_TOKEN=\"sbp_47fafab6185e2d06323b25f1b7b18aac659c002c\")",
+      "Bash(export SUPABASE_ACCESS_TOKEN=sbp_47fafab6185e2d06323b25f1b7b18aac659c002c)",
+      "Bash(npx supabase functions deploy:*)",
+      "Bash(curl -X POST \"https://tvqyozyjqcswojsbduzw.supabase.co/functions/v1/send-contact-email\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cXlvenlqcWNzd29qc2JkdXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI5MDU2MjIsImV4cCI6MjA0ODQ4MTYyMn0.f3pTfJsm94Rj0CDLSmKvmP-s30CQ0LQh7s5s1dopvwI\" -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Test User\"\",\"\"email\"\":\"\"test@example.com\"\",\"\"message\"\":\"\"This is a test message from Claude Code\"\",\"\"source\"\":\"\"test\"\"}\")",
+      "Bash(curl -X OPTIONS \"https://tvqyozyjqcswojsbduzw.supabase.co/functions/v1/send-contact-email\" -H \"Access-Control-Request-Method: POST\" -H \"Access-Control-Request-Headers: authorization, content-type\")",
+      "Bash(npx supabase functions list:*)",
+      "Bash(curl:*)",
+      "Bash(npx supabase db push:*)",
+      "Bash(npx supabase link:*)",
+      "Bash(python:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

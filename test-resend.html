@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resend Email Test - StreetCredRx</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .test-section h2 {
+            color: #1f2937;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        button {
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            display: block;
+        }
+        .result.error {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+            display: block;
+        }
+        .result.info {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            color: #1e3a8a;
+            display: block;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-badge.ready {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        pre {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box strong {
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Resend Email System Test</h1>
+        <p class="subtitle">StreetCredRx Email Configuration & Testing</p>
+
+        <div class="info-box">
+            <strong>✅ API Key Status:</strong> <span class="status-badge ready">CONFIGURED</span><br>
+            <strong>📧 Provider:</strong> Resend<br>
+            <strong>🔑 Key Prefix:</strong> re_CdxV7v5W_***<br>
+            <strong>🌐 Supabase Project:</strong> tvqyozyjqcswojsbduzw
+        </div>
+
+        <!-- Test 1: Welcome Email -->
+        <div class="test-section">
+            <h2>📧 Test 1: Welcome Email</h2>
+            <p>Send a test welcome email to verify basic functionality.</p>
+            <input type="email" id="test1-email" placeholder="Enter your email address" value="">
+            <input type="text" id="test1-name" placeholder="Your first name" value="Test User">
+            <button onclick="testWelcomeEmail()">Send Welcome Email</button>
+            <div id="test1-result" class="result"></div>
+        </div>
+
+        <!-- Test 2: Password Reset Email -->
+        <div class="test-section">
+            <h2>🔐 Test 2: Password Reset Email</h2>
+            <p>Test password reset email functionality.</p>
+            <input type="email" id="test2-email" placeholder="Enter your email address" value="">
+            <button onclick="testPasswordReset()">Send Password Reset Email</button>
+            <div id="test2-result" class="result"></div>
+        </div>
+
+        <!-- Test 3: Contact Form Email -->
+        <div class="test-section">
+            <h2>💼 Test 3: Contact Form Submission</h2>
+            <p>Test contact form email to admin (contact@streetcredrx.com).</p>
+            <input type="text" id="test3-name" placeholder="Your name" value="Test User">
+            <input type="email" id="test3-email" placeholder="Your email" value="">
+            <input type="tel" id="test3-phone" placeholder="Your phone (optional)" value="">
+            <textarea id="test3-message" placeholder="Your message" style="width:100%;min-height:100px;padding:12px;margin:10px 0;border:2px solid #e5e7eb;border-radius:6px;font-size:14px;font-family:inherit;">This is a test message from the Resend setup verification.</textarea>
+            <button onclick="testContactForm()">Submit Contact Form</button>
+            <div id="test3-result" class="result"></div>
+        </div>
+
+        <!-- Test 4: User Invitation -->
+        <div class="test-section">
+            <h2>👥 Test 4: User Invitation Email</h2>
+            <p>Test user invitation email functionality.</p>
+            <input type="email" id="test4-email" placeholder="Enter email to invite" value="">
+            <select id="test4-role">
+                <option value="admin">Admin</option>
+                <option value="super_admin">Super Admin</option>
+                <option value="regional_admin">Regional Admin</option>
+                <option value="staff">Staff</option>
+            </select>
+            <button onclick="testInvitation()">Send Invitation Email</button>
+            <div id="test4-result" class="result"></div>
+        </div>
+
+        <!-- Test 5: All Email Types -->
+        <div class="test-section">
+            <h2>🎯 Test 5: Complete System Test</h2>
+            <p>Run all email tests sequentially (will send 4 emails).</p>
+            <input type="email" id="test5-email" placeholder="Enter your email for all tests" value="">
+            <button onclick="testAllEmails()">Run Complete Test Suite</button>
+            <div id="test5-result" class="result"></div>
+        </div>
+
+        <div class="info-box" style="margin-top: 40px;">
+            <strong>📝 Setup Instructions:</strong><br>
+            1. The API key has been provided: <code>re_CdxV7v5W_EdfkcGcZpNNDQESnktuHuKAF</code><br>
+            2. Add this key to Supabase Secrets as <code>RESEND_API_KEY</code><br>
+            3. Go to: <a href="https://supabase.com/dashboard/project/tvqyozyjqcswojsbduzw/settings/functions" target="_blank">Supabase Secrets</a><br>
+            4. Run tests above to verify email delivery<br>
+            5. Check your email inbox (and spam folder!)
+        </div>
+    </div>
+
+    <script>
+        // Updated with correct Supabase credentials
+        const SUPABASE_URL = 'https://tvqyozyjqcswojsbduzw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cXlvenlqcWNzd29qc2JkdXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI5MDU2MjIsImV4cCI6MjA0ODQ4MTYyMn0.f3pTfJsm94Rj0CDLSmKvmP-s30CQ0LQh7s5s1dopvwI';
+
+        function showResult(elementId, type, message, data = null) {
+            const el = document.getElementById(elementId);
+            el.className = `result ${type}`;
+            let html = message;
+            if (data) {
+                html += `<br><br><strong>Response:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            el.innerHTML = html;
+        }
+
+        async function testWelcomeEmail() {
+            const email = document.getElementById('test1-email').value;
+            const name = document.getElementById('test1-name').value;
+            
+            if (!email) {
+                showResult('test1-result', 'error', '❌ Please enter an email address');
+                return;
+            }
+
+            showResult('test1-result', 'info', '⏳ Sending welcome email...');
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'welcome',
+                        to: email,
+                        firstName: name
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('test1-result', 'success', `✅ Welcome email sent successfully to ${email}! Check your inbox (and spam folder).`, data);
+                } else {
+                    showResult('test1-result', 'error', `❌ Failed to send email: ${data.error || 'Unknown error'}`, data);
+                }
+            } catch (error) {
+                showResult('test1-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+
+        async function testPasswordReset() {
+            const email = document.getElementById('test2-email').value;
+            
+            if (!email) {
+                showResult('test2-result', 'error', '❌ Please enter an email address');
+                return;
+            }
+
+            showResult('test2-result', 'info', '⏳ Sending password reset email...');
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'password-reset',
+                        to: email,
+                        resetLink: 'https://streetcredrx1.fly.dev/reset-password?token=test123'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('test2-result', 'success', `✅ Password reset email sent to ${email}!`, data);
+                } else {
+                    showResult('test2-result', 'error', `❌ Failed: ${data.error || 'Unknown error'}`, data);
+                }
+            } catch (error) {
+                showResult('test2-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+
+        async function testContactForm() {
+            const name = document.getElementById('test3-name').value;
+            const email = document.getElementById('test3-email').value;
+            const phone = document.getElementById('test3-phone').value;
+            const message = document.getElementById('test3-message').value;
+            
+            if (!name || !email || !message) {
+                showResult('test3-result', 'error', '❌ Please fill in name, email, and message');
+                return;
+            }
+
+            showResult('test3-result', 'info', '⏳ Submitting contact form...');
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-contact-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone,
+                        message,
+                        source: 'test-page'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('test3-result', 'success', `✅ Contact form submitted! Admin will receive notification at contact@streetcredrx.com`, data);
+                } else {
+                    showResult('test3-result', 'error', `❌ Failed: ${data.error || 'Unknown error'}`, data);
+                }
+            } catch (error) {
+                showResult('test3-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+
+        async function testInvitation() {
+            const email = document.getElementById('test4-email').value;
+            const role = document.getElementById('test4-role').value;
+            
+            if (!email) {
+                showResult('test4-result', 'error', '❌ Please enter an email address');
+                return;
+            }
+
+            showResult('test4-result', 'info', '⏳ Sending invitation email...');
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'user-invitation',
+                        to: email,
+                        roleName: role,
+                        invitationToken: 'test-token-' + Date.now(),
+                        inviteLink: 'https://streetcredrx1.fly.dev/accept-invite?token=test123'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('test4-result', 'success', `✅ Invitation sent to ${email} as ${role}!`, data);
+                } else {
+                    showResult('test4-result', 'error', `❌ Failed: ${data.error || 'Unknown error'}`, data);
+                }
+            } catch (error) {
+                showResult('test4-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+
+        async function testAllEmails() {
+            const email = document.getElementById('test5-email').value;
+            
+            if (!email) {
+                showResult('test5-result', 'error', '❌ Please enter an email address');
+                return;
+            }
+
+            showResult('test5-result', 'info', '⏳ Running complete test suite...');
+
+            const tests = [
+                { name: 'Welcome Email', type: 'welcome', data: { to: email, firstName: 'Test' } },
+                { name: 'Password Reset', type: 'password-reset', data: { to: email, resetLink: 'https://test.com/reset' } },
+                { name: 'Email Verification', type: 'verification', data: { to: email, verificationLink: 'https://test.com/verify' } },
+                { name: 'Role Change', type: 'role-change', data: { to: email, firstName: 'Test', newRole: 'admin' } }
+            ];
+
+            let results = [];
+            
+            for (const test of tests) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type: test.type, ...test.data })
+                    });
+
+                    const data = await response.json();
+                    results.push({ test: test.name, success: response.ok, data });
+                    
+                    // Wait a bit between emails to avoid rate limiting
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                } catch (error) {
+                    results.push({ test: test.name, success: false, error: error.message });
+                }
+            }
+
+            const successCount = results.filter(r => r.success).length;
+            const failCount = results.filter(r => !r.success).length;
+
+            if (successCount === tests.length) {
+                showResult('test5-result', 'success', 
+                    `✅ All tests passed! ${successCount}/${tests.length} emails sent successfully to ${email}. Check your inbox!`,
+                    results);
+            } else {
+                showResult('test5-result', 'error', 
+                    `⚠️ ${successCount}/${tests.length} tests passed, ${failCount} failed.`,
+                    results);
+            }
+        }
+    </script>
+</body>
+</html>

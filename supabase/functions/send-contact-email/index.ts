@@ -23,21 +23,31 @@ serve(async (req) => {
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
+    // Get environment variables with defaults and logging
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || 'https://tvqyozyjqcswojsbduzw.supabase.co'
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || ''
+
+    console.log('Environment check:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+      urlLength: supabaseUrl.length,
+      keyLength: supabaseKey.length
+    })
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
     // Extract IP address from request headers
-    const clientIP = req.headers.get('x-forwarded-for') || 
-                     req.headers.get('x-real-ip') || 
-                     req.headers.get('cf-connecting-ip') || 
+    const clientIP = req.headers.get('x-forwarded-for') ||
+                     req.headers.get('x-real-ip') ||
+                     req.headers.get('cf-connecting-ip') ||
                      'unknown'
 
     const { name, email, phone, message, source = 'website', userAgent, ipAddress, referrer }: ContactFormData = await req.json()
-    
+
     // Use client IP from headers if not provided in request body
-    const finalIpAddress = ipAddress || clientIP
+    // x-forwarded-for can contain multiple IPs, take the first one
+    const rawIpAddress = ipAddress || clientIP
+    const finalIpAddress = rawIpAddress.split(',')[0].trim()
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -68,12 +78,16 @@ serve(async (req) => {
       .single()
 
     if (dbError) {
-      console.error('Database error:', dbError)
+      console.error('Database error:', JSON.stringify(dbError, null, 2))
       return new Response(
-        JSON.stringify({ error: 'Failed to save submission' }),
-        { 
-          status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        JSON.stringify({
+          error: 'Failed to save submission',
+          details: dbError.message || 'Unknown database error',
+          code: dbError.code || 'unknown'
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       )
     }
@@ -81,7 +95,9 @@ serve(async (req) => {
     // Send email via Resend
     try {
       const resendApiKey = Deno.env.get('RESEND_API_KEY')
-      const recipientEmail = 'contact@streetcredrx.com' // Fixed recipient for inquiries
+      // TEMPORARY: Using verified email for testing with Resend sandbox
+      // TODO: Add custom domain to send to contact@streetcredrx.com
+      const recipientEmail = 'james@stricklandtm.com' // Replace with your verified Resend email
 
       if (!resendApiKey) {
         console.error('Resend API key not configured')

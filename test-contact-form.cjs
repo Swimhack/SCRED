@@ -37,8 +37,8 @@ async function testContactForm() {
   });
   
   try {
-    console.log('📍 Step 1: Navigating to contact page...');
-    await page.goto('https://streetcred.fly.dev/contact', { 
+    console.log('📍 Step 1: Navigating to local contact page...');
+    await page.goto('http://localhost:8084/contact', { 
       waitUntil: 'networkidle',
       timeout: 30000 
     });

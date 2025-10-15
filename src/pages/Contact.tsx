@@ -71,62 +71,46 @@ const Contact = () => {
         referrer
       });
       
-      // First try Supabase Edge Function
-      try {
-        const { data, error } = await supabase.functions.invoke('send-contact-email', {
-          body: {
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim(),
-            message: formData.message.trim(),
-            source: 'website',
-            userAgent,
-            referrer
-          }
-        });
-
-        console.log('Supabase function response:', { data, error });
-
-        if (!error && data?.success) {
-          toast({
-            title: "Message sent!",
-            description: "We've received your message and will get back to you soon. Thank you for contacting us!",
-          });
-          setFormData({ name: "", email: "", phone: "", message: "" });
-          return;
+      // Try Supabase Edge Function
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          message: formData.message.trim(),
+          source: 'website',
+          userAgent,
+          referrer
         }
-        
-        console.log('Supabase function failed, trying Formspree fallback');
-      } catch (supabaseError) {
-        console.log('Supabase function error, trying Formspree fallback:', supabaseError);
+      });
+
+      console.log('Supabase function response:', { data, error });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(`Email service error: ${error.message || 'Unknown error'}`);
       }
-      
-      // Fallback - Open email client with pre-filled message
-      const emailSubject = encodeURIComponent(`Contact Form Submission from ${formData.name.trim()}`);
-      const emailBody = encodeURIComponent(
-        `Name: ${formData.name.trim()}\n` +
-        `Email: ${formData.email.trim()}\n` +
-        `Phone: ${formData.phone.trim() || 'Not provided'}\n\n` +
-        `Message:\n${formData.message.trim()}\n\n` +
-        `---\nSource: Contact Page\n` +
-        `User Agent: ${userAgent}\n` +
-        `Referrer: ${referrer || 'Direct'}`
-      );
-      
-      window.open(`mailto:ajlipka@gmail.com?subject=${emailSubject}&body=${emailBody}`, '_blank');
-      
+
+      if (!data?.success) {
+        console.error('Email sending failed:', data);
+        throw new Error(data?.error || 'Failed to send email');
+      }
+
+      // Success!
       toast({
-        title: "Opening email client...",
-        description: "We've opened your email client with a pre-filled message. Please send the email to complete your inquiry.",
+        title: "Message sent!",
+        description: "We've received your message and will get back to you soon. Thank you for contacting us!",
       });
       setFormData({ name: "", email: "", phone: "", message: "" });
       
     } catch (error) {
-      console.error('Contact form submission failed completely:', error);
+      console.error('Contact form submission failed:', error);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       
       toast({
         title: "Unable to send message",
-        description: "We're experiencing technical difficulties. Please email us directly at ajlipka@gmail.com or try again later.",
+        description: `Error: ${errorMessage}. Please try again or contact us at contact@streetcredrx.com`,
         variant: "destructive",
       });
     } finally {

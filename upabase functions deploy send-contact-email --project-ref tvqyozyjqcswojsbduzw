@@ -1,0 +1,56 @@
+[33m0e43d6f[m Fix: Redirect issues after login
+[33m06993ae[m Add AI analysis to new messages
+[33m19b9a80[m Run SQL for AI feedback system
+[33mf4ad901[m Fix brand name and color accessibility
+[33m523223b[m Fix messages page functionality
+[33m43e1a16[m Fix messages reply functionality
+[33m4472444[m Fix logs page issues
+[33mb16becd[m Refactor Messages page
+[33m272d752[m Add reply functionality to messages
+[33me8f0d8f[m Run SQL migration
+[33mcee75c3[m Run database migration
+[33m9e28551[m Fix dev logs loading
+[33mf476cfb[m Fix: Address page loading issues
+[33m2fdeeb9[m Refactor UserManagement page
+[33macac72e[m Apply security fixes
+[33m05cda3f[m Run SQL migration
+[33m8d1baef[m Run database schema SQL
+[33m0d1ecba[m Implement pharmacist detail view and document management
+[33mb001784[m Remove old message components
+[33mf0930f1[m feat: Implement unified messaging center
+[33m68cd1f9[m Improve message history readability
+[33m24488d7[m Run database schema changes
+[33m06e835f[m Fix: Ensure email notifications for new messages
+[33m5a24b4f[m Run database schema changes
+[33m8ce44ab[m Fix: Apply pharmaceutical background to all pages
+[33m831877d[m Replace background image
+[33mbcf743c[m Fix text shadow
+[33mb0ff6ee[m Fix: Remove text shadowing
+[33m375caea[m Add "Remember Me" functionality
+[33mea1d1a4[m Fix: HeroSection text shadow and design
+[33me7cbac4[m Incorporate new images
+[33m27750b3[m Refactor: Incorporate new images and design elements
+[33m55f2d00[m Fix system logs and admin functionality.
+[33m1cca1e9[m Run SQL migration.
+[33m46478b1[m Fix Google OAuth email sync
+[33m6e707c5[m Fix: Use actual user emails
+[33m882022e[m Run SQL migration
+[33m7d5922e[m Run SQL migration
+[33m2cd5472[m Run SQL migration
+[33m59ad02d[m Implement role-based UI and user info editing
+[33mded3f8a[m Replace hero image
+[33md1f10fa[m Run database schema changes
+[33mb657fc0[m Fix: Remove unnecessary shadow effects and improve styling
+[33m7631d0c[m Fix login button on mobile
+[33m18eacde[m Implement email verification and password reset
+[33mb572274[m Fix email and sign-up issues
+[33m0db62af[m Implement email authentication features
+[33me18c4dc[m Fix logs access for super admin
+[33ma37b965[m Update DevConsole messaging instructions
+[33m7b0d99c[m Fix profile page
+[33m854c136[m Run database migrations
+[33m57c3ea2[m Run SQL migration.
+[33mc51ba44[m Run the SQL script.
+[33m6b93559[m Fix image text and UX
+[33m8699105[m Run SQL script
+[33m1a267b7[m Fix: Ensure full application functionality

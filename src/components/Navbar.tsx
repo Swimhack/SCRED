@@ -1,16 +1,51 @@
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Close menu on escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isMenuOpen]);
   
   return (
-    <nav className="absolute top-0 left-0 right-0 z-20 py-4">
+    <nav className="navbar absolute top-0 left-0 right-0 py-4">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-white text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+          <Link to="/" className="text-white text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2 relative z-10">
             <img 
               src="/lovable-uploads/d1013e83-9484-495e-880b-68ab1888a169.png" 
               alt="StreetCredRX" 
@@ -19,7 +54,7 @@ const Navbar = () => {
             StreetCredRX
           </Link>
           
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 relative z-10">
             <div className="flex items-center gap-4 lg:gap-6">
               <Link to="/" className="text-white hover:text-brand-primary transition-colors">Home</Link>
               <Link to="/about" className="text-white hover:text-brand-primary transition-colors">About</Link>
@@ -33,7 +68,7 @@ const Navbar = () => {
           </div>
           
           <button 
-            className="md:hidden text-white p-2"
+            className="md:hidden text-white p-2 relative z-10"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <Menu size={24} />
@@ -42,13 +77,13 @@ const Navbar = () => {
       </div>
       
       {isMenuOpen && (
-        <div className="md:hidden bg-gray-900 mt-2">
+        <div ref={menuRef} className="mobile-menu md:hidden bg-gray-900/95 backdrop-blur-sm mt-2">
           <div className="container mx-auto px-4 py-3 flex flex-col gap-2">
-            <Link to="/" className="text-white py-2 hover:text-brand-primary">Home</Link>
-            <Link to="/about" className="text-white py-2 hover:text-brand-primary">About</Link>
-            <Link to="/service" className="text-white py-2 hover:text-brand-primary">Service</Link>
-            <Link to="/contact" className="text-white py-2 hover:text-brand-primary">Contact</Link>
-            <Link to="/auth" className="bg-brand-primary text-primary-foreground py-2 px-4 rounded-lg text-center mt-2">
+            <Link to="/" className="text-white py-2 hover:text-brand-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link to="/about" className="text-white py-2 hover:text-brand-primary transition-colors" onClick={() => setIsMenuOpen(false)}>About</Link>
+            <Link to="/service" className="text-white py-2 hover:text-brand-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Service</Link>
+            <Link to="/contact" className="text-white py-2 hover:text-brand-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+            <Link to="/auth" className="bg-brand-primary text-primary-foreground py-2 px-4 rounded-lg text-center mt-2 hover:bg-brand-primary/90 transition-colors" onClick={() => setIsMenuOpen(false)}>
               Log In
             </Link>
           </div>

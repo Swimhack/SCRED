@@ -43,13 +43,13 @@ const Service = () => {
 
   return (
     <div 
-      className="relative min-h-screen bg-cover bg-center bg-no-repeat" 
+      className="hero-section relative min-h-screen bg-cover bg-center bg-no-repeat" 
       style={{ 
         backgroundImage: `url(${pharmaceuticalHero})`
       }}
     >
       {/* Simplified overlay for better text contrast */}
-      <div className="absolute inset-0 bg-black/50 z-10"></div>
+      <div className="bg-image-overlay absolute inset-0 bg-black/50"></div>
       <SEO 
         title="Pharmacy Credentialing & Enrollment Services" 
         description="Explore our comprehensive credentialing services for pharmacists including provider enrollment, insurance network applications, and ongoing maintenance."
@@ -57,7 +57,7 @@ const Service = () => {
       />
       <Navbar />
       
-      <div className="pt-24 pb-16 relative z-20">
+      <div className="bg-image-content pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl p-8 md:p-12 shadow-xl text-white">
             <h1 

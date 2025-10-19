@@ -19,7 +19,7 @@ $testData = @{
     email = "james@ekaty.com"
     phone = "713-444-6732"
     message = "This is a test message to verify the Resend email integration is working correctly."
-    source = "test-script"
+    source = "website"
     userAgent = "PowerShell-Test/1.0"
     referrer = "test"
 } | ConvertTo-Json

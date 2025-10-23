@@ -24,3 +24,4 @@ FROM vault.secrets
 WHERE name = 'RESEND_API_KEY';
 
 
+

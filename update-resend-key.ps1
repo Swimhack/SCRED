@@ -39,3 +39,4 @@ Write-Host "Now redeploying Edge Function with correct API key..." -ForegroundCo
 Write-Host ""
 
 
+

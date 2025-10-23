@@ -1,18 +1,11 @@
 
 import Navbar from "@/components/Navbar";
 import SEO from "@/components/SEO";
-import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const About = () => {
   return (
-    <div 
-      className="relative min-h-screen bg-cover bg-center bg-no-repeat" 
-      style={{ 
-        backgroundImage: `url(${pharmaceuticalHero})`
-      }}
-    >
-      {/* Simplified overlay for better text contrast */}
-      <div className="absolute inset-0 bg-black/50 z-10"></div>
+    <div className="relative min-h-screen" style={{ backgroundColor: '#682D70' }}>
+      {/* Clean purple background - no overlay needed */}
       <SEO 
         title="About Our Pharmacy Credentialing Services" 
         description="Learn about StreetCredRx's mission to streamline the credentialing process for pharmacists. Founded by pharmacists for pharmacists."

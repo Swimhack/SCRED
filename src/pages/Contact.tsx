@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
-import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const Contact = () => {
   console.log('Contact component rendered');

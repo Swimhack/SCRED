@@ -2,7 +2,6 @@
 import Navbar from "@/components/Navbar";
 import { Check } from "lucide-react";
 import SEO from "@/components/SEO";
-import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 
 const Service = () => {
   const services = [
@@ -20,14 +19,8 @@ const Service = () => {
   ];
 
   return (
-    <div 
-      className="hero-section relative min-h-screen bg-cover bg-center bg-no-repeat" 
-      style={{ 
-        backgroundImage: `url(${pharmaceuticalHero})`
-      }}
-    >
-      {/* Simplified overlay for better text contrast */}
-      <div className="bg-image-overlay absolute inset-0 bg-black/50"></div>
+    <div className="hero-section relative min-h-screen" style={{ backgroundColor: '#682D70' }}>
+      {/* Clean purple background - no overlay needed */}
       <SEO 
         title="Pharmacy Credentialing & Enrollment Services" 
         description="Explore our comprehensive credentialing services for pharmacists including provider enrollment, insurance network applications, and ongoing maintenance."

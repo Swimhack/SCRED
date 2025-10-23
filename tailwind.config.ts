@@ -69,7 +69,11 @@ export default {
 					yellow: 'hsl(var(--brand-yellow))',
 					blue: 'hsl(var(--brand-blue))',
 					green: 'hsl(var(--brand-green))',
-					red: 'hsl(var(--brand-red))'
+					red: 'hsl(var(--brand-red))',
+					finn: 'hsl(var(--brand-finn))',
+					maize: 'hsl(var(--brand-maize))',
+					bittersweet: 'hsl(var(--brand-bittersweet))',
+					'robins-egg': 'hsl(var(--brand-robins-egg))'
 				},
 				status: {
 					blue: 'hsl(var(--status-blue))',

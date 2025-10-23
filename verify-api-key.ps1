@@ -33,3 +33,4 @@ Write-Host ""
 Write-Host "Now redeploying Edge Function to pick up the API key..." -ForegroundColor Yellow
 Write-Host ""
 
+

@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import pharmaceuticalHero from "@/assets/pharmaceutical-lab-hero.jpg";
 import { CheckCircle, TrendingUp, Shield, Scale, DollarSign, Users, Clock, Star, ArrowRight } from "lucide-react";
 
 const Index = () => {
@@ -115,19 +114,17 @@ const Index = () => {
       
       {/* Hero Section */}
       <section 
-        className="hero-section relative min-h-screen flex items-center bg-cover bg-center bg-no-repeat"
+        className="hero-section relative min-h-screen flex items-center"
         style={{
-          backgroundImage: `url(${pharmaceuticalHero})`
+          backgroundColor: '#682D70'
         }}
       >
-        <div className="bg-image-overlay absolute inset-0 bg-black/50"></div>
         
         <div className="bg-image-content container mx-auto px-4">
           <div className="max-w-4xl w-full">
             <h1 
-              className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+              className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-brand-bittersweet"
               style={{
-                color: '#ffffff',
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
                 textRendering: 'optimizeLegibility',
@@ -135,12 +132,11 @@ const Index = () => {
                 backfaceVisibility: 'hidden'
               }}
             >
-              Revolutionizing Pharmacy<br />Credentialing
+              Pharmacist credentialing, simplified.
             </h1>
             <p 
-              className="text-lg md:text-xl mb-10 max-w-2xl leading-relaxed"
+              className="text-lg md:text-xl mb-10 max-w-2xl leading-relaxed text-white"
               style={{
-                color: '#ffffff',
                 opacity: '0.95',
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
@@ -149,16 +145,12 @@ const Index = () => {
                 backfaceVisibility: 'hidden'
               }}
             >
-              Streamlining the $50+ billion pharmacy credentialing market with automated workflows, 
-              compliance solutions, and scalable technology infrastructure.
+              Expert pharmacist credentialing to join health plan networks faster.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <a href="#contact" className="bg-brand-primary text-black px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-all duration-300 inline-block text-center">
-                Schedule a Demo
-              </a>
-              <a href="#market-opportunity" className="bg-transparent border-2 border-brand-primary text-brand-primary px-8 py-3 rounded-full font-medium hover:bg-brand-primary hover:text-black transition-all duration-300 inline-block text-center">
-                Learn More
+              <a href="#contact" className="bg-brand-maize text-black px-8 py-3 rounded-full font-medium hover:bg-brand-maize/90 transition-all duration-300 inline-block text-center">
+                See how it works
               </a>
             </div>
             
@@ -194,203 +186,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Market Opportunity Section */}
-      <section id="market-opportunity" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-              Massive Market Opportunity
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              The pharmacy credentialing market is ripe for disruption with outdated processes costing the industry billions annually.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">$50+ Billion</h3>
-              <p className="text-gray-600">Annual pharmacy credentialing market size with 12% YoY growth</p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">6-12 Months</h3>
-              <p className="text-gray-600">Average credentialing time we reduce to 30-60 days</p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-purple-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">67,000+</h3>
-              <p className="text-gray-600">Independent pharmacies needing credentialing services</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Platform Benefits Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-              Platform Advantages
-            </h2>
-            <p className="text-lg text-gray-600">
-              Our technology-first approach delivers measurable results for pharmacies and payers alike.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Automated Workflows</h3>
-                  <p className="text-gray-600">AI-powered document processing reduces manual work by 85% and eliminates common errors.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Compliance Assurance</h3>
-                  <p className="text-gray-600">Built-in compliance checks ensure 100% regulatory adherence across all states and payers.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Scale className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Scalable Infrastructure</h3>
-                  <p className="text-gray-600">Cloud-native architecture handles unlimited concurrent credentialing applications.</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gray-50 p-8 rounded-xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Key Metrics</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Time Reduction</span>
-                  <span className="font-semibold text-gray-900">80%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Cost Savings</span>
-                  <span className="font-semibold text-gray-900">$15K per pharmacy</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Success Rate</span>
-                  <span className="font-semibold text-gray-900">97.3%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Customer Retention</span>
-                  <span className="font-semibold text-gray-900">95%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Business Model Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-              Proven Business Model
-            </h2>
-            <p className="text-lg text-gray-600">
-              Multiple revenue streams with strong unit economics and predictable growth.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <div className="bg-white p-8 rounded-xl shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Revenue Streams</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Users className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">SaaS Subscriptions</h4>
-                    <p className="text-sm text-gray-600">$2,500/month per pharmacy, 95% retention</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                    <DollarSign className="w-4 h-4 text-green-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Transaction Fees</h4>
-                    <p className="text-sm text-gray-600">2.5% of processed credentialing volume</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <Shield className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Premium Services</h4>
-                    <p className="text-sm text-gray-600">Consulting, compliance audits, training</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Competitive Advantages</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-brand-primary mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">First-Mover Advantage</h4>
-                    <p className="text-sm text-gray-600">Only fully automated platform in market</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-brand-primary mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Network Effects</h4>
-                    <p className="text-sm text-gray-600">Payer integrations create switching costs</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-brand-primary mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Data Moat</h4>
-                    <p className="text-sm text-gray-600">Proprietary credentialing intelligence</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-brand-primary mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Regulatory Expertise</h4>
-                    <p className="text-sm text-gray-600">Deep compliance knowledge barrier</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-16 bg-white">
@@ -405,35 +200,16 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-gray-50 p-8 rounded-xl">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-brand-primary rounded-full flex items-center justify-center">
-                    <span className="text-black font-bold text-lg">SC</span>
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-brand-robins-egg p-6 rounded-xl mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-brand-bittersweet rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">SC</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">StreetCredRx Team</h3>
-                    <p className="text-gray-600">Leadership Team</p>
-                    <p className="text-gray-600">contact@streetcredrx.com</p>
+                    <h3 className="text-lg font-bold text-gray-900">StreetCredRx Team</h3>
+                    <p className="text-sm text-gray-700">info@streetcredrx.com</p>
                   </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900">What We're Looking For:</h4>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                      Strategic investors with healthcare expertise
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                      Partnership opportunities with payers
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                      Growth capital for market expansion
-                    </li>
-                  </ul>
                 </div>
               </div>
               
@@ -488,10 +264,10 @@ const Index = () => {
                   
                   <Button 
                     type="submit" 
-                    className="bg-brand-primary text-black px-8 py-3 rounded-full font-medium hover:bg-brand-primary/90 transition-colors w-full"
+                    className="bg-brand-maize text-black px-8 py-3 rounded-full font-medium hover:bg-brand-maize/90 transition-colors w-full"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Sending..." : "Schedule a Demo"}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </div>

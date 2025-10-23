@@ -68,11 +68,17 @@ html, body {
     --radius: 0.5rem;
 
     /* Brand colors */
-    --brand-primary: 45 100% 50%;
-    --brand-yellow: 45 100% 45%;
+    --brand-primary: 4 99% 68%;
+    --brand-yellow: 52 94% 68%;
     --brand-blue: 214 100% 90%;
     --brand-green: 134 61% 41%;
     --brand-red: 0 84% 60%;
+    
+    /* New brand colors - Updated 2025 */
+    --brand-finn: 295 44% 31%; /* #682D70 */
+    --brand-maize: 52 94% 68%; /* #F5E663 */
+    --brand-bittersweet: 4 99% 68%; /* #FE5F55 */
+    --brand-robins-egg: 186 74% 60%; /* #54DEE0 */
 
     /* Status colors */
     --status-blue: 214 91% 60%;
@@ -228,16 +234,7 @@ html, body {
   z-index: 0;
 }
 
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-}
+/* Removed dark overlay - using solid brand purple background instead */
 
 .hero-section .container {
   position: relative;

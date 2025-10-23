@@ -556,12 +556,21 @@ const Auth = () => {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
-            <button
-              className="font-medium text-blue-600 hover:text-blue-500"
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? "Sign up" : "Sign in"}
-            </button>
+            {isLogin ? (
+              <a
+                href="/contact"
+                className="font-medium text-brand-bittersweet hover:text-brand-bittersweet/80"
+              >
+                Contact us
+              </a>
+            ) : (
+              <button
+                className="font-medium text-brand-bittersweet hover:text-brand-bittersweet/80"
+                onClick={() => setIsLogin(!isLogin)}
+              >
+                Sign in
+              </button>
+            )}
           </p>
         </div>
         
@@ -633,7 +642,7 @@ const Auth = () => {
            <div>
              <Button
                type="submit"
-               className="w-full"
+               className="w-full bg-brand-maize text-black hover:bg-brand-maize/90"
                disabled={loading}
              >
                {loading ? "Processing..." : isLogin ? "Sign in" : "Sign up"}
@@ -642,7 +651,7 @@ const Auth = () => {
               <div className="mt-3 text-center">
                 <button
                   type="button"
-                  className="text-sm text-blue-600 hover:text-blue-500"
+                  className="text-sm text-brand-bittersweet hover:text-brand-bittersweet/80"
                   onClick={() => setShowForgotPassword(true)}
                 >
                   Forgot your password?

@@ -120,13 +120,8 @@ const Contact = () => {
 
   return (
     <div 
-      className="hero-section relative min-h-screen bg-cover bg-center bg-no-repeat" 
-      style={{ 
-        backgroundImage: `url(${pharmaceuticalHero})`
-      }}
+      className="hero-section relative min-h-screen bg-gray-50"
     >
-      {/* Simplified overlay for better text contrast */}
-      <div className="bg-image-overlay absolute inset-0 bg-black/50"></div>
       <SEO 
         title="Contact Us - StreetCredRx" 
         description="Get in touch with our pharmacy credentialing experts. We're here to help you navigate the provider enrollment process."
@@ -136,9 +131,9 @@ const Contact = () => {
       
       <div className="bg-image-content pt-24 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto bg-gray-900/80 backdrop-blur-sm rounded-xl p-4 sm:p-8 md:p-12 shadow-xl text-white">
+          <div className="max-w-2xl mx-auto bg-white rounded-xl p-4 sm:p-8 md:p-12 shadow-xl">
             <h1 
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 text-brand-primary text-center"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 text-brand-bittersweet text-center"
               style={{
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
@@ -150,7 +145,7 @@ const Contact = () => {
               Contact Us
             </h1>
             <p 
-              className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-center opacity-90"
+              className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-center text-gray-700"
               style={{
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
@@ -165,19 +160,19 @@ const Contact = () => {
             
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium">Your Name</label>
+                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Your Name</label>
                 <Input 
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="bg-gray-800 border-gray-700 text-white"
+                  className="border-gray-300"
                 />
               </div>
               
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium">Email Address</label>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email Address</label>
                 <Input 
                   id="email"
                   name="email"
@@ -185,24 +180,24 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="bg-gray-800 border-gray-700 text-white"
+                  className="border-gray-300"
                 />
               </div>
               
               <div>
-                <label htmlFor="phone" className="block mb-2 text-sm font-medium">Phone Number (Optional)</label>
+                <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900">Phone Number (Optional)</label>
                 <Input 
                   id="phone"
                   name="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="bg-gray-800 border-gray-700 text-white"
+                  className="border-gray-300"
                 />
               </div>
               
               <div>
-                <label htmlFor="message" className="block mb-2 text-sm font-medium">Message</label>
+                <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900">Message</label>
                 <Textarea 
                   id="message"
                   name="message"
@@ -210,13 +205,13 @@ const Contact = () => {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="bg-gray-800 border-gray-700 text-white"
+                  className="border-gray-300"
                 />
               </div>
               
               <Button 
                 type="submit" 
-                className="bg-brand-primary text-black px-8 py-6 rounded-full font-medium hover:bg-brand-primary/90 transition-colors w-full"
+                className="bg-brand-maize text-black px-8 py-6 rounded-full font-medium hover:bg-brand-maize/90 transition-colors w-full"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}

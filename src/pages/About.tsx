@@ -38,32 +38,28 @@ const About = () => {
             
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Mission</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-brand-bittersweet">Our Mission</h2>
                 <p className="text-lg">
                   StreetCredRx's mission is to make pharmacist credentialing affordable and accessible, empowering 
-                  pharmacies to unlock stronger revenue streams, expand patient services, and fuel long-term industry 
-                  growth. By removing administrative barriers and advancing the role of pharmacists in healthcare, 
-                  we help the profession thrive in a rapidly changing landscape.
+                  pharmacies to unlock stronger revenue streams, expand patient services and fuel long-term industry 
+                  growth.
                 </p>
               </div>
               
               <div>
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Story</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-brand-bittersweet">Our Story</h2>
                 <p className="text-lg mb-4">
-                  Founded by pharmacists who experienced firsthand the challenges of credentialing, StreetCredRx 
-                  was born out of necessity. As states began allowing pharmacists to bill as providers, we 
-                  identified a significant gap in the market for specialized credentialing support tailored 
-                  to pharmacy practice.
+                  Founded by 20+ year pharmacy industry veterans dedicated to advancing the pharmacy profession 
+                  and keeping community pharmacies profitable, StreetCredRx was born out of necessity.
                 </p>
                 <p className="text-lg">
-                  Today, we've helped hundreds of pharmacists across multiple states successfully navigate the 
-                  credentialing process, opening new revenue streams for their practices and expanding patient 
-                  access to pharmacy services.
+                  As states began allowing pharmacists to bill as providers, many pharmacies were unable to 
+                  affordably and efficiently get their pharmacists credentialed with medical payers.
                 </p>
               </div>
               
               <div>
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Expertise</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-brand-bittersweet">Our Expertise</h2>
                 <p className="text-lg">
                   Our team combines deep expertise in healthcare credentialing with specific knowledge of pharmacy 
                   practice. We understand the unique requirements of pharmacy credentialing across different states 
@@ -72,12 +68,29 @@ const About = () => {
               </div>
               
               <div className="border-t border-gray-700 pt-8">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-4">Join Us</h2>
-                <p className="text-lg">
-                  Ready to unlock the full potential of your pharmacy practice? Partner with StreetCredRx today and 
-                  let us handle the complexity of provider credentialing while you focus on delivering exceptional 
-                  patient care.
+                <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-brand-bittersweet">Contact Us</h2>
+                <p className="text-lg mb-6">
+                  Ready to unlock the full potential of your pharmacy practice? Get in touch with our team today.
                 </p>
+                <div className="max-w-md">
+                  <div className="bg-brand-robins-egg p-6 rounded-xl mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-brand-bittersweet rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">SC</span>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">StreetCredRx Team</h3>
+                        <p className="text-sm text-gray-700">info@streetcredrx.com</p>
+                      </div>
+                    </div>
+                  </div>
+                  <a 
+                    href="/contact" 
+                    className="bg-brand-maize text-black px-6 py-3 rounded-full font-medium hover:bg-brand-maize/90 transition-colors inline-block"
+                  >
+                    Send us a message
+                  </a>
+                </div>
               </div>
             </div>
           </div>

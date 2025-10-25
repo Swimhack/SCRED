@@ -64,3 +64,5 @@ Write-Host "2. Update in Supabase Edge Function Secrets" -ForegroundColor White
 Write-Host "3. Redeploy Edge Function" -ForegroundColor White
 
 
+
+

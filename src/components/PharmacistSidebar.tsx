@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getNavigationItems } from "@/lib/featureFlags";
 import featureFlags from "@/lib/featureFlags";
+import StreetCredRXLogo from "./StreetCredRXLogo";
 
 const PharmacistSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -71,8 +72,8 @@ const PharmacistSidebar = () => {
     )}>
       <div className="p-4 flex items-center justify-between border-b">
         <div className={cn("flex items-center", collapsed ? "justify-center w-full" : "")}>
-          {!collapsed && <h2 className="font-bold text-xl">StreetCredRx</h2>}
-          {collapsed && <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center">S</div>}
+          {!collapsed && <StreetCredRXLogo size="sm" showText={true} />}
+          {collapsed && <StreetCredRXLogo size="sm" showText={false} />}
         </div>
         <button 
           onClick={() => setCollapsed(!collapsed)}

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
-import streetCredIcon from "@/assets/streetcredrx-icon.png";
+import StreetCredRXLogo from "./StreetCredRXLogo";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,13 +46,8 @@ const Navbar = () => {
     <nav className="navbar absolute top-0 left-0 right-0 py-4">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-white text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2 sm:gap-3 relative z-10">
-            <img 
-              src={streetCredIcon} 
-              alt="StreetCredRX Icon" 
-              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
-            />
-            <span className="tracking-tight">StreetCredRX</span>
+          <Link to="/" className="relative z-10">
+            <StreetCredRXLogo size="md" />
           </Link>
           
           <div className="hidden md:flex items-center gap-6 lg:gap-8 relative z-10">

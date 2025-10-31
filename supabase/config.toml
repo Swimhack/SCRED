@@ -1,5 +1,19 @@
 project_id = "tvqyozyjqcswojsbduzw"
 
+[auth.email]
+# Custom email sender name for all authentication emails
+# This affects: signup confirmation, password reset, magic link, email change
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+
+# Email template settings
+# Note: For Supabase Cloud, email from name is configured in Dashboard:
+# Authentication > Email Templates > Settings > "From Name"
+# But we set it here for local/self-hosted instances
+mailer_from_name = "StreetCredRX"
+mailer_from_email = "noreply@streetcredrx.com"
+
 [functions.get-logs]
 verify_jwt = true
 

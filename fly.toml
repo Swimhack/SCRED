@@ -1,4 +1,4 @@
-app = "streetcredrx-web"
+app = "streetcredrx"
 primary_region = "iad"
 
 [build]

@@ -1,14 +1,8 @@
-# Application deployment configuration file for streetcred
-#
-# This file configures the deployment settings for the production environment.
-
-app = "streetcredrx1"
-primary_region = "dfw"
+app = "streetcredrx-web"
+primary_region = "iad"
 
 [build]
-
-[env]
-  PORT = "8080"
+# Uses Dockerfile in repo
 
 [http_service]
   internal_port = 8080
@@ -18,15 +12,12 @@ primary_region = "dfw"
   min_machines_running = 0
   processes = ["app"]
 
-[[http_service.checks]]
-  grace_period = "10s"
-  interval = "30s"
-  method = "GET"
-  timeout = "5s"
-  path = "/"
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
 
 [[vm]]
+  memory = "256mb"
   cpu_kind = "shared"
   cpus = 1
-  memory_mb = 256
-

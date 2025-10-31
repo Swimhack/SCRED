@@ -167,7 +167,7 @@ const Index = () => {
                 Ready to Learn More?
               </h2>
               <p className="text-lg text-gray-600">
-                Connect with our team to discuss this investment opportunity.
+                Connect with our team to discuss the next steps!
               </p>
             </div>
             

@@ -25,17 +25,20 @@ const Index = () => {
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('handleSubmit called', { formData });
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
       // Validate required fields
       if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+        console.log('Validation failed - calling toast for missing fields');
         toast({
           title: "Missing required fields",
           description: "Please fill in all required fields (name, email, and message).",
           variant: "destructive",
         });
+        console.log('Toast called for missing fields');
         setIsSubmitting(false);
         return;
       }
@@ -56,6 +59,16 @@ const Index = () => {
       const userAgent = navigator.userAgent;
       const referrer = document.referrer;
       
+      console.log('Submitting contact form with data:', {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message.substring(0, 50) + '...',
+        source: 'website',
+        userAgent: userAgent.substring(0, 50) + '...',
+        referrer
+      });
+
       // Try Supabase Edge Function
       const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: {
@@ -63,7 +76,7 @@ const Index = () => {
           email: formData.email.trim(),
           phone: formData.phone.trim(),
           message: formData.message.trim(),
-          source: 'investor-homepage',
+          source: 'website',
           userAgent,
           referrer
         }
@@ -84,7 +97,7 @@ const Index = () => {
       // Success!
       toast({
         title: "Message sent!",
-        description: "We've received your message and our team will get back to you soon. Thank you for your interest in StreetCredRx!",
+        description: "We've received your message and will get back to you soon. Thank you for contacting us!",
       });
       setFormData({ name: "", email: "", phone: "", message: "" });
       
@@ -94,7 +107,7 @@ const Index = () => {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       
       toast({
-        title: "Unable to send message", 
+        title: "Unable to send message",
         description: `Error: ${errorMessage}. Please try again or contact us at contact@streetcredrx.com`,
         variant: "destructive",
       });
@@ -186,11 +199,12 @@ const Index = () => {
               
               <div className="bg-white p-8 rounded-xl border border-gray-200">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Send a Message</h3>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                   <div>
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Your Name</label>
                     <Input 
+                      id="name"
                       name="name"
-                      placeholder="Your Name"
                       value={formData.name}
                       onChange={handleChange}
                       required
@@ -199,10 +213,11 @@ const Index = () => {
                   </div>
                   
                   <div>
+                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email Address</label>
                     <Input 
+                      id="email"
                       name="email"
                       type="email"
-                      placeholder="Email Address"
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -211,10 +226,11 @@ const Index = () => {
                   </div>
                   
                   <div>
+                    <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900">Phone Number (Optional)</label>
                     <Input 
+                      id="phone"
                       name="phone"
                       type="tel"
-                      placeholder="Phone Number (Optional)"
                       value={formData.phone}
                       onChange={handleChange}
                       className="border-gray-300"
@@ -222,10 +238,11 @@ const Index = () => {
                   </div>
                   
                   <div>
+                    <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900">Message</label>
                     <Textarea 
+                      id="message"
                       name="message"
-                      rows={4}
-                      placeholder="Tell us about your interest in StreetCredRx..."
+                      rows={5}
                       value={formData.message}
                       onChange={handleChange}
                       required
@@ -235,7 +252,7 @@ const Index = () => {
                   
                   <Button 
                     type="submit" 
-                    className="bg-brand-maize text-black px-8 py-3 rounded-full font-medium hover:bg-brand-maize/90 transition-colors w-full"
+                    className="bg-brand-maize text-black px-8 py-6 rounded-full font-medium hover:bg-brand-maize/90 transition-colors w-full"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Sending..." : "Send Message"}

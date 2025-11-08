@@ -19,6 +19,7 @@ import Pending from "./pages/Pending";
 import Completed from "./pages/Completed";
 import Expiring from "./pages/Expiring";
 import Auth from "./pages/Auth";
+import AuthCallback from "./pages/AuthCallback";
 import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
@@ -62,6 +63,7 @@ const AppContent = () => {
       <Route path="/service" element={<Service />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
       
       {/* Admin route - redirects to dashboard */}

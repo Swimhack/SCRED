@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import SEO from "@/components/SEO";
-import { supabase } from "@/integrations/supabase/client";
+import { submitContactForm } from "@/lib/neon-api";
 
 const Contact = () => {
   console.log('Contact component rendered');
@@ -70,29 +70,21 @@ const Contact = () => {
         referrer
       });
       
-      // Try Supabase Edge Function
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          message: formData.message.trim(),
-          source: 'website',
-          userAgent,
-          referrer
-        }
+      // Submit to Neon DB via backend API
+      const result = await submitContactForm({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        message: formData.message.trim(),
+        source: 'website',
+        userAgent,
+        referrer
       });
 
-      console.log('Supabase function response:', { data, error });
+      console.log('Contact form submission result:', result);
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(`Email service error: ${error.message || 'Unknown error'}`);
-      }
-
-      if (!data?.success) {
-        console.error('Email sending failed:', data);
-        throw new Error(data?.error || 'Failed to send email');
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to send message');
       }
 
       // Success!

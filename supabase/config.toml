@@ -10,9 +10,8 @@ enable_confirmations = true
 # Email template settings
 # Note: For Supabase Cloud, email from name is configured in Dashboard:
 # Authentication > Email Templates > Settings > "From Name"
-# But we set it here for local/self-hosted instances
-mailer_from_name = "StreetCredRX"
-mailer_from_email = "noreply@streetcredrx.com"
+# mailer_from_name and mailer_from_email are not supported in CLI config
+# Configure these directly in Supabase Dashboard instead
 
 [functions.get-logs]
 verify_jwt = true

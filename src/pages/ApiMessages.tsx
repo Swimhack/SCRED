@@ -91,7 +91,7 @@ const ApiMessages = () => {
           <div style={{ marginBottom: '20px', fontSize: '14px', color: '#666' }}>
             /* StreetCredRx Developer Messages API */
             <br />
-            /* Live URL: https://streetcredrx.netlify.app/api/messages?key=streetcred-api-2025 */
+            /* Live URL: https://scred.netlify.app/api/messages?key=streetcred-api-2025 */
             <br />
             /* Last Updated: {new Date().toISOString()} */
             <br />

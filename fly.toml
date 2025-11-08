@@ -1,8 +1,7 @@
-app = "streetcredrx"
+app = "streetcredrx1"
 primary_region = "iad"
 
 [build]
-# Uses Dockerfile in repo
 
 [http_service]
   internal_port = 8080

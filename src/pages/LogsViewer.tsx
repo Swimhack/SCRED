@@ -5,10 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2, Search, Calendar, Filter, ExternalLink, Download } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { getApiBaseUrl } from '@/lib/auth-api';
 
 interface LogEntry {
   id: string;
@@ -64,9 +64,9 @@ const LogsViewer = () => {
   // Generate the API URL that can be used by external agents
   useEffect(() => {
     if (user && session) {
-      const baseUrl = 'https://tvqyozyjqcswojsbduzw.supabase.co/functions/v1/get-logs';
+      const baseUrl = `${getApiBaseUrl()}/logs`;
       const params = new URLSearchParams();
-      
+
       if (filters.level) params.append('level', filters.level);
       if (filters.component) params.append('component', filters.component);
       if (filters.search) params.append('search', filters.search);
@@ -90,59 +90,47 @@ const LogsViewer = () => {
       return;
     }
 
+    if (!session?.token) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please sign in to access logs.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      // Apply filters to the query
-      let query = supabase
-        .from('application_logs')
-        .select('*')
-        .order('timestamp', { ascending: false });
+      const params = new URLSearchParams();
 
-      if (filters.level) {
-        query = query.eq('level', filters.level);
-      }
-      if (filters.component) {
-        query = query.eq('component', filters.component);
-      }
-      if (filters.search) {
-        query = query.or(`message.ilike.%${filters.search}%,component.ilike.%${filters.search}%`);
-      }
-      if (filters.start_date) {
-        query = query.gte('timestamp', filters.start_date);
-      }
-      if (filters.end_date) {
-        query = query.lte('timestamp', filters.end_date);
+      if (filters.level) params.append('level', filters.level);
+      if (filters.component) params.append('component', filters.component);
+      if (filters.search) params.append('search', filters.search);
+      if (filters.start_date) params.append('start_date', filters.start_date);
+      if (filters.end_date) params.append('end_date', filters.end_date);
+      params.append('limit', filters.limit.toString());
+      params.append('offset', filters.offset.toString());
+
+      const response = await fetch(`${getApiBaseUrl()}/logs?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${session.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch logs');
       }
 
-      // Apply pagination
-      query = query.range(filters.offset, filters.offset + filters.limit - 1);
+      const result: LogsResponse = await response.json();
 
-      const { data: directLogs, error: directError } = await query;
-        
-      if (!directError && directLogs) {
-        // Transform the data to match our interface expectations
-        const transformedLogs = directLogs.map((log: any) => ({
-          ...log,
-          metadata: typeof log.metadata === 'object' && log.metadata !== null 
-            ? log.metadata 
-            : {}
-        }));
-        setLogs(transformedLogs);
-        // Get total count for pagination
-        const { count } = await supabase
-          .from('application_logs')
-          .select('*', { count: 'exact', head: true });
-
-        setPagination({
-          total: count || 0,
-          limit: filters.limit,
-          offset: filters.offset,
-          has_more: (count || 0) > filters.offset + filters.limit
-        });
-        return;
+      if (result.success && result.data) {
+        setLogs(result.data);
+        setPagination(result.pagination);
+      } else {
+        throw new Error('Invalid response from logs API');
       }
-      
-      throw new Error('Failed to fetch logs from database');
     } catch (error: any) {
       console.error('Error fetching logs:', error);
       toast({

@@ -366,6 +366,120 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Logs endpoint - requires super_admin role
+app.get('/api/logs', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Missing or invalid authorization header',
+      });
+    }
+
+    const token = authHeader.substring('Bearer '.length).trim();
+    const payload = verifyAuthToken(token);
+    const user = await findUserById(payload.sub);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found',
+      });
+    }
+
+    // Check if user is super_admin
+    const isSuperAdmin = user.is_super_admin || payload.role === 'super_admin';
+    if (!isSuperAdmin) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Super admin role required.',
+      });
+    }
+
+    // Parse query parameters for filtering
+    const {
+      level,
+      component,
+      search,
+      start_date,
+      end_date,
+      limit = 50,
+      offset = 0,
+    } = req.query;
+
+    // Build query dynamically
+    let query = 'SELECT * FROM application_logs WHERE 1=1';
+    const params = [];
+    let paramCount = 1;
+
+    if (level) {
+      query += ` AND level = $${paramCount}`;
+      params.push(level);
+      paramCount++;
+    }
+
+    if (component) {
+      query += ` AND component = $${paramCount}`;
+      params.push(component);
+      paramCount++;
+    }
+
+    if (search) {
+      query += ` AND (message ILIKE $${paramCount} OR component ILIKE $${paramCount})`;
+      params.push(`%${search}%`);
+      paramCount++;
+    }
+
+    if (start_date) {
+      query += ` AND timestamp >= $${paramCount}`;
+      params.push(start_date);
+      paramCount++;
+    }
+
+    if (end_date) {
+      query += ` AND timestamp <= $${paramCount}`;
+      params.push(end_date);
+      paramCount++;
+    }
+
+    // Get total count for pagination
+    const countQuery = query.replace('SELECT *', 'SELECT COUNT(*)');
+    const countResult = await pool.query(countQuery, params);
+    const total = parseInt(countResult.rows[0].count);
+
+    // Add ordering and pagination
+    query += ` ORDER BY timestamp DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+    params.push(parseInt(limit), parseInt(offset));
+
+    const result = await pool.query(query, params);
+
+    return res.json({
+      success: true,
+      data: result.rows.map(log => ({
+        ...log,
+        metadata: log.metadata || {},
+      })),
+      pagination: {
+        total,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        has_more: total > parseInt(offset) + parseInt(limit),
+      },
+      filters: { level, component, search, start_date, end_date },
+      timestamp: new Date().toISOString(),
+    });
+
+  } catch (error) {
+    console.error('Logs API error:', error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Internal server error',
+    });
+  }
+});
+
 // Serve static files from React build
 const distPath = path.join(__dirname, '..', 'dist');
 app.use(express.static(distPath));

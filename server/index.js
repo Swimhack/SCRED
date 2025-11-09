@@ -366,6 +366,70 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Log submission endpoint - public (no auth required)
+app.post('/api/log', async (req, res) => {
+  try {
+    const {
+      level,
+      message,
+      metadata,
+      user_id,
+      session_id,
+      request_id,
+      user_agent,
+      route,
+      component,
+      error_stack,
+    } = req.body;
+
+    // Basic validation
+    if (!level || !message) {
+      return res.status(400).json({
+        success: false,
+        error: 'Level and message are required',
+      });
+    }
+
+    // Insert log into database
+    await pool.query(
+      `INSERT INTO application_logs (
+        level,
+        message,
+        metadata,
+        user_id,
+        session_id,
+        request_id,
+        user_agent,
+        ip_address,
+        route,
+        component,
+        error_stack,
+        timestamp,
+        created_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())`,
+      [
+        level,
+        message,
+        metadata ? JSON.stringify(metadata) : null,
+        user_id || null,
+        session_id || null,
+        request_id || null,
+        user_agent || null,
+        req.ip || null,
+        route || null,
+        component || null,
+        error_stack || null,
+      ]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Log submission error:', error);
+    // Don't fail loudly for logging errors
+    return res.status(200).json({ success: false, error: error.message });
+  }
+});
+
 // Logs endpoint - requires super_admin role
 app.get('/api/logs', async (req, res) => {
   try {

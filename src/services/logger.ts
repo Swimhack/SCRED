@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { getApiBaseUrl } from "@/lib/auth-api";
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
@@ -17,21 +17,10 @@ class Logger {
 
   constructor() {
     this.sessionId = this.generateSessionId();
-    this.initializeUserId();
   }
 
   private generateSessionId(): string {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  private async initializeUserId() {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      this.userId = user?.id || null;
-    } catch (error) {
-      // Silently handle auth errors
-      this.userId = null;
-    }
   }
 
   private async logToDatabase(entry: LogEntry) {
@@ -44,26 +33,24 @@ class Logger {
         session_id: this.sessionId,
         request_id: this.generateRequestId(),
         user_agent: navigator.userAgent,
-        ip_address: null, // Will be populated by edge function if needed
         route: entry.route || window.location.pathname,
         component: entry.component,
         error_stack: entry.error_stack,
-        timestamp: new Date().toISOString()
       };
 
-      // Use insert without waiting for response to avoid blocking
-      supabase
-        .from('application_logs')
-        .insert(logData)
-        .then(({ error }) => {
-          if (error) {
-            console.warn('Failed to log to database:', error);
-          }
-        });
+      // Send log to API without waiting for response to avoid blocking
+      fetch(`${getApiBaseUrl()}/log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(logData),
+      }).catch((error) => {
+        // Silently handle logging errors to prevent infinite loops
+        console.warn('Failed to log to API:', error);
+      });
 
     } catch (error) {
       // Silently handle logging errors to prevent infinite loops
-      console.warn('Logger database error:', error);
+      console.warn('Logger API error:', error);
     }
   }
 
